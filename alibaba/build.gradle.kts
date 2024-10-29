@@ -33,6 +33,20 @@ android {
     }
 }
 
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "com.thoughtworks.voiceassistant"
+            artifactId = "alibaba"
+            version = "0.1.0"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
