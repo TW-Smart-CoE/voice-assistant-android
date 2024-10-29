@@ -1,4 +1,4 @@
-package com.thoughtworks.voiceassistant.alibaba
+package com.thoughtworks.voiceassistant.baidu
 
 import org.junit.Test
 
