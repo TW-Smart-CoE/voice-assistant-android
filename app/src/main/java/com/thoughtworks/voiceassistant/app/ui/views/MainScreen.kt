@@ -20,12 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.thoughtworks.voiceassistant.app.R
-import com.thoughtworks.voiceassistant.app.ui.components.AbilityItem
 import com.thoughtworks.voiceassistant.app.definitions.Ability
 import com.thoughtworks.voiceassistant.app.definitions.ServiceProvider
+import com.thoughtworks.voiceassistant.app.di.Dependency
+import com.thoughtworks.voiceassistant.app.ui.components.AbilityItem
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    dependency: Dependency,
+    onNavigateToVoiceScreen: () -> Unit
+) {
     val context = LocalContext.current
 
     var ttsProvider by remember { mutableStateOf(ServiceProvider.ALIBABA) }
@@ -49,7 +53,8 @@ fun MainScreen() {
                     .padding(bottom = 16.dp)
                     .align(Alignment.CenterHorizontally),
                 text = context.getString(R.string.app_name),
-                style = MaterialTheme.typography.titleLarge)
+                style = MaterialTheme.typography.titleLarge
+            )
             AbilityItem(
                 Ability.TTS, listOf(
                     ServiceProvider.ALIBABA,
@@ -79,7 +84,9 @@ fun MainScreen() {
         }
 
         Button(
-            onClick = { /* Handle OK click */ },
+            onClick = {
+                onNavigateToVoiceScreen()
+            },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
