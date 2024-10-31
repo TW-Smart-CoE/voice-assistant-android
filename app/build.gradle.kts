@@ -40,6 +40,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":baidu-kit"))
+    implementation(project(":alibaba-kit"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
