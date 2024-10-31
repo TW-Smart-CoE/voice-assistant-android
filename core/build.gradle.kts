@@ -1,11 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("maven-publish")
 }
 
 android {
-    namespace = "com.thoughtworks.voiceassistant.baidukit"
+    namespace = "com.thoughtworks.voiceassistant.core"
     compileSdk = 34
 
     defaultConfig {
@@ -33,23 +32,8 @@ android {
     }
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "com.thoughtworks.voiceassistant"
-            artifactId = "baidu-kit"
-            version = "0.1.0"
-
-            afterEvaluate {
-                from(components["release"])
-            }
-        }
-    }
-}
-
 dependencies {
 
-    implementation(project(":core"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)

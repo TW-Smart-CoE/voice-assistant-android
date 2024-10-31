@@ -26,3 +26,4 @@ rootProject.name = "voice-assistant-android"
 include(":app")
 include(":alibaba-kit")
 include(":baidu-kit")
+include(":core")
