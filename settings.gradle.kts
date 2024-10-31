@@ -24,5 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "voice-assistant-android"
 include(":app")
-include(":alibaba")
-include(":baidu")
+include(":alibaba-kit")
+include(":baidu-kit")
