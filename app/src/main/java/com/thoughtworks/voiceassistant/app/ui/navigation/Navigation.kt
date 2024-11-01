@@ -4,26 +4,22 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.thoughtworks.voiceassistant.app.di.Dependency
-import com.thoughtworks.voiceassistant.app.ui.views.MainScreen
-import com.thoughtworks.voiceassistant.app.ui.views.VoiceScreen
+import com.thoughtworks.voiceassistant.app.ui.views.abilityconfig.AbilityConfigScreen
+import com.thoughtworks.voiceassistant.app.ui.views.voice.VoiceInteractionScreen
+import com.thoughtworks.voiceassistant.app.utils.navigator.NavigatorImpl
 
 @Composable
 fun Navigation(dependency: Dependency) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.Main) {
-        composable<Screen.Main> {
-            MainScreen(
-                dependency,
-                onNavigateToVoiceScreen = {
-                    navController.navigate(Screen.Voice("Hello, world!"))
-                }
-            )
+    dependency.setNavigator(NavigatorImpl(navController))
+
+    NavHost(navController = navController, startDestination = Screen.AbilityConfig) {
+        composable<Screen.AbilityConfig> {
+            AbilityConfigScreen(dependency)
         }
-        composable<Screen.Voice> { backStackEntry ->
-            val voice: Screen.Voice = backStackEntry.toRoute()
-            VoiceScreen(dependency, voice)
+        composable<Screen.VoiceInteraction> {
+            VoiceInteractionScreen(dependency)
         }
     }
 }

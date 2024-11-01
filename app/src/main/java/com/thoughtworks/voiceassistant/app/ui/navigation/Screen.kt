@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 sealed interface Screen {
     @Serializable
-    data object Main : Screen
+    data object AbilityConfig : Screen
 
     @Serializable
-    data class Voice(val text: String) : Screen
+    data object VoiceInteraction : Screen
 }
 

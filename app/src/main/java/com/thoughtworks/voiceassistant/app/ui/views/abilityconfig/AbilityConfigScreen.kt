@@ -1,4 +1,4 @@
-package com.thoughtworks.voiceassistant.app.ui.views
+package com.thoughtworks.voiceassistant.app.ui.views.abilityconfig
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,14 +11,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.thoughtworks.voiceassistant.app.R
 import com.thoughtworks.voiceassistant.app.definitions.Ability
 import com.thoughtworks.voiceassistant.app.definitions.ServiceProvider
@@ -26,16 +25,14 @@ import com.thoughtworks.voiceassistant.app.di.Dependency
 import com.thoughtworks.voiceassistant.app.ui.components.AbilityItem
 
 @Composable
-fun MainScreen(
+fun AbilityConfigScreen(
     dependency: Dependency,
-    onNavigateToVoiceScreen: () -> Unit
 ) {
-    val context = LocalContext.current
+    val factory = remember { AbilityConfigViewModelFactory(dependency) }
+    val viewModel: AbilityConfigViewModel = viewModel(factory = factory)
+    val state = viewModel.uiState.collectAsState()
 
-    var ttsProvider by remember { mutableStateOf(ServiceProvider.ALIBABA) }
-    var asrProvider by remember { mutableStateOf(ServiceProvider.ALIBABA) }
-    var wakeUpProvider by remember { mutableStateOf(ServiceProvider.BAIDU) }
-    var chatProvider by remember { mutableStateOf(ServiceProvider.OPENAI) }
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -55,37 +52,16 @@ fun MainScreen(
                 text = context.getString(R.string.app_name),
                 style = MaterialTheme.typography.titleLarge
             )
-            AbilityItem(
-                Ability.TTS, listOf(
-                    ServiceProvider.ALIBABA,
-                    ServiceProvider.GOOGLE,
-                ), ttsProvider
-            ) { ttsProvider = it }
-            AbilityItem(
-                Ability.ASR, listOf(
-                    ServiceProvider.BAIDU,
-                    ServiceProvider.IFLYTEK,
-                ), asrProvider
-            ) { asrProvider = it }
-            AbilityItem(
-                Ability.WAKE_UP, listOf(
-                    ServiceProvider.BAIDU,
-                    ServiceProvider.IFLYTEK,
-                ), wakeUpProvider
-            ) { wakeUpProvider = it }
-            AbilityItem(
-                Ability.CHAT, listOf(
-                    ServiceProvider.BAIDU,
-                    ServiceProvider.OPENAI,
-                ), chatProvider
-            ) { chatProvider = it }
-
+            AbilityList(
+                state.value,
+                viewModel::sendAction,
+            )
             Spacer(modifier = Modifier.weight(1f))
         }
 
         Button(
             onClick = {
-                onNavigateToVoiceScreen()
+                viewModel.sendAction(AbilityConfigAction.ClickOk)
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -94,4 +70,31 @@ fun MainScreen(
             Text("OK")
         }
     }
+}
+
+@Composable
+private fun AbilityList(
+    state: AbilityConfigState,
+    sendAction: (AbilityConfigAction) -> Unit,
+) {
+    AbilityItem(
+        Ability.TTS,
+        state.ttsProviderList,
+        ServiceProvider.valueOf(state.abilityDataCollection.tts.provider),
+    ) { sendAction(AbilityConfigAction.SelectTtsProvider(it)) }
+    AbilityItem(
+        Ability.ASR,
+        state.asrProviderList,
+        ServiceProvider.valueOf(state.abilityDataCollection.asr.provider),
+    ) { sendAction(AbilityConfigAction.SelectAsrProvider(it)) }
+    AbilityItem(
+        Ability.WAKE_UP,
+        state.wakeUpProviderList,
+        ServiceProvider.valueOf(state.abilityDataCollection.wakeUp.provider),
+    ) { sendAction(AbilityConfigAction.SelectWakeUpProvider(it)) }
+    AbilityItem(
+        Ability.CHAT,
+        state.chatProviderList,
+        ServiceProvider.valueOf(state.abilityDataCollection.chat.provider),
+    ) { sendAction(AbilityConfigAction.SelectChatProvider(it)) }
 }
