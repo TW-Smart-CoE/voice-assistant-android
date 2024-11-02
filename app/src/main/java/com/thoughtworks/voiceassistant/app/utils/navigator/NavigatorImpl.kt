@@ -5,6 +5,6 @@ import com.thoughtworks.voiceassistant.app.ui.navigation.Screen
 
 class NavigatorImpl(private val navController: NavController) : Navigator {
     override fun navigateToVoiceScreen() {
-        navController.navigate(Screen.VoiceInteraction)
+        navController.navigate(Screen.VoiceInteractionScreen.route)
     }
 }

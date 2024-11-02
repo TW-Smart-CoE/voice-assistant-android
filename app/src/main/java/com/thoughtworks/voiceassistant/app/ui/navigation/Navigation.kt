@@ -14,11 +14,11 @@ fun Navigation(dependency: Dependency) {
     val navController = rememberNavController()
     dependency.setNavigator(NavigatorImpl(navController))
 
-    NavHost(navController = navController, startDestination = Screen.AbilityConfig) {
-        composable<Screen.AbilityConfig> {
+    NavHost(navController = navController, startDestination = Screen.AbilityConfigScreen.route) {
+        composable(route = Screen.AbilityConfigScreen.route) {
             AbilityConfigScreen(dependency)
         }
-        composable<Screen.VoiceInteraction> {
+        composable(route = Screen.VoiceInteractionScreen.route) {
             VoiceInteractionScreen(dependency)
         }
     }

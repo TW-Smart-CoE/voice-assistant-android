@@ -1,12 +1,16 @@
 package com.thoughtworks.voiceassistant.app.ui.navigation
 
-import kotlinx.serialization.Serializable
+sealed class Screen(val route: String) {
+    data object AbilityConfigScreen : Screen("ability_config_screen")
+    data object VoiceInteractionScreen : Screen("voice_interaction_screen")
 
-sealed interface Screen {
-    @Serializable
-    data object AbilityConfig : Screen
-
-    @Serializable
-    data object VoiceInteraction : Screen
+    fun routeWithArgs(vararg args: String): String {
+        return buildString {
+            append(route)
+            args.forEach { arg ->
+                append("/$arg")
+            }
+        }
+    }
 }
 
