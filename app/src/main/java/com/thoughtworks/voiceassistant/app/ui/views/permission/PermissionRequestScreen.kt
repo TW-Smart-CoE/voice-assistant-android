@@ -79,7 +79,8 @@ fun PermissionRequestScreen(
                 } else {
                     Text("Denied Permissions:")
                     deniedPermissions.forEach { permission ->
-                        Text("- $permission")
+                        val displayPermission = permission.replace("android.permission.", "")
+                        Text(displayPermission)
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))

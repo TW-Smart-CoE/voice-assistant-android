@@ -22,7 +22,7 @@ fun Navigation(dependency: Dependency) {
                     android.Manifest.permission.RECORD_AUDIO,
                 ),
                 onAllPermissionsGranted = {
-                    navController.navigate(Screen.AbilityConfigScreen.route)
+                    dependency.navigator.navigateToAbilityConfigScreen()
                 }
             )
         }
