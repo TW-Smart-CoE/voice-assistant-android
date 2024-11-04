@@ -25,17 +25,16 @@ class LocalStorageImpl(
         sharedPreferenceUtil.setString(KEY_ABILITY_DATA_COLLECTION, abilityDataCollectionJson)
     }
 
-    override fun loadTtsPrompt(): String {
-        return sharedPreferenceUtil.getString(KEY_TTS_PROMPT)
-            ?: context.getString(R.string.tts_prompt)
+    override fun loadTtsInput(): String {
+        return sharedPreferenceUtil.getString(KEY_TTS_INPUT) ?: context.getString(R.string.tts_input)
     }
 
-    override fun saveTtsPrompt(ttsPrompt: String) {
-        sharedPreferenceUtil.setString(KEY_TTS_PROMPT, ttsPrompt)
+    override fun saveTtsInput(ttsInput: String) {
+        sharedPreferenceUtil.setString(KEY_TTS_INPUT, ttsInput)
     }
 
     companion object {
         private const val KEY_ABILITY_DATA_COLLECTION = "ability_data_collection"
-        private const val KEY_TTS_PROMPT = "tts_prompt"
+        private const val KEY_TTS_INPUT = "tts_input"
     }
 }

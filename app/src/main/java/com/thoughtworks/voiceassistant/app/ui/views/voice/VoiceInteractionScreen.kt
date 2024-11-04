@@ -96,14 +96,14 @@ fun WakeUpCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.wakeUpStarted,
+                    enabled = !state.wakeUp.started,
                     onClick = { sendAction(VoiceInteractionAction.WakeUpStart) }
                 ) {
                     Text(context.getString(R.string.start_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.wakeUpStarted,
+                    enabled = state.wakeUp.started,
                     onClick = { sendAction(VoiceInteractionAction.WakeUpStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
@@ -130,14 +130,14 @@ fun AsrCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.asrStarted,
+                    enabled = !state.asr.started,
                     onClick = { sendAction(VoiceInteractionAction.AsrStart) }
                 ) {
                     Text(context.getString(R.string.start_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.asrStarted,
+                    enabled = state.asr.started,
                     onClick = { sendAction(VoiceInteractionAction.AsrStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
@@ -159,7 +159,7 @@ fun TtsCard(
             Text(Ability.TTS.displayName, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             BasicTextField(
-                value = state.ttsPrompt,
+                value = state.tts.input,
                 onValueChange = { sendAction(VoiceInteractionAction.ChangeTtsPrompt(it)) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -179,14 +179,14 @@ fun TtsCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.ttsPlaying,
+                    enabled = !state.tts.playing,
                     onClick = { sendAction(VoiceInteractionAction.TtsPlay) }
                 ) {
                     Text(context.getString(R.string.play_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.ttsPlaying,
+                    enabled = state.tts.playing,
                     onClick = { sendAction(VoiceInteractionAction.TtsStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
@@ -208,7 +208,7 @@ fun ChatCard(
             Text(Ability.CHAT.displayName, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             BasicTextField(
-                value = state.chatInput,
+                value = state.chat.input,
                 onValueChange = { sendAction(VoiceInteractionAction.ChangeChatInput(it)) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -228,7 +228,7 @@ fun ChatCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.chatStarted,
+                    enabled = !state.chat.started,
                     onClick = { sendAction(VoiceInteractionAction.ChatStart) }
                 ) {
                     Text(context.getString(R.string.chat_btn))

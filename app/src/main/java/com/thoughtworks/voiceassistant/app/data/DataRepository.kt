@@ -30,12 +30,12 @@ class DataRepository(
         localStorage.saveAbilityDataCollection(abilityDataCollection)
     }
 
-    override fun loadTtsPrompt(): String {
-        return localStorage.loadTtsPrompt()
+    override fun loadTtsInput(): String {
+        return localStorage.loadTtsInput()
     }
 
-    override fun saveTtsPrompt(ttsPrompt: String) {
-        localStorage.saveTtsPrompt(ttsPrompt)
+    override fun saveTtsInput(ttsInput: String) {
+        localStorage.saveTtsInput(ttsInput)
     }
 
     private fun getTtsServiceProviderList(): List<ServiceProvider> {

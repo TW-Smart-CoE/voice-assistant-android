@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">voice-assistant-android</string>
-    <string name="start_btn">start</string>
-    <string name="stop_btn">stop</string>
-    <string name="play_btn">play</string>
-    <string name="clear_history_btn">clear history</string>
-    <string name="chat_btn">chat</string>
-    <string name="ok_btn">OK</string>
-    <string name="request_permission_screen_title">Permission Request</string>
-    <string name="denied_permissions_title">Denied Permissions:</string>
-    <string name="all_permission_granted">All permissions granted!</string>
-    <string name="request_permission_btn">Request Permissions</string>
-    <string name="tts_prompt">hello, I am smart assistance</string>
+    <string name="app_name" translatable="false">voice-assistant-android</string>
+    <string name="start_btn" translatable="false">start</string>
+    <string name="stop_btn" translatable="false">stop</string>
+    <string name="play_btn" translatable="false">play</string>
+    <string name="clear_history_btn" translatable="false">clear history</string>
+    <string name="chat_btn" translatable="false">chat</string>
+    <string name="ok_btn" translatable="false">OK</string>
+    <string name="request_permission_screen_title" translatable="false">Permission Request</string>
+    <string name="denied_permissions_title" translatable="false">Denied Permissions:</string>
+    <string name="all_permission_granted" translatable="false">All permissions granted!</string>
+    <string name="request_permission_btn" translatable="false">Request Permissions</string>
+    <string name="tts_input">hello, I am smart assistance</string>
 </resources>
