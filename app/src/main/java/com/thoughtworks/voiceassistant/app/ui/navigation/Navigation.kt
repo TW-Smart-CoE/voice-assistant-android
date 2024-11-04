@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.thoughtworks.voiceassistant.app.di.Dependency
 import com.thoughtworks.voiceassistant.app.ui.views.abilityconfig.AbilityConfigScreen
+import com.thoughtworks.voiceassistant.app.ui.views.permission.PermissionRequestScreen
 import com.thoughtworks.voiceassistant.app.ui.views.voice.VoiceInteractionScreen
 import com.thoughtworks.voiceassistant.app.utils.navigator.NavigatorImpl
 
@@ -14,7 +15,17 @@ fun Navigation(dependency: Dependency) {
     val navController = rememberNavController()
     dependency.setNavigator(NavigatorImpl(navController))
 
-    NavHost(navController = navController, startDestination = Screen.AbilityConfigScreen.route) {
+    NavHost(navController = navController, startDestination = Screen.PermissionScreen.route) {
+        composable(route = Screen.PermissionScreen.route) {
+            PermissionRequestScreen(
+                requiredPermissions = arrayOf(
+                    android.Manifest.permission.RECORD_AUDIO,
+                ),
+                onAllPermissionsGranted = {
+                    navController.navigate(Screen.AbilityConfigScreen.route)
+                }
+            )
+        }
         composable(route = Screen.AbilityConfigScreen.route) {
             AbilityConfigScreen(dependency)
         }
