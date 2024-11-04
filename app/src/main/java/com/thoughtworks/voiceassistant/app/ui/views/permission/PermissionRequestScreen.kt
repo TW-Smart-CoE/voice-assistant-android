@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.thoughtworks.voiceassistant.app.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,19 +66,19 @@ fun PermissionRequestScreen(
     // UI
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Permission Request") })
+            TopAppBar(title = { Text(context.getString(R.string.request_permission_screen_title)) })
         },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
-                    .padding(top = 84.dp)
+                    .padding(paddingValues)
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
                 if (deniedPermissions.isEmpty()) {
-                    Text("All permissions granted!")
+                    Text(context.getString(R.string.all_permission_granted))
                 } else {
-                    Text("Denied Permissions:")
+                    Text(context.getString(R.string.denied_permissions_title))
                     deniedPermissions.forEach { permission ->
                         val displayPermission = permission.replace("android.permission.", "")
                         Text(displayPermission)
@@ -88,7 +89,7 @@ fun PermissionRequestScreen(
                     Button(onClick = {
                         permissionLauncher.launch(deniedPermissions.toTypedArray())
                     }) {
-                        Text("Request Permissions")
+                        Text(context.getString(R.string.request_permission_btn))
                     }
                 }
             }

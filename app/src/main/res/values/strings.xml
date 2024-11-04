@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">voice-assistant-android</string>
+    <string name="start_btn">start</string>
+    <string name="stop_btn">stop</string>
+    <string name="play_btn">play</string>
+    <string name="clear_history_btn">clear history</string>
+    <string name="chat_btn">chat</string>
+    <string name="ok_btn">OK</string>
+    <string name="request_permission_screen_title">Permission Request</string>
+    <string name="denied_permissions_title">Denied Permissions:</string>
+    <string name="all_permission_granted">All permissions granted!</string>
+    <string name="request_permission_btn">Request Permissions</string>
+    <string name="tts_prompt">hello, I am smart assistance</string>
 </resources>

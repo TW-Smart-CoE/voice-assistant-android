@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -24,6 +27,7 @@ import com.thoughtworks.voiceassistant.app.definitions.ServiceProvider
 import com.thoughtworks.voiceassistant.app.di.Dependency
 import com.thoughtworks.voiceassistant.app.ui.components.AbilityItem
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AbilityConfigScreen(
     dependency: Dependency,
@@ -34,42 +38,50 @@ fun AbilityConfigScreen(
 
     val context = LocalContext.current
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = context.getString(R.string.app_name),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+            )
+        },
+        content = { paddingValues ->
+            Box(
                 modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .align(Alignment.CenterHorizontally),
-                text = context.getString(R.string.app_name),
-                style = MaterialTheme.typography.titleLarge
-            )
-            AbilityList(
-                state.value,
-                viewModel::sendAction,
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
+                    .padding(paddingValues)
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 32.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    AbilityList(
+                        state.value,
+                        viewModel::sendAction,
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
 
-        Button(
-            onClick = {
-                viewModel.sendAction(AbilityConfigAction.ClickOk)
-            },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-        ) {
-            Text("OK")
+                Button(
+                    onClick = {
+                        viewModel.sendAction(AbilityConfigAction.ClickOk)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                ) {
+                    Text(context.getString(R.string.ok_btn))
+                }
+            }
         }
-    }
+    )
 }
 
 @Composable
