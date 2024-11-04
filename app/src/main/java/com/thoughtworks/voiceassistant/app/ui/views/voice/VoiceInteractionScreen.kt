@@ -1,5 +1,6 @@
 package com.thoughtworks.voiceassistant.app.ui.views.voice
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,15 +23,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.thoughtworks.voiceassistant.app.R
 import com.thoughtworks.voiceassistant.app.definitions.Ability
 import com.thoughtworks.voiceassistant.app.di.Dependency
@@ -38,14 +38,22 @@ import com.thoughtworks.voiceassistant.app.di.Dependency
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VoiceInteractionScreen(dependency: Dependency) {
+    val factory = remember { VoiceInteractionViewModelFactory(dependency) }
+    val viewModel: VoiceInteractionViewModel = viewModel(factory = factory)
+    val state = viewModel.uiState.collectAsState()
+
     val context = LocalContext.current
+
+    BackHandler {
+        viewModel.sendAction(VoiceInteractionAction.NavigateBack)
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(context.getString(R.string.app_name)) },
                 navigationIcon = {
-                    IconButton(onClick = { dependency.navigator.navigateBack() }) {
+                    IconButton(onClick = { viewModel.sendAction(VoiceInteractionAction.NavigateBack) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_back_24_black),
                             contentDescription = "Back"
@@ -62,17 +70,20 @@ fun VoiceInteractionScreen(dependency: Dependency) {
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                item { WakeUpCard() }
-                item { AsrCard() }
-                item { TtsCard() }
-                item { ChatCard() }
+                item { WakeUpCard(state.value, viewModel::sendAction) }
+                item { AsrCard(state.value, viewModel::sendAction) }
+                item { TtsCard(state.value, viewModel::sendAction) }
+                item { ChatCard(state.value, viewModel::sendAction) }
             }
         }
     )
 }
 
 @Composable
-fun WakeUpCard() {
+fun WakeUpCard(
+    state: VoiceInteractionState,
+    sendAction: (VoiceInteractionAction) -> Unit,
+) {
     val context = LocalContext.current
 
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -85,13 +96,15 @@ fun WakeUpCard() {
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* TODO: Start Wakeup */ }
+                    enabled = !state.wakeUpStarted,
+                    onClick = { sendAction(VoiceInteractionAction.WakeUpStart) }
                 ) {
                     Text(context.getString(R.string.start_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* TODO: Stop Wakeup */ }
+                    enabled = state.wakeUpStarted,
+                    onClick = { sendAction(VoiceInteractionAction.WakeUpStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
                 }
@@ -101,7 +114,10 @@ fun WakeUpCard() {
 }
 
 @Composable
-fun AsrCard() {
+fun AsrCard(
+    state: VoiceInteractionState,
+    sendAction: (VoiceInteractionAction) -> Unit,
+) {
     val context = LocalContext.current
 
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -114,13 +130,15 @@ fun AsrCard() {
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* TODO: Start Listening */ }
+                    enabled = !state.asrStarted,
+                    onClick = { sendAction(VoiceInteractionAction.AsrStart) }
                 ) {
                     Text(context.getString(R.string.start_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* TODO: Stop Listening */ }
+                    enabled = state.asrStarted,
+                    onClick = { sendAction(VoiceInteractionAction.AsrStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
                 }
@@ -130,17 +148,19 @@ fun AsrCard() {
 }
 
 @Composable
-fun TtsCard() {
+fun TtsCard(
+    state: VoiceInteractionState,
+    sendAction: (VoiceInteractionAction) -> Unit,
+) {
     val context = LocalContext.current
-    var text by remember { mutableStateOf(context.getString(R.string.tts_prompt)) }
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(Ability.TTS.displayName, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             BasicTextField(
-                value = text,
-                onValueChange = { text = it },
+                value = state.ttsPrompt,
+                onValueChange = { sendAction(VoiceInteractionAction.ChangeTtsPrompt(it)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
@@ -159,13 +179,15 @@ fun TtsCard() {
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* TODO: Play TTS */ }
+                    enabled = !state.ttsPlaying,
+                    onClick = { sendAction(VoiceInteractionAction.TtsPlay) }
                 ) {
                     Text(context.getString(R.string.play_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* TODO: Stop Play */ }
+                    enabled = state.ttsPlaying,
+                    onClick = { sendAction(VoiceInteractionAction.TtsStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
                 }
@@ -175,17 +197,19 @@ fun TtsCard() {
 }
 
 @Composable
-fun ChatCard() {
+fun ChatCard(
+    state: VoiceInteractionState,
+    sendAction: (VoiceInteractionAction) -> Unit,
+) {
     val context = LocalContext.current
-    var chatInput by remember { mutableStateOf("") }
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(Ability.CHAT.displayName, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             BasicTextField(
-                value = chatInput,
-                onValueChange = { chatInput = it },
+                value = state.chatInput,
+                onValueChange = { sendAction(VoiceInteractionAction.ChangeChatInput(it)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
@@ -204,13 +228,14 @@ fun ChatCard() {
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* TODO: Chat */ }
+                    enabled = !state.chatStarted,
+                    onClick = { sendAction(VoiceInteractionAction.ChatStart) }
                 ) {
                     Text(context.getString(R.string.chat_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* TODO: Clear Chat History */ }
+                    onClick = { sendAction(VoiceInteractionAction.ChatClearHistory) }
                 ) {
                     Text(context.getString(R.string.clear_history_btn))
                 }

@@ -8,4 +8,6 @@ interface DataSource {
     fun getAbilityServiceProviderList(ability: Ability): List<ServiceProvider>
     fun loadAbilityDataCollection(): AbilityDataCollection?
     fun saveAbilityDataCollection(abilityDataCollection: AbilityDataCollection)
+    fun loadTtsPrompt(): String
+    fun saveTtsPrompt(ttsPrompt: String)
 }

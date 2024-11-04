@@ -30,6 +30,14 @@ class DataRepository(
         localStorage.saveAbilityDataCollection(abilityDataCollection)
     }
 
+    override fun loadTtsPrompt(): String {
+        return localStorage.loadTtsPrompt()
+    }
+
+    override fun saveTtsPrompt(ttsPrompt: String) {
+        localStorage.saveTtsPrompt(ttsPrompt)
+    }
+
     private fun getTtsServiceProviderList(): List<ServiceProvider> {
         return listOf(ServiceProvider.ALIBABA, ServiceProvider.BAIDU)
     }

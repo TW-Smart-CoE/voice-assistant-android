@@ -6,14 +6,6 @@ import com.thoughtworks.voiceassistant.app.foundation.mvi.model.Action
 import com.thoughtworks.voiceassistant.app.foundation.mvi.model.Event
 import com.thoughtworks.voiceassistant.app.foundation.mvi.model.State
 
-sealed interface AbilityConfigAction : Action {
-    data class SelectTtsProvider(val provider: ServiceProvider) : AbilityConfigAction
-    data class SelectAsrProvider(val provider: ServiceProvider) : AbilityConfigAction
-    data class SelectWakeUpProvider(val provider: ServiceProvider) : AbilityConfigAction
-    data class SelectChatProvider(val provider: ServiceProvider) : AbilityConfigAction
-    data object ClickOk : AbilityConfigAction
-}
-
 data class AbilityConfigState(
     val abilityDataCollection: AbilityDataCollection,
     val ttsProviderList: List<ServiceProvider> = emptyList(),
@@ -23,3 +15,11 @@ data class AbilityConfigState(
 ) : State
 
 sealed class AbilityConfigEvent : Event
+
+sealed interface AbilityConfigAction : Action {
+    data class SelectTtsProvider(val provider: ServiceProvider) : AbilityConfigAction
+    data class SelectAsrProvider(val provider: ServiceProvider) : AbilityConfigAction
+    data class SelectWakeUpProvider(val provider: ServiceProvider) : AbilityConfigAction
+    data class SelectChatProvider(val provider: ServiceProvider) : AbilityConfigAction
+    data object ClickOk : AbilityConfigAction
+}

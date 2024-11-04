@@ -2,7 +2,6 @@ package com.thoughtworks.voiceassistant.app.ui.views.abilityconfig
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.thoughtworks.voiceassistant.app.data.models.AbilityData
 import com.thoughtworks.voiceassistant.app.data.models.AbilityDataCollection
 import com.thoughtworks.voiceassistant.app.definitions.Ability
@@ -14,28 +13,29 @@ import com.thoughtworks.voiceassistant.app.foundation.mvi.Store
 import kotlinx.coroutines.launch
 
 
-interface IAbilityConfigViewModel :
-    Store<AbilityConfigState, AbilityConfigEvent, AbilityConfigAction>
-
 class AbilityConfigViewModel(
     dependency: Dependency,
     store: Store<AbilityConfigState, AbilityConfigEvent, AbilityConfigAction> =
         DefaultStore(
             initialState = AbilityConfigState(
                 abilityDataCollection = AbilityDataCollection(
-                    AbilityData(Ability.TTS.name,
+                    AbilityData(
+                        Ability.TTS.name,
                         dependency.dataSource.getAbilityServiceProviderList(Ability.TTS)
                             .first().name
                     ),
-                    AbilityData(Ability.ASR.name,
+                    AbilityData(
+                        Ability.ASR.name,
                         dependency.dataSource.getAbilityServiceProviderList(Ability.ASR)
                             .first().name
                     ),
-                    AbilityData(Ability.WAKE_UP.name,
+                    AbilityData(
+                        Ability.WAKE_UP.name,
                         dependency.dataSource.getAbilityServiceProviderList(Ability.WAKE_UP)
                             .first().name
                     ),
-                    AbilityData(Ability.CHAT.name,
+                    AbilityData(
+                        Ability.CHAT.name,
                         dependency.dataSource.getAbilityServiceProviderList(Ability.CHAT)
                             .first().name
                     ),
@@ -46,8 +46,7 @@ class AbilityConfigViewModel(
                 chatProviderList = dependency.dataSource.getAbilityServiceProviderList(Ability.CHAT),
             )
         ),
-) : MVIViewModel<AbilityConfigState, AbilityConfigEvent, AbilityConfigAction>(store),
-    IAbilityConfigViewModel {
+) : MVIViewModel<AbilityConfigState, AbilityConfigEvent, AbilityConfigAction>(store) {
 
     private val navigator = dependency.navigator
     private val dataSource = dependency.dataSource
@@ -111,14 +110,14 @@ class AbilityConfigViewModel(
     }
 
     private fun saveAndNavigateToVoiceScreen(abilityDataCollection: AbilityDataCollection) {
-        viewModelScope.launch {
+        scope.launch {
             dataSource.saveAbilityDataCollection(abilityDataCollection)
             navigator.navigateToVoiceScreen()
         }
     }
 
     private fun loadAbilityDataCollection() {
-        viewModelScope.launch {
+        scope.launch {
             val abilityDataCollection = dataSource.loadAbilityDataCollection()
             abilityDataCollection?.let {
                 sendAction(AbilityConfigAction.SelectTtsProvider(ServiceProvider.valueOf(it.tts.provider)))
