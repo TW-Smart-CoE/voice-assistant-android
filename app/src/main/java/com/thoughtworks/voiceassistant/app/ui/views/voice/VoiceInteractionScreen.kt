@@ -79,11 +79,20 @@ fun WakeUpCard() {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(Ability.WAKE_UP.displayName, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { /* TODO: Start Wakeup */ }) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /* TODO: Start Wakeup */ }
+                ) {
                     Text(context.getString(R.string.start_btn))
                 }
-                Button(onClick = { /* TODO: Stop Wakeup */ }) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /* TODO: Stop Wakeup */ }
+                ) {
                     Text(context.getString(R.string.stop_btn))
                 }
             }
@@ -99,11 +108,20 @@ fun AsrCard() {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(Ability.ASR.displayName, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { /* TODO: Start Listening */ }) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /* TODO: Start Listening */ }
+                ) {
                     Text(context.getString(R.string.start_btn))
                 }
-                Button(onClick = { /* TODO: Stop Listening */ }) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /* TODO: Stop Listening */ }
+                ) {
                     Text(context.getString(R.string.stop_btn))
                 }
             }
@@ -135,11 +153,20 @@ fun TtsCard() {
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { /* TODO: Play TTS */ }) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /* TODO: Play TTS */ }
+                ) {
                     Text(context.getString(R.string.play_btn))
                 }
-                Button(onClick = { /* TODO: Stop Play */ }) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /* TODO: Stop Play */ }
+                ) {
                     Text(context.getString(R.string.stop_btn))
                 }
             }
@@ -171,12 +198,21 @@ fun ChatCard() {
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { /* TODO: Clear Chat History */ }) {
-                    Text(context.getString(R.string.clear_history_btn))
-                }
-                Button(onClick = { /* TODO: Chat */ }) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /* TODO: Chat */ }
+                ) {
                     Text(context.getString(R.string.chat_btn))
+                }
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /* TODO: Clear Chat History */ }
+                ) {
+                    Text(context.getString(R.string.clear_history_btn))
                 }
             }
         }
