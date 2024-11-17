@@ -88,7 +88,7 @@ fun WakeUpCard(
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(Ability.WAKE_UP.displayName, style = MaterialTheme.typography.titleMedium)
+            Text(state.wakeUp.title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -122,7 +122,7 @@ fun AsrCard(
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(Ability.ASR.displayName, style = MaterialTheme.typography.titleMedium)
+            Text(state.asr.title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -156,7 +156,7 @@ fun TtsCard(
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(Ability.TTS.displayName, style = MaterialTheme.typography.titleMedium)
+            Text(state.tts.title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             BasicTextField(
                 value = state.tts.input,
@@ -205,7 +205,7 @@ fun ChatCard(
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(Ability.CHAT.displayName, style = MaterialTheme.typography.titleMedium)
+            Text(state.chat.title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             BasicTextField(
                 value = state.chat.input,

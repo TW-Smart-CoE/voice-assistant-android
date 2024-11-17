@@ -48,8 +48,12 @@ publishing {
 }
 
 dependencies {
-
     implementation(project(":core"))
+
+    implementation(libs.nuisdk)
+    implementation(libs.alibaba.fastjson)
+    implementation(libs.okhttp)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)

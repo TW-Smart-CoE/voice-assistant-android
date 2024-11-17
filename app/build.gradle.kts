@@ -1,8 +1,31 @@
+import com.android.build.api.dsl.DefaultConfig
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
+}
+
+fun loadLocalProperties(): Properties {
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { stream ->
+            properties.load(stream)
+        }
+    }
+    return properties
+}
+
+fun DefaultConfig.addBuildConfigFieldFromProperties(
+    properties: Properties,
+    key: String,
+    defaultValue: String = "",
+) {
+    val value = properties.getProperty(key) ?: defaultValue
+    buildConfigField("String", key, "\"$value\"")
 }
 
 android {
@@ -17,6 +40,17 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = loadLocalProperties()
+        addBuildConfigFieldFromProperties(localProperties, "ALI_IVS_ACCESS_KEY")
+        addBuildConfigFieldFromProperties(localProperties, "ALI_IVS_ACCESS_KEY_SECRET")
+        addBuildConfigFieldFromProperties(localProperties, "ALI_IVS_APP_KEY")
+    }
+
+    sourceSets {
+        named("main") {
+            jniLibs.srcDirs("libs/iflytek")
+        }
     }
 
     buildTypes {
@@ -37,6 +71,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

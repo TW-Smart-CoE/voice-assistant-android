@@ -1,14 +1,14 @@
 package com.thoughtworks.voiceassistant.baidukit.abilities.wakeup
 
-import com.thoughtworks.voiceassistant.core.WakeUp
-import com.thoughtworks.voiceassistant.core.WakeUpCallback
+import com.thoughtworks.voiceassistant.core.abilities.WakeUp
+import com.thoughtworks.voiceassistant.core.abilities.WakeUpCallback
 
 class BaiduWakeUp : WakeUp {
     override fun initialize() {
         TODO("Not yet implemented")
     }
 
-    override suspend fun start(wakeUpCallback: WakeUpCallback?): Int {
+    override fun start(wakeUpCallback: WakeUpCallback?) {
         TODO("Not yet implemented")
     }
 

@@ -48,8 +48,12 @@ publishing {
 }
 
 dependencies {
-
+    implementation(fileTree("libs") {
+        include("*.jar")
+    })
     implementation(project(":core"))
+    implementation(libs.gson)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)

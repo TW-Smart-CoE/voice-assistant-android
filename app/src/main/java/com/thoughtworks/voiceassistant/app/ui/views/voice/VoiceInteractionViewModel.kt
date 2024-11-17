@@ -1,16 +1,19 @@
 package com.thoughtworks.voiceassistant.app.ui.views.voice
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.thoughtworks.voiceassistant.app.data.models.AbilityDataCollection
+import com.thoughtworks.voiceassistant.app.definitions.Ability
 import com.thoughtworks.voiceassistant.app.di.Dependency
 import com.thoughtworks.voiceassistant.app.foundation.mvi.DefaultStore
 import com.thoughtworks.voiceassistant.app.foundation.mvi.MVIViewModel
 import com.thoughtworks.voiceassistant.app.foundation.mvi.Store
-import com.thoughtworks.voiceassistant.core.Asr
-import com.thoughtworks.voiceassistant.core.Chat
-import com.thoughtworks.voiceassistant.core.Tts
-import com.thoughtworks.voiceassistant.core.WakeUp
+import com.thoughtworks.voiceassistant.app.utils.voice.VoiceManager
+import com.thoughtworks.voiceassistant.core.abilities.Tts
+import kotlinx.coroutines.launch
 
 class VoiceInteractionViewModel(
     dependency: Dependency,
@@ -22,22 +25,22 @@ class VoiceInteractionViewModel(
         )
     ),
 ) : MVIViewModel<VoiceInteractionState, VoiceInteractionEvent, VoiceInteractionAction>(store) {
-
     private val navigator = dependency.navigator
     private val dataSource = dependency.dataSource
 
     private lateinit var abilityCollection: AbilityDataCollection
-    private lateinit var wakeUp: WakeUp
-    private lateinit var asr: Asr
-    private lateinit var tts: Tts
-    private lateinit var chat: Chat
+    private lateinit var voiceManager: VoiceManager
 
     init {
-        initAbilities()
+        initAbilities(dependency.context)
+        viewModelScope.launch {
+            voiceManager.initialize()
+        }
     }
 
-    private fun initAbilities() {
+    private fun initAbilities(context: Context) {
         abilityCollection = dataSource.loadAbilityDataCollection()!!
+        voiceManager = VoiceManager(context, abilityCollection)
         sendAction(VoiceInteractionAction.UpdateAbilityDataCollection(abilityCollection))
     }
 
@@ -46,6 +49,29 @@ class VoiceInteractionViewModel(
         action: VoiceInteractionAction,
     ): VoiceInteractionState {
         return when (action) {
+            is VoiceInteractionAction.UpdateAbilityDataCollection -> {
+                currentState.copy(
+                    wakeUp = WakeUpState(
+                        title = "${Ability.WAKE_UP.displayName}: ${abilityCollection.wakeUp.provider}",
+                        started = false
+                    ),
+                    asr = AsrState(
+                        title = "${Ability.ASR.displayName}: ${abilityCollection.asr.provider}",
+                        started = false
+                    ),
+                    tts = currentState.tts.copy(
+                        title = "${Ability.TTS.displayName}: ${abilityCollection.tts.provider}",
+                        playing = false,
+                        input = currentState.tts.input
+
+                    ),
+                    chat = ChatState(
+                        title = "${Ability.CHAT.displayName}: ${abilityCollection.chat.provider}",
+                        started = false
+                    )
+                )
+            }
+
             is VoiceInteractionAction.ChangeTtsPrompt -> {
                 currentState.copy(
                     tts = currentState.tts.copy(
@@ -136,10 +162,25 @@ class VoiceInteractionViewModel(
 
             is VoiceInteractionAction.TtsPlay -> {
                 dataSource.saveTtsInput(currentState.tts.input)
+                playTts(currentState.tts.input)
+            }
+
+            is VoiceInteractionAction.TtsStop -> {
+                voiceManager.tts.stopPlay()
             }
 
             else -> {
             }
+        }
+    }
+
+    private fun playTts(text: String) {
+        viewModelScope.launch {
+            voiceManager.tts.play(text, emptyMap(), object : Tts.Listener {
+                override fun onTTSFileSaved(ttsFilePath: String) {
+                    Log.d("VoiceInteractionViewModel", "TTS file saved: $ttsFilePath")
+                }
+            })
         }
     }
 }
