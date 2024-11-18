@@ -2,7 +2,6 @@ package com.thoughtworks.voiceassistant.alibabakit.abilities.tts
 
 import android.content.Context
 import android.os.Build
-import android.os.SystemClock
 import android.text.TextUtils
 import com.alibaba.idst.nui.Constants
 import com.alibaba.idst.nui.INativeTtsCallback
@@ -15,6 +14,12 @@ import com.thoughtworks.voiceassistant.core.logger.DefaultLogger
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
 import com.thoughtworks.voiceassistant.core.logger.error
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 class AlibabaTts private constructor(
@@ -29,6 +34,7 @@ class AlibabaTts private constructor(
     private val playerManager = PlayerManager(logger, ttsConfig) {
         logger.debug(TAG, "MP3 player end")
         listener?.onPlayEnd()
+        listener = null
     }
     private var listener: Tts.Listener? = null
     private var wavHeaderToBeRemove: Boolean = false
@@ -64,6 +70,7 @@ class AlibabaTts private constructor(
                         ttsConfig.encodeType == AlibabaTtsParams.EncodeType.VALUES.WAV
                     ) {
                         listener?.onPlayEnd()
+                        listener = null
                     }
                 }
 
@@ -72,12 +79,14 @@ class AlibabaTts private constructor(
                     finishFileWrite()
                     wavHeaderToBeRemove = false
                     listener?.onPlayCancel()
+                    listener = null
                 }
 
                 INativeTtsCallback.TtsEvent.TTS_EVENT_ERROR -> {
                     val errorMsg = ttsInstance.getparamTts("error_msg")
                     logger.error(TAG, "TTS_EVENT_ERROR error_code:$resultCode err_msg:$errorMsg")
                     listener?.onError(errorMsg)
+                    listener = null
                 }
 
                 else -> {}
@@ -148,18 +157,18 @@ class AlibabaTts private constructor(
         }
     }
 
-    override suspend fun play(text: String, params: Map<String, Any>, listener: Tts.Listener?) {
+    override suspend fun play(text: String, params: Map<String, Any>, listener: Tts.Listener) {
         if (!isInit) {
             logger.error(TAG, "TTS is not initialized!")
             return
         }
 
         // Wait for the previous tts play clear
-        SystemClock.sleep(ttsConfig.stopAndStartDelay.toLong())
+        delay(ttsConfig.stopAndStartDelay.toLong())
 
         if (TextUtils.isEmpty(text)) {
             logger.debug(TAG, "Text is empty")
-            listener?.onPlayEnd()
+            listener.onPlayEnd()
             return
         }
 
@@ -186,7 +195,65 @@ class AlibabaTts private constructor(
         this.listener = listener
     }
 
-    override fun stopPlay() {
+    override suspend fun play(
+        text: String,
+        params: Map<String, Any>,
+    ): Tts.Result {
+        return suspendCoroutine { continuation ->
+            CoroutineScope(Dispatchers.IO).launch {
+                play(text, params, object : Tts.Listener {
+                    private fun resumeWithoutComplain(result: Tts.Result) {
+                        try {
+                            continuation.resume(
+                                result
+                            )
+                        } catch (_: Exception) {
+                        }
+                    }
+
+                    override fun onPlayStart() {
+                    }
+
+                    override fun onPlayEnd() {
+                        resumeWithoutComplain(
+                            Tts.Result(
+                                success = true,
+                                ttsFilePath = ttsConfig.ttsFilePath
+                            )
+                        )
+                    }
+
+                    override fun onPlayCancel() {
+                        resumeWithoutComplain(
+                            Tts.Result(
+                                success = false,
+                                errorMessage = "cancel"
+                            )
+                        )
+                    }
+
+                    override fun onError(errorMessage: String) {
+                        resumeWithoutComplain(
+                            Tts.Result(
+                                success = false,
+                                errorMessage = errorMessage,
+                            )
+                        )
+                    }
+
+                    override fun onTTSFileSaved(ttsFilePath: String) {
+                    }
+                })
+            }
+        }
+    }
+
+    override fun stop() {
+        if (!isInit) {
+            logger.error(TAG, "TTS is not initialized!")
+            return
+        }
+
         taskIdManager.getTaskId().let {
             if (it.isNotEmpty()) {
                 ttsInstance.cancelTts(it)

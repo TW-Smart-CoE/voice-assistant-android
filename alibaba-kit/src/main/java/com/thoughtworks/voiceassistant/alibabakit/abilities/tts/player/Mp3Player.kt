@@ -19,14 +19,14 @@ class Mp3Player(
             return
         }
 
-        stop()
+        stopPlay()
 
         try {
             mediaPlayer = MediaPlayer().apply {
                 setDataSource(ttsConfig.ttsFilePath)
                 prepare() // or prepareAsync() for streaming
-                setOnCompletionListener { onPlayEnd() }
-                setOnErrorListener { _, _, _ -> onErrorEnd() }
+                setOnCompletionListener { onPlayEndHandler(false) }
+                setOnErrorListener { _, _, _ -> onPlayEndHandler(false) }
                 start()
             }
             logger.debug(TAG, "Mp3Player started")
@@ -36,16 +36,20 @@ class Mp3Player(
     }
 
     fun stop() {
+        stopPlay()
+        onPlayEndHandler(true)
+    }
+
+    private fun stopPlay() {
         mediaPlayer?.apply {
             stop()
             release()
         }
         mediaPlayer = null
-        logger.debug(TAG, "Mp3Player stopped")
-        onErrorEnd()
     }
 
-    private fun onErrorEnd(): Boolean {
+    private fun onPlayEndHandler(stopByForce: Boolean): Boolean {
+        logger.debug(TAG, "Mp3Player stopped by force: $stopByForce")
         onPlayEnd()
         return true
     }

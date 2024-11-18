@@ -12,7 +12,6 @@ import com.thoughtworks.voiceassistant.app.foundation.mvi.DefaultStore
 import com.thoughtworks.voiceassistant.app.foundation.mvi.MVIViewModel
 import com.thoughtworks.voiceassistant.app.foundation.mvi.Store
 import com.thoughtworks.voiceassistant.app.utils.voice.VoiceManager
-import com.thoughtworks.voiceassistant.core.abilities.Tts
 import kotlinx.coroutines.launch
 
 class VoiceInteractionViewModel(
@@ -166,7 +165,7 @@ class VoiceInteractionViewModel(
             }
 
             is VoiceInteractionAction.TtsStop -> {
-                voiceManager.tts.stopPlay()
+                voiceManager.tts.stop()
             }
 
             else -> {
@@ -176,12 +175,14 @@ class VoiceInteractionViewModel(
 
     private fun playTts(text: String) {
         viewModelScope.launch {
-            voiceManager.tts.play(text, emptyMap(), object : Tts.Listener {
-                override fun onTTSFileSaved(ttsFilePath: String) {
-                    Log.d("VoiceInteractionViewModel", "TTS file saved: $ttsFilePath")
-                }
-            })
+            val result = voiceManager.tts.play(text, emptyMap())
+            Log.d(TAG, result.toString())
+            sendAction(VoiceInteractionAction.TtsStop)
         }
+    }
+
+    companion object {
+        private const val TAG = "VoiceInteractionViewModel"
     }
 }
 

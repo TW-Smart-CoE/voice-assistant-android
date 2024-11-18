@@ -9,8 +9,26 @@ interface Tts {
         fun onTTSFileSaved(ttsFilePath: String) {}
     }
 
+    data class Result(
+        val success: Boolean = false,
+        val errorMessage: String = "",
+        val ttsFilePath: String = "",
+    )
+
     suspend fun initialize()
+
     fun release()
-    suspend fun play(text: String, params: Map<String, Any> = emptyMap(), listener: Listener? = null)
-    fun stopPlay()
+
+    suspend fun play(
+        text: String,
+        params: Map<String, Any>,
+        listener: Listener,
+    )
+
+    suspend fun play(
+        text: String,
+        params: Map<String, Any>,
+    ): Result
+
+    fun stop()
 }
