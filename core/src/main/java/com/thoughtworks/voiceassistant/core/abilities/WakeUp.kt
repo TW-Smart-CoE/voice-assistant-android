@@ -8,7 +8,7 @@ interface WakeUpCallback {
 
 interface WakeUp {
     fun initialize()
-    fun start(wakeUpCallback: WakeUpCallback? = null)
+    fun listen(wakeUpCallback: WakeUpCallback? = null)
     fun stop()
     fun release()
 }

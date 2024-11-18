@@ -3,6 +3,7 @@ package com.thoughtworks.voiceassistant.alibabakit.abilities.tts
 import android.content.Context
 import android.os.Build
 import android.text.TextUtils
+import com.alibaba.idst.nui.CommonUtils
 import com.alibaba.idst.nui.Constants
 import com.alibaba.idst.nui.INativeTtsCallback
 import com.alibaba.idst.nui.NativeNui
@@ -25,13 +26,13 @@ import kotlin.coroutines.suspendCoroutine
 class AlibabaTts private constructor(
     private val context: Context,
     private val logger: Logger,
-    private val ttsConfig: TtsConfig,
+    private val config: TtsConfig,
 ) : Tts {
     private val ttsInstance = NativeNui(Constants.ModeType.MODE_TTS)
     private var isInit = false
     private val taskIdManager = TaskIdManager()
-    private val ttsFileWriter = TtsFileWriter(logger, ttsConfig)
-    private val playerManager = PlayerManager(logger, ttsConfig) {
+    private val ttsFileWriter = TtsFileWriter(logger, config)
+    private val playerManager = PlayerManager(logger, config) {
         logger.debug(TAG, "MP3 player end")
         listener?.onPlayEnd()
         listener = null
@@ -52,52 +53,65 @@ class AlibabaTts private constructor(
 
             when (event) {
                 INativeTtsCallback.TtsEvent.TTS_EVENT_START -> {
-                    logger.debug(TAG, "TTS_EVENT_START")
-                    listener?.onPlayStart()
-                    wavHeaderToBeRemove = Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
-                    if (ttsConfig.ttsFilePath.isNotEmpty()) {
-                        ttsFileWriter.createFile()
-                    }
+                    onTtsStart()
                 }
 
                 INativeTtsCallback.TtsEvent.TTS_EVENT_END -> {
-                    logger.debug(TAG, "TTS_EVENT_END")
-                    finishFileWrite()
-                    wavHeaderToBeRemove = false
-                    playerManager.playSoundEnd()
-
-                    if (!ttsConfig.playSound ||
-                        ttsConfig.encodeType == AlibabaTtsParams.EncodeType.VALUES.WAV
-                    ) {
-                        listener?.onPlayEnd()
-                        listener = null
-                    }
+                    onTtsEnd()
                 }
 
                 INativeTtsCallback.TtsEvent.TTS_EVENT_CANCEL -> {
-                    logger.debug(TAG, "TTS_EVENT_CANCEL")
-                    finishFileWrite()
-                    wavHeaderToBeRemove = false
-                    listener?.onPlayCancel()
-                    listener = null
+                    onTtsCancel()
                 }
 
                 INativeTtsCallback.TtsEvent.TTS_EVENT_ERROR -> {
-                    val errorMsg = ttsInstance.getparamTts("error_msg")
-                    logger.error(TAG, "TTS_EVENT_ERROR error_code:$resultCode err_msg:$errorMsg")
-                    listener?.onError(errorMsg)
-                    listener = null
+                    onTtsError(resultCode)
                 }
 
                 else -> {}
             }
         }
 
+        private fun onTtsError(resultCode: Int) {
+            val errorMsg = ttsInstance.getparamTts("error_msg")
+            logger.error(TAG, "error_code: $resultCode err_msg: $errorMsg")
+            listener?.onError(errorMsg)
+            listener = null
+        }
+
+        private fun onTtsCancel() {
+            finishFileWrite()
+            wavHeaderToBeRemove = false
+            listener?.onPlayCancel()
+            listener = null
+        }
+
+        private fun onTtsEnd() {
+            finishFileWrite()
+            wavHeaderToBeRemove = false
+            playerManager.playSoundEnd()
+
+            if (!config.playSound ||
+                config.encodeType == TtsParams.EncodeType.VALUES.WAV
+            ) {
+                listener?.onPlayEnd()
+                listener = null
+            }
+        }
+
+        private fun onTtsStart() {
+            wavHeaderToBeRemove = Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
+            if (config.ttsFilePath.isNotEmpty()) {
+                ttsFileWriter.createFile()
+            }
+            listener?.onPlayStart()
+        }
+
         private fun finishFileWrite() {
             ttsFileWriter.closeFile()
-            if (ttsConfig.ttsFilePath.isNotEmpty()) {
-                logger.debug(TAG, "TTS file saved at: ${ttsConfig.ttsFilePath}")
-                listener?.onTTSFileSaved(ttsConfig.ttsFilePath)
+            if (config.ttsFilePath.isNotEmpty()) {
+                logger.debug(TAG, "TTS file saved at: ${config.ttsFilePath}")
+                listener?.onTTSFileSaved(config.ttsFilePath)
             }
         }
 
@@ -106,7 +120,7 @@ class AlibabaTts private constructor(
                 val ttsData = TtsStreamData(info, infoLen, data)
 
                 val newAudioData: ByteArray =
-                    if (ttsConfig.encodeType == AlibabaTtsParams.EncodeType.VALUES.WAV && wavHeaderToBeRemove) {
+                    if (config.encodeType == TtsParams.EncodeType.VALUES.WAV && wavHeaderToBeRemove) {
                         ttsData.data.copyOfRange(
                             44,
                             ttsData.data.size
@@ -115,7 +129,7 @@ class AlibabaTts private constructor(
                 wavHeaderToBeRemove = false
                 playerManager.writeSoundData(newAudioData)
 
-                if (ttsConfig.ttsFilePath.isNotEmpty()) {
+                if (config.ttsFilePath.isNotEmpty()) {
                     ttsFileWriter.writeData(ttsData.data)
                 }
             }
@@ -131,7 +145,14 @@ class AlibabaTts private constructor(
             return
         }
 
-        val ticket = ttsConfig.generateTicket(context, logger)
+        if (CommonUtils.copyAssetsData(context)) {
+            logger.debug(TAG, "copy assets data done")
+        } else {
+            logger.error(TAG, "copy assets failed")
+            return
+        }
+
+        val ticket = config.generateTicket(context, logger)
         val initResult = ttsInstance.tts_initialize(
             ttsInitCallback,
             ticket,
@@ -140,10 +161,10 @@ class AlibabaTts private constructor(
         )
 
         if (initResult == Constants.NuiResultCode.SUCCESS) {
-            ttsInstance.setparamTts("font_name", ttsConfig.fontName)
-            ttsInstance.setparamTts("sample_rate", ttsConfig.sampleRate.toString())
-            ttsInstance.setparamTts("enable_subtitle", ttsConfig.enableSubtitle)
-            ttsInstance.setparamTts("encode_type", ttsConfig.encodeType)
+            ttsInstance.setparamTts("font_name", config.fontName)
+            ttsInstance.setparamTts("sample_rate", config.sampleRate.toString())
+            ttsInstance.setparamTts("enable_subtitle", config.enableSubtitle)
+            ttsInstance.setparamTts("encode_type", config.encodeType)
             logger.debug(TAG, "TTS instance initialized successfully")
             isInit = true
         }
@@ -157,14 +178,14 @@ class AlibabaTts private constructor(
         }
     }
 
-    override suspend fun play(text: String, params: Map<String, Any>, listener: Tts.Listener) {
+    override suspend fun speak(text: String, params: Map<String, Any>, listener: Tts.Listener) {
         if (!isInit) {
             logger.error(TAG, "TTS is not initialized!")
             return
         }
 
         // Wait for the previous tts play clear
-        delay(ttsConfig.stopAndStartDelay.toLong())
+        delay(config.stopAndStartDelay.toLong())
 
         if (TextUtils.isEmpty(text)) {
             logger.debug(TAG, "Text is empty")
@@ -195,13 +216,13 @@ class AlibabaTts private constructor(
         this.listener = listener
     }
 
-    override suspend fun play(
+    override suspend fun speak(
         text: String,
         params: Map<String, Any>,
     ): Tts.Result {
         return suspendCoroutine { continuation ->
             CoroutineScope(Dispatchers.IO).launch {
-                play(text, params, object : Tts.Listener {
+                speak(text, params, object : Tts.Listener {
                     private fun resumeWithoutComplain(result: Tts.Result) {
                         try {
                             continuation.resume(
@@ -218,7 +239,7 @@ class AlibabaTts private constructor(
                         resumeWithoutComplain(
                             Tts.Result(
                                 success = true,
-                                ttsFilePath = ttsConfig.ttsFilePath
+                                ttsFilePath = config.ttsFilePath
                             )
                         )
                     }

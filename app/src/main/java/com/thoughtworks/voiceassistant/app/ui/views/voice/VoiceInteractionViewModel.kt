@@ -52,15 +52,15 @@ class VoiceInteractionViewModel(
                 currentState.copy(
                     wakeUp = WakeUpState(
                         title = "${Ability.WAKE_UP.displayName}: ${abilityCollection.wakeUp.provider}",
-                        started = false
+                        listening = false
                     ),
                     asr = AsrState(
                         title = "${Ability.ASR.displayName}: ${abilityCollection.asr.provider}",
-                        started = false
+                        listening = false
                     ),
                     tts = currentState.tts.copy(
                         title = "${Ability.TTS.displayName}: ${abilityCollection.tts.provider}",
-                        playing = false,
+                        speaking = false,
                         input = currentState.tts.input
 
                     ),
@@ -87,10 +87,10 @@ class VoiceInteractionViewModel(
                 )
             }
 
-            is VoiceInteractionAction.WakeUpStart -> {
+            is VoiceInteractionAction.WakeUpListen -> {
                 currentState.copy(
                     wakeUp = currentState.wakeUp.copy(
-                        started = true
+                        listening = true
                     )
                 )
             }
@@ -98,15 +98,15 @@ class VoiceInteractionViewModel(
             is VoiceInteractionAction.WakeUpStop -> {
                 currentState.copy(
                     wakeUp = currentState.wakeUp.copy(
-                        started = false
+                        listening = false
                     )
                 )
             }
 
-            is VoiceInteractionAction.AsrStart -> {
+            is VoiceInteractionAction.AsrListen -> {
                 currentState.copy(
                     asr = currentState.asr.copy(
-                        started = true
+                        listening = true
                     )
                 )
             }
@@ -114,15 +114,15 @@ class VoiceInteractionViewModel(
             is VoiceInteractionAction.AsrStop -> {
                 currentState.copy(
                     asr = currentState.asr.copy(
-                        started = false
+                        listening = false
                     )
                 )
             }
 
-            is VoiceInteractionAction.TtsPlay -> {
+            is VoiceInteractionAction.TtsSpeak -> {
                 currentState.copy(
                     tts = currentState.tts.copy(
-                        playing = true
+                        speaking = true
                     )
                 )
             }
@@ -130,7 +130,7 @@ class VoiceInteractionViewModel(
             is VoiceInteractionAction.TtsStop -> {
                 currentState.copy(
                     tts = currentState.tts.copy(
-                        playing = false
+                        speaking = false
                     )
                 )
             }
@@ -159,9 +159,13 @@ class VoiceInteractionViewModel(
                 navigator.navigateBack()
             }
 
-            is VoiceInteractionAction.TtsPlay -> {
+            is VoiceInteractionAction.AsrListen -> {
+                asrListen()
+            }
+
+            is VoiceInteractionAction.TtsSpeak -> {
                 dataSource.saveTtsInput(currentState.tts.input)
-                playTts(currentState.tts.input)
+                ttsSpeak(currentState.tts.input)
             }
 
             is VoiceInteractionAction.TtsStop -> {
@@ -173,9 +177,17 @@ class VoiceInteractionViewModel(
         }
     }
 
-    private fun playTts(text: String) {
+    private fun asrListen() {
         viewModelScope.launch {
-            val result = voiceManager.tts.play(text, emptyMap())
+            val result = voiceManager.asr.listen()
+            Log.d(TAG, result.toString())
+            sendAction(VoiceInteractionAction.AsrStop)
+        }
+    }
+
+    private fun ttsSpeak(text: String) {
+        viewModelScope.launch {
+            val result = voiceManager.tts.speak(text, emptyMap())
             Log.d(TAG, result.toString())
             sendAction(VoiceInteractionAction.TtsStop)
         }

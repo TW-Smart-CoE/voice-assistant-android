@@ -32,7 +32,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.thoughtworks.voiceassistant.app.R
-import com.thoughtworks.voiceassistant.app.definitions.Ability
 import com.thoughtworks.voiceassistant.app.di.Dependency
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,14 +95,14 @@ fun WakeUpCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.wakeUp.started,
-                    onClick = { sendAction(VoiceInteractionAction.WakeUpStart) }
+                    enabled = !state.wakeUp.listening,
+                    onClick = { sendAction(VoiceInteractionAction.WakeUpListen) }
                 ) {
-                    Text(context.getString(R.string.start_btn))
+                    Text(context.getString(R.string.listen_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.wakeUp.started,
+                    enabled = state.wakeUp.listening,
                     onClick = { sendAction(VoiceInteractionAction.WakeUpStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
@@ -130,14 +129,14 @@ fun AsrCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.asr.started,
-                    onClick = { sendAction(VoiceInteractionAction.AsrStart) }
+                    enabled = !state.asr.listening,
+                    onClick = { sendAction(VoiceInteractionAction.AsrListen) }
                 ) {
-                    Text(context.getString(R.string.start_btn))
+                    Text(context.getString(R.string.listen_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.asr.started,
+                    enabled = state.asr.listening,
                     onClick = { sendAction(VoiceInteractionAction.AsrStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
@@ -179,14 +178,14 @@ fun TtsCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.tts.playing,
-                    onClick = { sendAction(VoiceInteractionAction.TtsPlay) }
+                    enabled = !state.tts.speaking,
+                    onClick = { sendAction(VoiceInteractionAction.TtsSpeak) }
                 ) {
-                    Text(context.getString(R.string.play_btn))
+                    Text(context.getString(R.string.speak_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.tts.playing,
+                    enabled = state.tts.speaking,
                     onClick = { sendAction(VoiceInteractionAction.TtsStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))

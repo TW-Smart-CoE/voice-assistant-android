@@ -1,5 +1,7 @@
 package com.thoughtworks.voiceassistant.app.ui.navigation
 
+import android.Manifest
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,6 +12,7 @@ import com.thoughtworks.voiceassistant.app.ui.views.permission.PermissionRequest
 import com.thoughtworks.voiceassistant.app.ui.views.voice.VoiceInteractionScreen
 import com.thoughtworks.voiceassistant.app.utils.navigator.NavigatorImpl
 
+@SuppressLint("InlinedApi")
 @Composable
 fun Navigation(dependency: Dependency) {
     val navController = rememberNavController()
@@ -19,7 +22,7 @@ fun Navigation(dependency: Dependency) {
         composable(route = Screen.PermissionScreen.route) {
             PermissionRequestScreen(
                 requiredPermissions = arrayOf(
-                    android.Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.RECORD_AUDIO,
                 ),
                 onAllPermissionsGranted = {
                     dependency.navigator.navigateToAbilityConfigScreen()

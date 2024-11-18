@@ -19,13 +19,13 @@ interface Tts {
 
     fun release()
 
-    suspend fun play(
+    suspend fun speak(
         text: String,
         params: Map<String, Any>,
         listener: Listener,
     )
 
-    suspend fun play(
+    suspend fun speak(
         text: String,
         params: Map<String, Any>,
     ): Result

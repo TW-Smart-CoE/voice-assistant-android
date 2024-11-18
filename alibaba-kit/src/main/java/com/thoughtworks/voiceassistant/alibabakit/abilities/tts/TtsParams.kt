@@ -1,6 +1,6 @@
 package com.thoughtworks.voiceassistant.alibabakit.abilities.tts
 
-object AlibabaTtsParams {
+object TtsParams {
     object AccessKey {
         const val KEY = "access_key"
     }
@@ -68,8 +68,4 @@ object AlibabaTtsParams {
         const val KEY = "stop_and_start_delay"
         const val DEFAULT_VALUE = 50
     }
-
-//    const val REMOVE_WAV_HEADER = "remove_wav_header"
-//    const val STOP_AND_START_DELAY = "stop_and_start_delay"
-//    const val TTS_FILE_PATH = "tts_file_path"
 }

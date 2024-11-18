@@ -8,17 +8,17 @@ import com.thoughtworks.voiceassistant.app.foundation.mvi.model.State
 
 data class WakeUpState(
     val title: String = Ability.WAKE_UP.displayName,
-    val started: Boolean = false,
+    val listening: Boolean = false,
 )
 
 data class AsrState(
     val title: String = Ability.ASR.displayName,
-    val started: Boolean = false,
+    val listening: Boolean = false,
 )
 
 data class TtsState(
     val title: String = Ability.TTS.displayName,
-    val playing: Boolean = false,
+    val speaking: Boolean = false,
     val input: String = "",
 )
 
@@ -44,11 +44,11 @@ sealed interface VoiceInteractionAction : Action {
         VoiceInteractionAction
 
     data object NavigateBack : VoiceInteractionAction
-    data object WakeUpStart : VoiceInteractionAction
+    data object WakeUpListen : VoiceInteractionAction
     data object WakeUpStop : VoiceInteractionAction
-    data object AsrStart : VoiceInteractionAction
+    data object AsrListen : VoiceInteractionAction
     data object AsrStop : VoiceInteractionAction
-    data object TtsPlay : VoiceInteractionAction
+    data object TtsSpeak : VoiceInteractionAction
     data object TtsStop : VoiceInteractionAction
     data object ChatStart : VoiceInteractionAction
     data object ChatClearHistory : VoiceInteractionAction

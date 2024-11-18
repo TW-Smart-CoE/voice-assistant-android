@@ -1,6 +1,6 @@
 package com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player
 
-import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.AlibabaTtsParams
+import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsParams
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsConfig
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
@@ -21,7 +21,7 @@ class PlayerManager(
         }
 
         when (ttsConfig.encodeType) {
-            AlibabaTtsParams.EncodeType.VALUES.WAV -> {
+            TtsParams.EncodeType.VALUES.WAV -> {
                 try {
                     pcmPlayer.stop()
                     pcmPlayer.start()
@@ -40,7 +40,7 @@ class PlayerManager(
         }
 
         when (ttsConfig.encodeType) {
-            AlibabaTtsParams.EncodeType.VALUES.MP3 -> {
+            TtsParams.EncodeType.VALUES.MP3 -> {
                 try {
                     mp3Player.play()
                 } catch (t: Throwable) {
@@ -58,7 +58,7 @@ class PlayerManager(
         }
 
         when (ttsConfig.encodeType) {
-            AlibabaTtsParams.EncodeType.VALUES.WAV -> pcmPlayer.writeData(data)
+            TtsParams.EncodeType.VALUES.WAV -> pcmPlayer.writeData(data)
         }
     }
 
@@ -69,8 +69,8 @@ class PlayerManager(
         }
 
         when (ttsConfig.encodeType) {
-            AlibabaTtsParams.EncodeType.VALUES.WAV -> pcmPlayer.stop()
-            AlibabaTtsParams.EncodeType.VALUES.MP3 -> mp3Player.stop()
+            TtsParams.EncodeType.VALUES.WAV -> pcmPlayer.stop()
+            TtsParams.EncodeType.VALUES.MP3 -> mp3Player.stop()
         }
     }
 

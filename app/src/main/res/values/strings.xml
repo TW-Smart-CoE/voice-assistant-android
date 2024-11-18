@@ -2,7 +2,8 @@
     <string name="app_name" translatable="false">voice-assistant-android</string>
     <string name="start_btn" translatable="false">start</string>
     <string name="stop_btn" translatable="false">stop</string>
-    <string name="play_btn" translatable="false">play</string>
+    <string name="speak_btn" translatable="false">speak</string>
+    <string name="listen_btn" translatable="false">listen</string>
     <string name="clear_history_btn" translatable="false">clear history</string>
     <string name="chat_btn" translatable="false">chat</string>
     <string name="ok_btn" translatable="false">OK</string>

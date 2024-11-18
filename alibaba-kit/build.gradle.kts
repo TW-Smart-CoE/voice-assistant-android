@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.nuisdk)
     implementation(libs.alibaba.fastjson)
     implementation(libs.okhttp)
+    implementation(libs.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
