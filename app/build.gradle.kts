@@ -77,10 +77,10 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":baidu-kit"))
-    implementation(project(":alibaba-kit"))
-    implementation(project(":iflytek-kit"))
-    implementation(project(":openai-kit"))
+    implementation(project(":baidukit"))
+    implementation(project(":alibabakit"))
+    implementation(project(":iflytekkit"))
+    implementation(project(":openaikit"))
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.gson)

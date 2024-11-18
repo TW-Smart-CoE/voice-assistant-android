@@ -24,8 +24,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "voice-assistant-android"
 include(":app")
-include(":alibaba-kit")
-include(":baidu-kit")
 include(":core")
-include(":iflytek-kit")
-include(":openai-kit")
+include(":alibabakit")
+include(":baidukit")
+include(":iflytekkit")
+include(":openaikit")

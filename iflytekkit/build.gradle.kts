@@ -37,7 +37,7 @@ publishing {
     publications {
         register<MavenPublication>("release") {
             groupId = "com.thoughtworks.voiceassistant"
-            artifactId = "iflytek-kit"
+            artifactId = "iflytekkit"
             version = "0.1.0"
 
             afterEvaluate {

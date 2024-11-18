@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.thoughtworks.voiceassistant.baidukit"
+    namespace = "com.thoughtworks.voiceassistant.alibabakit"
     compileSdk = 35
 
     defaultConfig {
@@ -37,7 +37,7 @@ publishing {
     publications {
         register<MavenPublication>("release") {
             groupId = "com.thoughtworks.voiceassistant"
-            artifactId = "baidu-kit"
+            artifactId = "alibabakit"
             version = "0.1.0"
 
             afterEvaluate {
@@ -49,6 +49,11 @@ publishing {
 
 dependencies {
     implementation(project(":core"))
+
+    implementation(libs.nuisdk)
+    implementation(libs.alibaba.fastjson)
+    implementation(libs.okhttp)
+    implementation(libs.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
