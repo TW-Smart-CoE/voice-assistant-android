@@ -6,6 +6,8 @@ import com.alibaba.idst.nui.CommonUtils
 import com.alibaba.idst.nui.Constants
 import com.alibaba.idst.nui.Constants.VadMode
 import com.thoughtworks.voiceassistant.alibabakit.utils.AlibabaConfig
+import com.thoughtworks.voiceassistant.alibabakit.utils.AuthUtils
+import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.utils.DeviceUtils
 import org.json.JSONException
 import org.json.JSONObject
@@ -17,10 +19,13 @@ class AsrConfig(
     deviceId: String = "",
     workspace: String = "",
     token: String = "",
-    debugPath: String = "",
+    val debugPath: String = "",
     val audioSource: String = AsrParams.AudioSource.VALUES.DEFAULT,
+    val vadMode: String = AsrParams.VadMode.VALUES.P2T,
+    val enableVoiceDetection: Boolean = true,
+    val maxStartSilence: Int = AsrParams.MaxStartSilence.DEFAULT_VALUE,
+    val maxEndSilence: Int = AsrParams.MaxEndSilence.DEFAULT_VALUE,
     val speechNoiseThreshold: Float = AsrParams.SpeechNoiseThreshold.DEFAULT_VALUE,
-    val vadMode: String = AsrParams.VadMode.VALUES.VAD,
 ) : AlibabaConfig(accessKey, accessKeySecret, appKey, deviceId, workspace, token) {
     fun getMediaRecorderAudioSource(): Int {
         return when (audioSource) {
@@ -31,9 +36,36 @@ class AsrConfig(
 
     fun getAliVadMode(): VadMode {
         return when (vadMode) {
-            AsrParams.VadMode.VALUES.P2T -> VadMode.TYPE_P2T
-            else -> VadMode.TYPE_VAD
+            AsrParams.VadMode.VALUES.VAD -> VadMode.TYPE_VAD
+            else -> VadMode.TYPE_P2T
         }
+    }
+
+    override suspend fun generateTicket(
+        context: Context,
+        logger: Logger,
+    ): String {
+        val tokenValue = when (token.isNotEmpty()) {
+            true -> token
+            false -> AuthUtils(
+                context, logger
+            ).getToken(
+                accessKey, accessKeySecret
+            )
+        }
+
+        val jsonObj = JSONObject().apply {
+            put("app_key", appKey)
+            put("token", tokenValue)
+            put("device_id", deviceId)
+            put("url", url)
+            put("workspace", workspace)
+            put("sample_rate", "16000")
+            put("format", "opus")
+            put("debug_path", debugPath)
+            put("service_mode", Constants.ModeAsrCloud)
+        }
+        return jsonObj.toString()
     }
 
     fun genParams(): String {
@@ -47,15 +79,12 @@ class AsrConfig(
             //nls_config.put("enable_inverse_text_normalization", true);
             //nls_config.put("customization_id", "test_id");
             //nls_config.put("vocabulary_id", "test_id");
-            nlsConfig.put("enable_voice_detection", true)
-            nlsConfig.put("max_start_silence", 10000)
-            nlsConfig.put("max_end_silence", 800)
-            if (getAliVadMode() == VadMode.TYPE_VAD) {
-                nlsConfig.put(
-                    "speech_noise_threshold",
-                    speechNoiseThreshold
-                ) // https://help.aliyun.com/document_detail/316816.html
-            }
+            nlsConfig.put("enable_voice_detection", enableVoiceDetection)
+            nlsConfig.put("max_start_silence", maxStartSilence)
+            nlsConfig.put("max_end_silence", maxEndSilence)
+            nlsConfig.put(
+                "speech_noise_threshold", speechNoiseThreshold
+            ) // https://help.aliyun.com/document_detail/316816.html
 
             //nls_config.put("sample_rate", 16000);
             //nls_config.put("sr_format", "opus");
@@ -108,10 +137,15 @@ class AsrConfig(
                 debugPath = debugPath,
                 audioSource = params[AsrParams.AudioSource.KEY]?.toString()
                     ?: AsrParams.AudioSource.VALUES.DEFAULT,
-                speechNoiseThreshold = params[AsrParams.SpeechNoiseThreshold.KEY] as? Float
-                    ?: AsrParams.SpeechNoiseThreshold.DEFAULT_VALUE,
-                vadMode = params[AsrParams.VadMode.KEY]?.toString()
-                    ?: AsrParams.VadMode.VALUES.VAD,
+                vadMode = params[AsrParams.VadMode.KEY]?.toString() ?: AsrParams.VadMode.VALUES.P2T,
+                enableVoiceDetection = params[AsrParams.EnableVoiceDetection.KEY]?.toString()
+                    ?.toBoolean() != false,
+                maxStartSilence = params[AsrParams.MaxStartSilence.KEY]?.toString()?.toInt()
+                    ?: AsrParams.MaxStartSilence.DEFAULT_VALUE,
+                maxEndSilence = params[AsrParams.MaxEndSilence.KEY]?.toString()?.toInt()
+                    ?: AsrParams.MaxEndSilence.DEFAULT_VALUE,
+                speechNoiseThreshold = params[AsrParams.SpeechNoiseThreshold.KEY]?.toString()
+                    ?.toFloat() ?: AsrParams.SpeechNoiseThreshold.DEFAULT_VALUE,
             )
         }
     }

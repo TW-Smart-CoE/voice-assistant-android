@@ -163,6 +163,10 @@ class VoiceInteractionViewModel(
                 asrListen()
             }
 
+            is VoiceInteractionAction.AsrStop -> {
+                voiceManager.asr.stop()
+            }
+
             is VoiceInteractionAction.TtsSpeak -> {
                 dataSource.saveTtsInput(currentState.tts.input)
                 ttsSpeak(currentState.tts.input)

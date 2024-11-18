@@ -133,7 +133,7 @@ class AlibabaAsr(
     @SuppressLint("MissingPermission")
     override suspend fun initialize() {
         if (isInit) {
-            logger.debug(TAG, "nuiInstance has been initialized")
+            logger.debug(TAG, "ASR instance has been initialized")
             return
         }
 
@@ -163,19 +163,19 @@ class AlibabaAsr(
         val ret: Int = nuiInstance.initialize(
             nuiCallback,
             ticket,
-            Constants.LogLevel.LOG_LEVEL_VERBOSE,
-            true
+            Constants.LogLevel.LOG_LEVEL_DEBUG,
+            false
         )
 
         if (ret != Constants.NuiResultCode.SUCCESS) {
-            logger.error(TAG, "nuiInstance initialize failed: result = $ret")
+            logger.error(TAG, "ASR instance initialize failed: result = $ret")
             return
         }
 
         nuiInstance.setParams(config.genParams())
         isInit = true
 
-        logger.debug(TAG, "nuiInstance initialize success")
+        logger.debug(TAG, "ASR instance initialize success")
     }
 
     override fun release() {
@@ -187,7 +187,7 @@ class AlibabaAsr(
 
     override suspend fun listen(listener: Asr.Listener) {
         if (!isInit) {
-            logger.error(TAG, "nuiInstance not initialized")
+            logger.error(TAG, "ASR instance not initialized")
             return
         }
 
@@ -246,7 +246,7 @@ class AlibabaAsr(
 
     override fun stop() {
         if (!isInit) {
-            logger.error(TAG, "nuiInstance not initialized")
+            logger.error(TAG, "ASR instance not initialized")
             return
         }
 

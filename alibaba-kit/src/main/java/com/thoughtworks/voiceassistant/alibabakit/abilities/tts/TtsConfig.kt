@@ -3,7 +3,10 @@ package com.thoughtworks.voiceassistant.alibabakit.abilities.tts
 import android.content.Context
 import com.alibaba.idst.nui.CommonUtils
 import com.thoughtworks.voiceassistant.alibabakit.utils.AlibabaConfig
+import com.thoughtworks.voiceassistant.alibabakit.utils.AuthUtils
+import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.utils.DeviceUtils
+import org.json.JSONObject
 
 class TtsConfig(
     accessKey: String = "",
@@ -19,8 +22,34 @@ class TtsConfig(
     val enableSubtitle: String = TtsParams.EnableSubtitle.VALUES.ENABLE,
     val playSound: Boolean = true,
     val stopAndStartDelay: Int = 50,
+    val modeType: Int = DEFAULT_MODE,
 ) : AlibabaConfig(accessKey, accessKeySecret, appKey, deviceId, workspace, token) {
+    override suspend fun generateTicket(context: Context, logger: Logger): String {
+        val tokenValue = when (token.isNotEmpty()) {
+            true -> token
+            false -> AuthUtils(
+                context,
+                logger
+            ).getToken(
+                accessKey,
+                accessKeySecret
+            )
+        }
+
+        val jsonObj = JSONObject().apply {
+            put("app_key", appKey)
+            put("token", tokenValue)
+            put("device_id", deviceId)
+            put("url", url)
+            put("workspace", workspace)
+            put("mode_type", modeType.toString())
+        }
+        return jsonObj.toString()
+    }
+
     companion object {
+        private const val DEFAULT_MODE = 2 // online synthesis
+
         fun create(
             context: Context,
             params: Map<String, Any>,
