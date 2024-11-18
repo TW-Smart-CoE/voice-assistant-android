@@ -28,16 +28,24 @@ class AlibabaTts private constructor(
     private val logger: Logger,
     private val config: TtsConfig,
 ) : Tts {
+    interface TtsListener {
+        fun onPlayStart() {}
+        fun onPlayEnd() {}
+        fun onPlayCancel() {}
+        fun onError(errorMessage: String) {}
+        fun onTTSFileSaved(ttsFilePath: String) {}
+    }
+
     private val ttsInstance = NativeNui(Constants.ModeType.MODE_TTS)
     private var isInit = false
     private val taskIdManager = TaskIdManager()
     private val ttsFileWriter = TtsFileWriter(logger, config)
     private val playerManager = PlayerManager(logger, config) {
         logger.debug(TAG, "MP3 player end")
-        listener?.onPlayEnd()
-        listener = null
+        ttsListener?.onPlayEnd()
+        ttsListener = null
     }
-    private var listener: Tts.Listener? = null
+    private var ttsListener: TtsListener? = null
     private var wavHeaderToBeRemove: Boolean = false
 
     private val ttsInitCallback = object : INativeTtsCallback {
@@ -75,15 +83,15 @@ class AlibabaTts private constructor(
         private fun onTtsError(resultCode: Int) {
             val errorMsg = ttsInstance.getparamTts("error_msg")
             logger.error(TAG, "error_code: $resultCode err_msg: $errorMsg")
-            listener?.onError(errorMsg)
-            listener = null
+            ttsListener?.onError(errorMsg)
+            ttsListener = null
         }
 
         private fun onTtsCancel() {
             finishFileWrite()
             wavHeaderToBeRemove = false
-            listener?.onPlayCancel()
-            listener = null
+            ttsListener?.onPlayCancel()
+            ttsListener = null
         }
 
         private fun onTtsEnd() {
@@ -94,8 +102,8 @@ class AlibabaTts private constructor(
             if (!config.playSound ||
                 config.encodeType == TtsParams.EncodeType.VALUES.WAV
             ) {
-                listener?.onPlayEnd()
-                listener = null
+                ttsListener?.onPlayEnd()
+                ttsListener = null
             }
         }
 
@@ -104,14 +112,14 @@ class AlibabaTts private constructor(
             if (config.ttsFilePath.isNotEmpty()) {
                 ttsFileWriter.createFile()
             }
-            listener?.onPlayStart()
+            ttsListener?.onPlayStart()
         }
 
         private fun finishFileWrite() {
             ttsFileWriter.closeFile()
             if (config.ttsFilePath.isNotEmpty()) {
                 logger.debug(TAG, "TTS file saved at: ${config.ttsFilePath}")
-                listener?.onTTSFileSaved(config.ttsFilePath)
+                ttsListener?.onTTSFileSaved(config.ttsFilePath)
             }
         }
 
@@ -178,7 +186,7 @@ class AlibabaTts private constructor(
         }
     }
 
-    override suspend fun speak(text: String, params: Map<String, Any>, listener: Tts.Listener) {
+    private suspend fun speak(text: String, params: Map<String, Any>, listener: TtsListener) {
         if (!isInit) {
             logger.error(TAG, "TTS is not initialized!")
             return
@@ -213,7 +221,7 @@ class AlibabaTts private constructor(
             ttsInstance.startTts("1", taskIdManager.generateTaskId(), text)
         }
 
-        this.listener = listener
+        this.ttsListener = listener
     }
 
     override suspend fun speak(
@@ -222,7 +230,7 @@ class AlibabaTts private constructor(
     ): Tts.Result {
         return suspendCoroutine { continuation ->
             CoroutineScope(Dispatchers.IO).launch {
-                speak(text, params, object : Tts.Listener {
+                speak(text, params, object : TtsListener {
                     private fun resumeWithoutComplain(result: Tts.Result) {
                         try {
                             continuation.resume(
@@ -283,7 +291,7 @@ class AlibabaTts private constructor(
         ttsInstance.stopDialog()
         taskIdManager.clearTaskId()
         playerManager.stopPlaySound()
-        this.listener = null
+        this.ttsListener = null
     }
 
     private fun formatSSML(

@@ -31,11 +31,17 @@ class AlibabaAsr(
     private val logger: Logger,
     private val config: AsrConfig,
 ) : Asr {
+    interface AsrListener {
+        fun onResult(text: String) {}
+        fun onError(errorMessage: String) {}
+        fun onVolumeChanged(volume: Float) {}
+    }
+
     private var isInit = false
     private val nuiInstance = NativeNui()
     private lateinit var audioRecorder: AudioRecord
     private val gson = Gson()
-    var listener: Asr.Listener? = null
+    var asrListener: AsrListener? = null
 
     private val nuiCallback = object : INativeNuiCallback {
         override fun onNuiEventCallback(
@@ -56,7 +62,7 @@ class AlibabaAsr(
                         val result = gson.fromJson(it.asrResult, ASRResult::class.java)
                         result.payload?.result?.let { payload ->
                             logger.debug(TAG, "RESULT: $payload")
-                            listener?.onResult(payload)
+                            asrListener?.onResult(payload)
                         }
                     }
                 }
@@ -66,8 +72,8 @@ class AlibabaAsr(
 
                 Constants.NuiEvent.EVENT_ASR_ERROR -> {
                     logger.error(TAG, "EVENT_ASR_ERROR: $resultCode")
-                    listener?.onError("EVENT_ASR_ERROR: $resultCode")
-                    listener = null
+                    asrListener?.onError("EVENT_ASR_ERROR: $resultCode")
+                    asrListener = null
                 }
 
                 Constants.NuiEvent.EVENT_VAD_START -> {
@@ -84,7 +90,7 @@ class AlibabaAsr(
 
                 Constants.NuiEvent.EVENT_DIALOG_EX -> {
                     logger.debug(TAG, "onDialogEx: ${asrResult?.asrResult}")
-                    listener?.onResult("")
+                    asrListener?.onResult("")
                 }
 
                 else -> {
@@ -122,7 +128,7 @@ class AlibabaAsr(
         }
 
         override fun onNuiAudioRMSChanged(p0: Float) {
-            listener?.onVolumeChanged(p0)
+            asrListener?.onVolumeChanged(p0)
         }
 
         override fun onNuiVprEventCallback(p0: Constants.NuiVprEvent?) {
@@ -185,7 +191,7 @@ class AlibabaAsr(
         }
     }
 
-    override suspend fun listen(listener: Asr.Listener) {
+    private fun listen(listener: AsrListener) {
         if (!isInit) {
             logger.error(TAG, "ASR instance not initialized")
             return
@@ -202,13 +208,13 @@ class AlibabaAsr(
             return
         }
 
-        this.listener = listener
+        this.asrListener = listener
     }
 
     override suspend fun listen(): Asr.Result {
         return suspendCoroutine { continuation ->
             CoroutineScope(Dispatchers.IO).launch {
-                listen(object : Asr.Listener {
+                listen(object : AsrListener {
                     private fun resumeWithoutComplain(result: Asr.Result) {
                         try {
                             continuation.resume(
@@ -250,7 +256,7 @@ class AlibabaAsr(
             return
         }
 
-        listener = null
+        asrListener = null
         nuiInstance.stopDialog()
     }
 
