@@ -32,7 +32,13 @@ object TtsParams {
 
     object SampleRate {
         const val KEY = "sample_rate"
-        const val DEFAULT_VALUE = 16000
+        object VALUES {
+            const val RATE_8K = 8000
+            const val RATE_16K = 16000
+            const val RATE_24K = 24000
+            const val RATE_32K = 32000
+            const val RATE_48K = 48000
+        }
     }
 
     object FontName {
@@ -61,11 +67,16 @@ object TtsParams {
 
     object PlaySound {
         const val KEY = "play_sound"
-        const val DEFAULT_VALUE = true
+        object VALUES {
+            const val TRUE = true
+            const val FALSE = false
+        }
     }
 
     object StopAndStartDelay {
         const val KEY = "stop_and_start_delay"
-        const val DEFAULT_VALUE = 50
+        object VALUES {
+            const val DEFAULT = 50
+        }
     }
 }

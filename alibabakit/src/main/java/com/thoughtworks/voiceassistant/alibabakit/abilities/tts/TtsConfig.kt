@@ -2,6 +2,7 @@ package com.thoughtworks.voiceassistant.alibabakit.abilities.tts
 
 import android.content.Context
 import com.alibaba.idst.nui.CommonUtils
+import com.thoughtworks.voiceassistant.alibabakit.abilities.asr.AsrParams
 import com.thoughtworks.voiceassistant.alibabakit.utils.AlibabaConfig
 import com.thoughtworks.voiceassistant.alibabakit.utils.AuthUtils
 import com.thoughtworks.voiceassistant.core.logger.Logger
@@ -17,7 +18,7 @@ class TtsConfig(
     token: String = "",
     val encodeType: String = TtsParams.EncodeType.VALUES.WAV,
     val ttsFilePath: String = "",
-    val sampleRate: Int = TtsParams.SampleRate.DEFAULT_VALUE,
+    val sampleRate: Int = TtsParams.SampleRate.VALUES.RATE_16K,
     val fontName: String = TtsParams.FontName.VALUES.ZHIMIAO_EMO,
     val enableSubtitle: String = TtsParams.EnableSubtitle.VALUES.ENABLE,
     val playSound: Boolean = true,
@@ -54,6 +55,15 @@ class TtsConfig(
             context: Context,
             params: Map<String, Any>,
         ): TtsConfig {
+            params.requireKey(AsrParams.AppKey.KEY)
+            params.requireAtLeastOneKeyGroup(
+                listOf(AsrParams.Token.KEY),
+                listOf(
+                    AsrParams.AccessKey.KEY,
+                    AsrParams.AccessKeySecret.KEY
+                )
+            )
+
             return TtsConfig(
                 accessKey = params[TtsParams.AccessKey.KEY]?.toString() ?: "",
                 accessKeySecret = params[TtsParams.AccessKeySecret.KEY]?.toString() ?: "",
@@ -65,7 +75,7 @@ class TtsConfig(
                     ?: TtsParams.EncodeType.VALUES.WAV,
                 ttsFilePath = params[TtsParams.TtsFilePath.KEY]?.toString() ?: "",
                 sampleRate = params[TtsParams.SampleRate.KEY]?.toString()?.toInt()
-                    ?: TtsParams.SampleRate.DEFAULT_VALUE,
+                    ?: TtsParams.SampleRate.VALUES.RATE_16K,
                 fontName = params[TtsParams.FontName.KEY]?.toString()
                     ?: TtsParams.FontName.VALUES.ZHIMIAO_EMO,
                 enableSubtitle = params[TtsParams.EnableSubtitle.KEY]?.toString()

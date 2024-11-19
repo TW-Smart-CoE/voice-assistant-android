@@ -24,10 +24,10 @@ class AsrConfig(
     val audioSource: String = AsrParams.AudioSource.VALUES.DEFAULT,
     val vadMode: String = AsrParams.VadMode.VALUES.P2T,
     val enableVoiceDetection: Boolean = true,
-    val maxStartSilence: Int = AsrParams.MaxStartSilence.DEFAULT_VALUE,
-    val maxEndSilence: Int = AsrParams.MaxEndSilence.DEFAULT_VALUE,
-    val speechNoiseThreshold: Float = AsrParams.SpeechNoiseThreshold.DEFAULT_VALUE,
-    val vocabularyId: String = ""
+    val maxStartSilence: Int = AsrParams.MaxStartSilence.VALUES.DEFAULT,
+    val maxEndSilence: Int = AsrParams.MaxEndSilence.VALUES.DEFAULT,
+    val speechNoiseThreshold: Float = AsrParams.SpeechNoiseThreshold.VALUES.DEFAULT,
+    val vocabularyId: String = "",
 ) : AlibabaConfig(accessKey, accessKeySecret, appKey, deviceId, workspace, token) {
     fun getMediaRecorderAudioSource(): Int {
         return when (audioSource) {
@@ -149,6 +149,15 @@ class AsrConfig(
             context: Context,
             params: Map<String, Any>,
         ): AsrConfig {
+            params.requireKey(AsrParams.AppKey.KEY)
+            params.requireAtLeastOneKeyGroup(
+                listOf(AsrParams.Token.KEY),
+                listOf(
+                    AsrParams.AccessKey.KEY,
+                    AsrParams.AccessKeySecret.KEY
+                )
+            )
+
             var debugPath = ""
             context.externalCacheDir?.absolutePath?.also {
                 debugPath = "$it/debug_${System.currentTimeMillis()}"
@@ -170,11 +179,11 @@ class AsrConfig(
                 enableVoiceDetection = params[AsrParams.EnableVoiceDetection.KEY]?.toString()
                     ?.toBoolean() != false,
                 maxStartSilence = params[AsrParams.MaxStartSilence.KEY]?.toString()?.toInt()
-                    ?: AsrParams.MaxStartSilence.DEFAULT_VALUE,
+                    ?: AsrParams.MaxStartSilence.VALUES.DEFAULT,
                 maxEndSilence = params[AsrParams.MaxEndSilence.KEY]?.toString()?.toInt()
-                    ?: AsrParams.MaxEndSilence.DEFAULT_VALUE,
+                    ?: AsrParams.MaxEndSilence.VALUES.DEFAULT,
                 speechNoiseThreshold = params[AsrParams.SpeechNoiseThreshold.KEY]?.toString()
-                    ?.toFloat() ?: AsrParams.SpeechNoiseThreshold.DEFAULT_VALUE,
+                    ?.toFloat() ?: AsrParams.SpeechNoiseThreshold.VALUES.DEFAULT,
                 vocabularyId = params[AsrParams.VocabularyId.KEY]?.toString() ?: ""
             )
         }

@@ -46,22 +46,31 @@ object AsrParams {
 
     object EnableVoiceDetection {
         const val KEY = "enable_voice_detection"
-        const val DEFAULT_VALUE = true
+        object VALUES {
+            const val TRUE = true
+            const val FALSE = false
+        }
     }
 
     object MaxStartSilence {
         const val KEY = "max_start_silence"
-        const val DEFAULT_VALUE = 10000
+        object VALUES {
+            const val DEFAULT = 10000
+        }
     }
 
     object MaxEndSilence {
         const val KEY = "max_end_silence"
-        const val DEFAULT_VALUE = 800
+        object VALUES {
+            const val DEFAULT = 800
+        }
     }
 
     object SpeechNoiseThreshold {
         const val KEY = "speech_noise_threshold"
-        const val DEFAULT_VALUE = 0.7f
+        object VALUES {
+            const val DEFAULT = 0.7f
+        }
     }
 
     object VocabularyId {
