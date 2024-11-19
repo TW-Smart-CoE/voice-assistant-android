@@ -4,6 +4,7 @@ import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
+import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.AlibabaTts
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsConfig
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
@@ -60,6 +61,6 @@ class PcmPlayer(
     }
 
     companion object {
-        private const val TAG = "PcmPlayer"
+        private const val TAG = "${AlibabaTts.TAG}.PcmPlayer"
     }
 }

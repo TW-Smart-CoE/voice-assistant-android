@@ -1,5 +1,6 @@
 package com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player
 
+import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.AlibabaTts
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsParams
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsConfig
 import com.thoughtworks.voiceassistant.core.logger.Logger
@@ -75,6 +76,6 @@ class PlayerManager(
     }
 
     companion object {
-        private const val TAG = "PlayerManager"
+        private const val TAG = "${AlibabaTts.TAG}.PlayerManager"
     }
 }

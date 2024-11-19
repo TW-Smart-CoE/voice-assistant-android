@@ -1,5 +1,6 @@
 package com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player
 
+import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.AlibabaTts
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsConfig
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.error
@@ -55,6 +56,6 @@ class TtsFileWriter(
     }
 
     companion object {
-        private const val TAG = "TtsFileWriter"
+        private const val TAG = "${AlibabaTts.TAG}.TtsFileWriter"
     }
 }

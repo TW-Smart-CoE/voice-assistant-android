@@ -1,6 +1,7 @@
 package com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player
 
 import android.media.MediaPlayer
+import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.AlibabaTts
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsConfig
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
@@ -55,6 +56,6 @@ class Mp3Player(
     }
 
     companion object {
-        private const val TAG = "Mp3Player"
+        private const val TAG = "${AlibabaTts.TAG}.Mp3Player"
     }
 }

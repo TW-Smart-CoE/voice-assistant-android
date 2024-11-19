@@ -306,7 +306,7 @@ class AlibabaTts private constructor(
     }
 
     companion object {
-        private const val TAG = "AlibabaTts"
+        const val TAG = "AlibabaTts"
         private const val MAX_TEXT_NUM = 300
 
         fun create(
