@@ -45,6 +45,13 @@ class AlibabaAsr(
     var onHeard: ((String) -> Unit)? = null
 
     private val nuiCallback = object : INativeNuiCallback {
+        private fun logEvent(event: Constants.NuiEvent, resultCode: Int) {
+            logger.debug(
+                TAG,
+                "onNuiEventCallback event:$event resultCode:$resultCode"
+            )
+        }
+
         override fun onNuiEventCallback(
             event: Constants.NuiEvent,
             resultCode: Int,
@@ -52,11 +59,6 @@ class AlibabaAsr(
             kwsResult: KwsResult?,
             asrResult: AsrResult?,
         ) {
-            logger.debug(
-                TAG,
-                "onNuiEventCallback event:$event resultCode:$resultCode"
-            )
-
             when (event) {
                 Constants.NuiEvent.EVENT_ASR_RESULT -> {
                     asrResult?.let {
@@ -72,10 +74,8 @@ class AlibabaAsr(
                 Constants.NuiEvent.EVENT_ASR_PARTIAL_RESULT -> {
                 }
 
-                Constants.NuiEvent.EVENT_SENTENCE_START -> {
-                }
-
                 Constants.NuiEvent.EVENT_SENTENCE_END -> {
+                    logEvent(event, resultCode)
                     asrResult?.let {
                         val result = gson.fromJson(it.asrResult, ASRResult::class.java)
                         result.payload?.result?.let { payload ->
@@ -92,15 +92,15 @@ class AlibabaAsr(
                 }
 
                 Constants.NuiEvent.EVENT_VAD_START -> {
-                    logger.debug(TAG, "onStartListening")
+                    logEvent(event, resultCode)
                 }
 
                 Constants.NuiEvent.EVENT_VAD_END -> {
-                    logger.debug(TAG, "onStopListening")
+                    logEvent(event, resultCode)
                 }
 
                 Constants.NuiEvent.EVENT_VAD_TIMEOUT -> {
-                    logger.debug(TAG, "onTimeout")
+                    logEvent(event, resultCode)
                 }
 
                 Constants.NuiEvent.EVENT_DIALOG_EX -> {
@@ -109,7 +109,7 @@ class AlibabaAsr(
                 }
 
                 else -> {
-                    logger.debug(TAG, event.name)
+                    logEvent(event, resultCode)
                 }
             }
         }
