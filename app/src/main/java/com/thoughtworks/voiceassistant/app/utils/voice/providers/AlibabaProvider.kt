@@ -18,6 +18,7 @@ object AlibabaProvider {
                 AsrParams.AccessKeySecret.KEY to BuildConfig.ALI_IVS_ACCESS_KEY_SECRET,
                 AsrParams.AppKey.KEY to BuildConfig.ALI_IVS_APP_KEY,
                 AsrParams.AudioSource.KEY to AsrParams.AudioSource.VALUES.COMMUNICATION,
+                AsrParams.RecognitionType.KEY to AsrParams.RecognitionType.VALUES.LONG,
             )
         )
     }

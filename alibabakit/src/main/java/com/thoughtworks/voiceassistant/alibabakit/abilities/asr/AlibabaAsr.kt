@@ -42,6 +42,7 @@ class AlibabaAsr(
     private lateinit var audioRecorder: AudioRecord
     private val gson = Gson()
     var asrListener: AsrListener? = null
+    var onHeard: ((String) -> Unit)? = null
 
     private val nuiCallback = object : INativeNuiCallback {
         override fun onNuiEventCallback(
@@ -63,6 +64,7 @@ class AlibabaAsr(
                         result.payload?.result?.let { payload ->
                             logger.debug(TAG, "RESULT: $payload")
                             asrListener?.onResult(payload)
+                            onHeard?.invoke(payload)
                         }
                     }
                 }
@@ -70,10 +72,23 @@ class AlibabaAsr(
                 Constants.NuiEvent.EVENT_ASR_PARTIAL_RESULT -> {
                 }
 
+                Constants.NuiEvent.EVENT_SENTENCE_START -> {
+                }
+
+                Constants.NuiEvent.EVENT_SENTENCE_END -> {
+                    asrResult?.let {
+                        val result = gson.fromJson(it.asrResult, ASRResult::class.java)
+                        result.payload?.result?.let { payload ->
+                            logger.debug(TAG, "SENTENCE: $payload")
+                            onHeard?.invoke(payload)
+                        }
+                    }
+                }
+
                 Constants.NuiEvent.EVENT_ASR_ERROR -> {
                     logger.error(TAG, "EVENT_ASR_ERROR: $resultCode")
                     asrListener?.onError("EVENT_ASR_ERROR: $resultCode")
-                    asrListener = null
+                    clearListeners()
                 }
 
                 Constants.NuiEvent.EVENT_VAD_START -> {
@@ -211,7 +226,9 @@ class AlibabaAsr(
         this.asrListener = listener
     }
 
-    override suspend fun listen(): Asr.Result {
+    override suspend fun listen(onHeard: ((String) -> Unit)?): Asr.Result {
+        this.onHeard = onHeard
+
         return suspendCoroutine { continuation ->
             CoroutineScope(Dispatchers.IO).launch {
                 listen(object : AsrListener {
@@ -256,8 +273,14 @@ class AlibabaAsr(
             return
         }
 
-        asrListener = null
+        asrListener?.onResult("")
+        clearListeners()
         nuiInstance.stopDialog()
+    }
+
+    private fun clearListeners() {
+        asrListener = null
+        onHeard = null
     }
 
     companion object {

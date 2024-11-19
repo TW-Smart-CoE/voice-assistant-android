@@ -19,6 +19,7 @@ class AsrConfig(
     deviceId: String = "",
     workspace: String = "",
     token: String = "",
+    val recognitionType: String = AsrParams.RecognitionType.VALUES.SINGLE,
     val debugPath: String = "",
     val audioSource: String = AsrParams.AudioSource.VALUES.DEFAULT,
     val vadMode: String = AsrParams.VadMode.VALUES.P2T,
@@ -39,6 +40,24 @@ class AsrConfig(
             AsrParams.VadMode.VALUES.VAD -> VadMode.TYPE_VAD
             else -> VadMode.TYPE_P2T
         }
+    }
+
+    private fun getServiceType(): Int {
+        return when (recognitionType) {
+            AsrParams.RecognitionType.VALUES.LONG -> Constants.kServiceTypeSpeechTranscriber
+            else -> Constants.kServiceTypeASR
+        }
+    }
+
+    private fun getServiceMode(): String {
+        return when (recognitionType) {
+            AsrParams.RecognitionType.VALUES.LONG -> Constants.ModeFullCloud
+            else -> Constants.ModeAsrCloud
+        }
+    }
+
+    private fun isSingleRecognition(): Boolean {
+        return recognitionType == AsrParams.RecognitionType.VALUES.SINGLE
     }
 
     override suspend fun generateTicket(
@@ -63,7 +82,7 @@ class AsrConfig(
             put("sample_rate", "16000")
             put("format", "opus")
             put("debug_path", debugPath)
-            put("service_mode", Constants.ModeAsrCloud)
+            put("service_mode", getServiceMode())
         }
         return jsonObj.toString()
     }
@@ -79,9 +98,12 @@ class AsrConfig(
             //nls_config.put("enable_inverse_text_normalization", true);
             //nls_config.put("customization_id", "test_id");
             //nls_config.put("vocabulary_id", "test_id");
-            nlsConfig.put("enable_voice_detection", enableVoiceDetection)
-            nlsConfig.put("max_start_silence", maxStartSilence)
-            nlsConfig.put("max_end_silence", maxEndSilence)
+            if (isSingleRecognition()) {
+                nlsConfig.put("enable_voice_detection", enableVoiceDetection)
+                nlsConfig.put("max_start_silence", maxStartSilence)
+                nlsConfig.put("max_end_silence", maxEndSilence)
+            }
+
             nlsConfig.put(
                 "speech_noise_threshold", speechNoiseThreshold
             ) // https://help.aliyun.com/document_detail/316816.html
@@ -90,7 +112,7 @@ class AsrConfig(
             //nls_config.put("sr_format", "opus");
             val parameters = JSONObject()
             parameters.put("nls_config", nlsConfig)
-            parameters.put("service_type", Constants.kServiceTypeASR)
+            parameters.put("service_type", getServiceType())
 
             //如果有HttpDns则可进行设置
             //parameters.put("direct_ip", Utils.getDirectIp());
@@ -132,6 +154,8 @@ class AsrConfig(
                 accessKeySecret = params[AsrParams.AccessKeySecret.KEY]?.toString() ?: "",
                 appKey = params[AsrParams.AppKey.KEY]?.toString() ?: "",
                 token = params[AsrParams.Token.KEY]?.toString() ?: "",
+                recognitionType = params[AsrParams.RecognitionType.KEY]?.toString()
+                    ?: AsrParams.RecognitionType.VALUES.SINGLE,
                 deviceId = DeviceUtils.getDeviceId(context),
                 workspace = CommonUtils.getModelPath(context),
                 debugPath = debugPath,

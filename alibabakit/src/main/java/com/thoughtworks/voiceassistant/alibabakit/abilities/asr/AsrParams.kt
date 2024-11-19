@@ -19,14 +19,25 @@ object AsrParams {
 
     object AudioSource {
         const val KEY = "audio_source"
+
         object VALUES {
             const val DEFAULT = "default"
             const val COMMUNICATION = "COMMUNICATION"
         }
     }
 
+    object RecognitionType {
+        const val KEY = "recognition_type"
+
+        object VALUES {
+            const val SINGLE = "single"
+            const val LONG = "long"
+        }
+    }
+
     object VadMode {
         const val KEY = "vad_mode"
+
         object VALUES {
             const val P2T = "P2T"
             const val VAD = "VAD"

@@ -183,7 +183,9 @@ class VoiceInteractionViewModel(
 
     private fun asrListen() {
         viewModelScope.launch {
-            val result = voiceManager.asr.listen()
+            val result = voiceManager.asr.listen {
+                Log.d(TAG, "onHeard: $it")
+            }
             Log.d(TAG, result.toString())
             sendAction(VoiceInteractionAction.AsrStop)
         }
