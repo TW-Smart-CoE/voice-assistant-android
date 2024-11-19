@@ -181,7 +181,7 @@ class AlibabaAsr(
         nuiInstance.setParams(config.genParams())
         isInit = true
 
-        logger.debug(TAG, "ASR instance initialize success")
+        logger.debug(TAG, "ASR instance initialized successfully")
     }
 
     override fun release() {

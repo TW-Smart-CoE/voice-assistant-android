@@ -18,13 +18,12 @@ object AlibabaProvider {
                 AsrParams.AccessKeySecret.KEY to BuildConfig.ALI_IVS_ACCESS_KEY_SECRET,
                 AsrParams.AppKey.KEY to BuildConfig.ALI_IVS_APP_KEY,
                 AsrParams.AudioSource.KEY to AsrParams.AudioSource.VALUES.COMMUNICATION,
-                AsrParams.VadMode.KEY to AsrParams.VadMode.VALUES.P2T,
             )
         )
     }
 
     fun createTts(context: Context): Tts {
-        val encodeType = TtsParams.EncodeType.VALUES.MP3
+        val encodeType = TtsParams.EncodeType.VALUES.WAV
 
         return AlibabaTts.create(
             context,
