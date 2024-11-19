@@ -14,7 +14,7 @@ data class AbilityConfigState(
     val chatProviderList: List<ServiceProvider> = emptyList(),
 ) : State
 
-sealed class AbilityConfigEvent : Event
+sealed interface AbilityConfigEvent : Event
 
 sealed interface AbilityConfigAction : Action {
     data class SelectTtsProvider(val provider: ServiceProvider) : AbilityConfigAction

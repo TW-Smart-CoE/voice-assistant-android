@@ -22,7 +22,7 @@ object AsrParams {
 
         object VALUES {
             const val DEFAULT = "default"
-            const val COMMUNICATION = "COMMUNICATION"
+            const val COMMUNICATION = "communication"
         }
     }
 
@@ -62,5 +62,9 @@ object AsrParams {
     object SpeechNoiseThreshold {
         const val KEY = "speech_noise_threshold"
         const val DEFAULT_VALUE = 0.7f
+    }
+
+    object VocabularyId {
+        const val KEY = "vocabulary_id"
     }
 }

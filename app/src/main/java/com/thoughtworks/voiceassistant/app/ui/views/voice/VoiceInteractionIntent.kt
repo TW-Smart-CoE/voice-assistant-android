@@ -35,7 +35,9 @@ data class VoiceInteractionState(
     val chat: ChatState = ChatState(),
 ) : State
 
-sealed class VoiceInteractionEvent : Event
+sealed interface VoiceInteractionEvent : Event {
+    data class ShowToast(val text: String) : VoiceInteractionEvent
+}
 
 sealed interface VoiceInteractionAction : Action {
     data class ChangeTtsPrompt(val text: String) : VoiceInteractionAction

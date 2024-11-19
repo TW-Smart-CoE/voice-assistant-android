@@ -27,6 +27,7 @@ class AsrConfig(
     val maxStartSilence: Int = AsrParams.MaxStartSilence.DEFAULT_VALUE,
     val maxEndSilence: Int = AsrParams.MaxEndSilence.DEFAULT_VALUE,
     val speechNoiseThreshold: Float = AsrParams.SpeechNoiseThreshold.DEFAULT_VALUE,
+    val vocabularyId: String = ""
 ) : AlibabaConfig(accessKey, accessKeySecret, appKey, deviceId, workspace, token) {
     fun getMediaRecorderAudioSource(): Int {
         return when (audioSource) {
@@ -108,6 +109,10 @@ class AsrConfig(
                 "speech_noise_threshold", speechNoiseThreshold
             ) // https://help.aliyun.com/document_detail/316816.html
 
+            if (vocabularyId.isNotEmpty()) {
+                nlsConfig.put("vocabulary_id", vocabularyId)
+            }
+
             //nls_config.put("sample_rate", 16000);
             //nls_config.put("sr_format", "opus");
             val parameters = JSONObject()
@@ -170,6 +175,7 @@ class AsrConfig(
                     ?: AsrParams.MaxEndSilence.DEFAULT_VALUE,
                 speechNoiseThreshold = params[AsrParams.SpeechNoiseThreshold.KEY]?.toString()
                     ?.toFloat() ?: AsrParams.SpeechNoiseThreshold.DEFAULT_VALUE,
+                vocabularyId = params[AsrParams.VocabularyId.KEY]?.toString() ?: ""
             )
         }
     }

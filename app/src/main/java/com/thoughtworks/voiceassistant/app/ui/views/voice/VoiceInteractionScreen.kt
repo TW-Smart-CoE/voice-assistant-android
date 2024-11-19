@@ -1,5 +1,6 @@
 package com.thoughtworks.voiceassistant.app.ui.views.voice
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,8 +24,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -33,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.thoughtworks.voiceassistant.app.R
 import com.thoughtworks.voiceassistant.app.di.Dependency
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +45,8 @@ fun VoiceInteractionScreen(dependency: Dependency) {
     val factory = remember { VoiceInteractionViewModelFactory(dependency) }
     val viewModel: VoiceInteractionViewModel = viewModel(factory = factory)
     val state = viewModel.uiState.collectAsState()
+    val event = viewModel.uiEvent
+    val scope = rememberCoroutineScope()
 
     val context = LocalContext.current
 
@@ -76,6 +83,16 @@ fun VoiceInteractionScreen(dependency: Dependency) {
             }
         }
     )
+
+    LaunchedEffect(Unit) {
+        event.onEach { event ->
+            when (event) {
+                is VoiceInteractionEvent.ShowToast -> {
+                    Toast.makeText(context, event.text, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }.launchIn(scope)
+    }
 }
 
 @Composable
