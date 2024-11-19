@@ -246,7 +246,7 @@ class AlibabaTts private constructor(
                     override fun onPlayEnd() {
                         resumeWithoutComplain(
                             Tts.Result(
-                                success = true,
+                                isSuccess = true,
                                 ttsFilePath = config.ttsFilePath
                             )
                         )
@@ -255,7 +255,7 @@ class AlibabaTts private constructor(
                     override fun onPlayCancel() {
                         resumeWithoutComplain(
                             Tts.Result(
-                                success = false,
+                                isSuccess = false,
                                 errorMessage = "cancel"
                             )
                         )
@@ -264,7 +264,7 @@ class AlibabaTts private constructor(
                     override fun onError(errorMessage: String) {
                         resumeWithoutComplain(
                             Tts.Result(
-                                success = false,
+                                isSuccess = false,
                                 errorMessage = errorMessage,
                             )
                         )

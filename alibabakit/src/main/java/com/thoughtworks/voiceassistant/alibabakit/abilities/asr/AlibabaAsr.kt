@@ -244,7 +244,7 @@ class AlibabaAsr(
                     override fun onResult(result: String) {
                         resumeWithoutComplain(
                             Asr.Result(
-                                success = true,
+                                isSuccess = true,
                                 heardContent = result
                             )
                         )
@@ -253,7 +253,7 @@ class AlibabaAsr(
                     override fun onError(error: String) {
                         resumeWithoutComplain(
                             Asr.Result(
-                                success = false,
+                                isSuccess = false,
                                 errorMessage = error
                             )
                         )
