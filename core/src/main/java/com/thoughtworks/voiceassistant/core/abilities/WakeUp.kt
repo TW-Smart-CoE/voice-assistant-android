@@ -8,7 +8,7 @@ interface WakeUp {
     )
 
     suspend fun initialize(): Boolean
-    suspend fun listen(onWakeUp: ((Int) -> Unit)?): Result
+    suspend fun listen(onWakeUp: ((Int) -> Unit)? = null): Result
     fun stop()
     fun release()
 }

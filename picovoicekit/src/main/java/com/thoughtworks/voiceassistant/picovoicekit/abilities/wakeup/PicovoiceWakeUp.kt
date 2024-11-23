@@ -43,13 +43,16 @@ class PicovoiceWakeUp(
         }
 
         try {
-            porcupineManager = PorcupineManager.Builder()
-                .setAccessKey(wakeUpConfig.accessKey)
-                .setModelPath(wakeUpConfig.modelPath)
-                .setKeywordPaths(wakeUpConfig.keywordPaths)
-                .build(context, wakeWordCallback)
+            PorcupineManager.Builder().apply {
+                setAccessKey(wakeUpConfig.accessKey)
+                setKeywordPaths(wakeUpConfig.keywordPaths)
+                if (wakeUpConfig.modelPath.isNotEmpty()) {
+                    setModelPath(wakeUpConfig.modelPath)
+                }
+                porcupineManager = build(context, wakeWordCallback)
+            }
         } catch (e: Exception) {
-            logger.error(TAG, "Failed to initialize wakeup manager: ${e.message}")
+            logger.error(TAG, "Failed to initialize WakeUpManager: ${e.message}")
             return false
         }
 
