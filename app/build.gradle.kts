@@ -45,6 +45,7 @@ android {
         addBuildConfigFieldFromProperties(localProperties, "ALI_IVS_ACCESS_KEY")
         addBuildConfigFieldFromProperties(localProperties, "ALI_IVS_ACCESS_KEY_SECRET")
         addBuildConfigFieldFromProperties(localProperties, "ALI_IVS_APP_KEY")
+        addBuildConfigFieldFromProperties(localProperties, "PICOVOICE_ACCESS_KEY")
     }
 
     sourceSets {
@@ -77,8 +78,9 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":baidukit"))
     implementation(project(":alibabakit"))
+    implementation(project(":baidukit"))
+    implementation(project(":picovoicekit"))
     implementation(project(":iflytekkit"))
     implementation(project(":openaikit"))
 

@@ -7,7 +7,7 @@ interface Asr {
         val errorMessage: String = "",
     )
 
-    suspend fun initialize()
+    suspend fun initialize(): Boolean
     fun release()
     suspend fun listen(onHeard: ((String) -> Unit)? = null): Result
     fun stop()

@@ -159,6 +159,14 @@ class VoiceInteractionViewModel(
                 navigator.navigateBack()
             }
 
+            is VoiceInteractionAction.WakeUpListen -> {
+               wakeUpListen()
+            }
+
+            is VoiceInteractionAction.WakeUpStop -> {
+                voiceManager.wakeUp.stop()
+            }
+
             is VoiceInteractionAction.AsrListen -> {
                 asrListen()
             }
@@ -178,6 +186,17 @@ class VoiceInteractionViewModel(
 
             else -> {
             }
+        }
+    }
+
+    private fun wakeUpListen() {
+        viewModelScope.launch {
+            val result = voiceManager.wakeUp.listen {
+                Log.d(TAG, "onWakeUp: $it")
+                sendEvent(VoiceInteractionEvent.ShowToast(it.toString()))
+            }
+            Log.d(TAG, result.toString())
+            sendAction(VoiceInteractionAction.WakeUpStop)
         }
     }
 

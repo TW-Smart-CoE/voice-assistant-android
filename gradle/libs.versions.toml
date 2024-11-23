@@ -15,8 +15,7 @@ gson = "2.11.0"
 okhttp = "4.12.0"
 nuisdk = "0.1.8"
 alibabaFastjson = "1.2.83"
-alibabaNls = "2.1.6"
-aliyunCore = "4.7.2"
+picovoicePorcupine = "3.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +39,7 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 nuisdk = { group = "com.github.TW-Smart-CoE", name = "nuisdk", version.ref = "nuisdk" }
 alibaba-fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "alibabaFastjson" }
+picovoice-porcupine = { group = "ai.picovoice", name = "porcupine-android", version.ref = "picovoicePorcupine" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

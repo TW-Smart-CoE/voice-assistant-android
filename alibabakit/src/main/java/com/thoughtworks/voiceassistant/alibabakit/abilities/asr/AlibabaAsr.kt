@@ -32,9 +32,9 @@ class AlibabaAsr(
     private val config: AsrConfig,
 ) : Asr {
     interface AsrListener {
-        fun onResult(text: String) {}
-        fun onError(errorMessage: String) {}
-        fun onVolumeChanged(volume: Float) {}
+        fun onResult(text: String)
+        fun onError(errorMessage: String)
+        fun onVolumeChanged(volume: Float)
     }
 
     private var isInit = false
@@ -152,10 +152,10 @@ class AlibabaAsr(
     }
 
     @SuppressLint("MissingPermission")
-    override suspend fun initialize() {
+    override suspend fun initialize(): Boolean {
         if (isInit) {
-            logger.debug(TAG, "ASR instance has been initialized")
-            return
+            logger.debug(TAG, "ASR instance is already initialized")
+            return true
         }
 
         if (ActivityCompat.checkSelfPermission(
@@ -164,7 +164,7 @@ class AlibabaAsr(
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             logger.error(TAG, "Manifest.permission.RECORD_AUDIO does not granted")
-            return
+            return false
         }
 
         val ticket = config.generateTicket(context, logger)
@@ -178,7 +178,7 @@ class AlibabaAsr(
             logger.debug(TAG, "copy assets data done")
         } else {
             logger.error(TAG, "copy assets failed")
-            return
+            return false
         }
 
         val ret: Int = nuiInstance.initialize(
@@ -190,13 +190,15 @@ class AlibabaAsr(
 
         if (ret != Constants.NuiResultCode.SUCCESS) {
             logger.error(TAG, "ASR instance initialize failed: result = $ret")
-            return
+            return false
         }
 
         nuiInstance.setParams(config.genParams())
-        isInit = true
 
+        isInit = true
         logger.debug(TAG, "ASR instance initialized successfully")
+
+        return isInit
     }
 
     override fun release() {

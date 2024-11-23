@@ -7,7 +7,7 @@ interface Tts {
         val ttsFilePath: String = "",
     )
 
-    suspend fun initialize()
+    suspend fun initialize(): Boolean
     fun release()
     suspend fun speak(text: String, params: Map<String, Any> = emptyMap()): Result
     fun stop()

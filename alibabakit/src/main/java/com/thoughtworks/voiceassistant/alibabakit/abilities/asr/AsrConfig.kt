@@ -9,6 +9,8 @@ import com.thoughtworks.voiceassistant.alibabakit.utils.AlibabaConfig
 import com.thoughtworks.voiceassistant.alibabakit.utils.AuthUtils
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.utils.DeviceUtils
+import com.thoughtworks.voiceassistant.core.utils.ParamUtils.requireAtLeastOneKeyGroup
+import com.thoughtworks.voiceassistant.core.utils.ParamUtils.requireKey
 import org.json.JSONException
 import org.json.JSONObject
 

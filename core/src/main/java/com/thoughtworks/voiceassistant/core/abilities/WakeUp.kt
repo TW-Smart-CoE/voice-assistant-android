@@ -1,14 +1,14 @@
 package com.thoughtworks.voiceassistant.core.abilities
 
-interface WakeUpCallback {
-    fun onSuccess(keywordIndex: Int) {}
-    fun onError(errorCode: Int, errorMessage: String) {}
-    fun onStop() {}
-}
-
 interface WakeUp {
-    fun initialize()
-    fun listen(wakeUpCallback: WakeUpCallback? = null)
+    data class Result(
+        val isSuccess: Boolean = false,
+        val keywordIndex: Int = 0,
+        val errorMessage: String = "",
+    )
+
+    suspend fun initialize(): Boolean
+    suspend fun listen(onWakeUp: ((Int) -> Unit)?): Result
     fun stop()
     fun release()
 }

@@ -39,18 +39,18 @@ class DataRepository(
     }
 
     private fun getTtsServiceProviderList(): List<ServiceProvider> {
-        return listOf(ServiceProvider.ALIBABA, ServiceProvider.BAIDU)
+        return listOf(ServiceProvider.ALIBABA)
     }
 
     private fun getAsrServiceProviderList(): List<ServiceProvider> {
-        return listOf(ServiceProvider.ALIBABA, ServiceProvider.BAIDU, ServiceProvider.IFLYTEK)
+        return listOf(ServiceProvider.ALIBABA)
     }
 
     private fun getWakeUpServiceProviderList(): List<ServiceProvider> {
-        return listOf(ServiceProvider.BAIDU, ServiceProvider.IFLYTEK)
+        return listOf(ServiceProvider.PICOVOICE)
     }
 
     private fun getChatServiceProviderList(): List<ServiceProvider> {
-        return listOf(ServiceProvider.OPENAI, ServiceProvider.BAIDU)
+        return listOf(ServiceProvider.OPENAI)
     }
 }

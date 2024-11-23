@@ -4,6 +4,7 @@ import android.content.Context
 import com.thoughtworks.voiceassistant.app.data.models.AbilityDataCollection
 import com.thoughtworks.voiceassistant.app.definitions.ServiceProvider
 import com.thoughtworks.voiceassistant.app.utils.voice.providers.AlibabaProvider
+import com.thoughtworks.voiceassistant.app.utils.voice.providers.PicovoiceProvider
 import com.thoughtworks.voiceassistant.core.abilities.Asr
 import com.thoughtworks.voiceassistant.core.abilities.Chat
 import com.thoughtworks.voiceassistant.core.abilities.Tts
@@ -19,11 +20,19 @@ class VoiceManager(
     lateinit var chat: Chat
 
     init {
+        createWakeUp()
         createAsr()
         createTts()
     }
 
+    private fun createWakeUp() {
+        when (abilityCollection.wakeUp.provider.lowercase()) {
+            ServiceProvider.PICOVOICE.name.lowercase() -> wakeUp = PicovoiceProvider.createWakeUp(context)
+        }
+    }
+
     suspend fun initialize() {
+        wakeUp.initialize()
         asr.initialize()
         tts.initialize()
     }

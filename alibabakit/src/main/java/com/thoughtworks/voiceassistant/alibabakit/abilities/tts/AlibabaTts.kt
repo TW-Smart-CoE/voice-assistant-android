@@ -29,11 +29,11 @@ class AlibabaTts private constructor(
     private val config: TtsConfig,
 ) : Tts {
     interface TtsListener {
-        fun onPlayStart() {}
-        fun onPlayEnd() {}
-        fun onPlayCancel() {}
-        fun onError(errorMessage: String) {}
-        fun onTTSFileSaved(ttsFilePath: String) {}
+        fun onPlayStart()
+        fun onPlayEnd()
+        fun onPlayCancel()
+        fun onError(errorMessage: String)
+        fun onTTSFileSaved(ttsFilePath: String)
     }
 
     private val ttsInstance = NativeNui(Constants.ModeType.MODE_TTS)
@@ -147,17 +147,17 @@ class AlibabaTts private constructor(
         }
     }
 
-    override suspend fun initialize() {
+    override suspend fun initialize(): Boolean {
         if (isInit) {
-            logger.debug(TAG, "TTS instance has been initialized")
-            return
+            logger.debug(TAG, "TTS instance is already initialized")
+            return true
         }
 
         if (CommonUtils.copyAssetsData(context)) {
             logger.debug(TAG, "copy assets data done")
         } else {
             logger.error(TAG, "copy assets failed")
-            return
+            return false
         }
 
         val ticket = config.generateTicket(context, logger)
@@ -176,6 +176,8 @@ class AlibabaTts private constructor(
             logger.debug(TAG, "TTS instance initialized successfully")
             isInit = true
         }
+
+        return isInit
     }
 
     override fun release() {
