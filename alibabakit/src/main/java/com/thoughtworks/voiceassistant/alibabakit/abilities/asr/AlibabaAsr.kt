@@ -66,8 +66,8 @@ class AlibabaAsr(
                         val result = gson.fromJson(it.asrResult, ASRResult::class.java)
                         result.payload?.result?.let { payload ->
                             logger.debug(TAG, "RESULT: $payload")
-                            asrListener?.onResult(payload)
                             onHeard?.invoke(payload)
+                            asrListener?.onResult(payload)
                         }
                     }
                 }

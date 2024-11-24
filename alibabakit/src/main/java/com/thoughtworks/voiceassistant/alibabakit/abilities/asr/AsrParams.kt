@@ -62,7 +62,7 @@ object AsrParams {
     object MaxEndSilence {
         const val KEY = "max_end_silence"
         object VALUES {
-            const val DEFAULT = 800
+            const val DEFAULT = 1500
         }
     }
 
