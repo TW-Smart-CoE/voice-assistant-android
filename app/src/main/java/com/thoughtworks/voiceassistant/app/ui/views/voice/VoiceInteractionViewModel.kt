@@ -12,6 +12,7 @@ import com.thoughtworks.voiceassistant.app.foundation.mvi.DefaultStore
 import com.thoughtworks.voiceassistant.app.foundation.mvi.MVIViewModel
 import com.thoughtworks.voiceassistant.app.foundation.mvi.Store
 import com.thoughtworks.voiceassistant.app.utils.voice.VoiceManager
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class VoiceInteractionViewModel(
@@ -26,6 +27,7 @@ class VoiceInteractionViewModel(
 ) : MVIViewModel<VoiceInteractionState, VoiceInteractionEvent, VoiceInteractionAction>(store) {
     private val navigator = dependency.navigator
     private val dataSource = dependency.dataSource
+    private val ioDispatcher = dependency.coroutineDispatchers.ioDispatcher
 
     private lateinit var abilityCollection: AbilityDataCollection
     private lateinit var voiceManager: VoiceManager
@@ -34,6 +36,20 @@ class VoiceInteractionViewModel(
         initAbilities(dependency.context)
         viewModelScope.launch {
             voiceManager.initialize()
+        }
+
+//        checkStatusAsync()
+    }
+
+    private fun checkStatusAsync() {
+        viewModelScope.launch(ioDispatcher) {
+            while (true) {
+                Log.d(
+                    TAG,
+                    "isTtsSpeaking = ${voiceManager.tts.isSpeaking()}, isAsrListening = ${voiceManager.asr.isListening()}, isWakeUpListening = ${voiceManager.wakeUp.isListening()}"
+                )
+                delay(1000L)
+            }
         }
     }
 
@@ -160,7 +176,7 @@ class VoiceInteractionViewModel(
             }
 
             is VoiceInteractionAction.WakeUpListen -> {
-               wakeUpListen()
+                wakeUpListen()
             }
 
             is VoiceInteractionAction.WakeUpStop -> {

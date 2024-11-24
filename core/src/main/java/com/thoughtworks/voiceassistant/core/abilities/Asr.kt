@@ -10,6 +10,7 @@ interface Asr {
     suspend fun initialize(): Boolean
     fun release()
     suspend fun listen(onHeard: ((String) -> Unit)? = null): Result
+    fun isListening(): Boolean
     fun stop()
 }
 

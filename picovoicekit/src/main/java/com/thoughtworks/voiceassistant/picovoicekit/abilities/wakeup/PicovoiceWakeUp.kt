@@ -20,6 +20,7 @@ class PicovoiceWakeUp(
     private val wakeUpConfig: WakeUpConfig,
 ) : WakeUp {
     private var isInit = false
+    private var isListening = false
     private var wakeUpListener: WakeUpListener? = null
 
     interface WakeUpListener {
@@ -73,6 +74,7 @@ class PicovoiceWakeUp(
     }
 
     override suspend fun listen(onWakeUp: ((Int) -> Unit)?): WakeUp.Result {
+        isListening = true
         return suspendCoroutine { continuation ->
             CoroutineScope(Dispatchers.IO).launch {
                 listen(object : WakeUpListener {
@@ -82,6 +84,9 @@ class PicovoiceWakeUp(
                                 result
                             )
                         } catch (_: Exception) {
+                        } finally {
+                            isListening = false
+                            wakeUpListener = null
                         }
                     }
 
@@ -114,11 +119,20 @@ class PicovoiceWakeUp(
                     }
 
                     override fun onStop() {
-                        wakeUpListener = null
+                        resumeWithoutComplain(
+                            WakeUp.Result(
+                                isSuccess = false,
+                                errorMessage = "stopped"
+                            )
+                        )
                     }
                 })
             }
         }
+    }
+
+    override fun isListening(): Boolean {
+        return isListening
     }
 
     override fun stop() {
@@ -128,13 +142,14 @@ class PicovoiceWakeUp(
         }
 
         porcupineManager?.stop()
-        wakeUpListener = null
+        wakeUpListener?.onStop()
     }
 
     override fun release() {
         if (isInit) {
             wakeUpListener = null
             porcupineManager?.delete()
+            porcupineManager = null
             isInit = false
         }
     }

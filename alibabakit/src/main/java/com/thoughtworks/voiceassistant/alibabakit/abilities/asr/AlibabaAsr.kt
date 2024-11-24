@@ -38,11 +38,12 @@ class AlibabaAsr(
     }
 
     private var isInit = false
+    private var isListening = false
     private val nuiInstance = NativeNui()
     private lateinit var audioRecorder: AudioRecord
     private val gson = Gson()
-    var asrListener: AsrListener? = null
-    var onHeard: ((String) -> Unit)? = null
+    private var asrListener: AsrListener? = null
+    private var onHeard: ((String) -> Unit)? = null
 
     private val nuiCallback = object : INativeNuiCallback {
         private fun logEvent(event: Constants.NuiEvent, resultCode: Int) {
@@ -88,7 +89,6 @@ class AlibabaAsr(
                 Constants.NuiEvent.EVENT_ASR_ERROR -> {
                     logger.error(TAG, "EVENT_ASR_ERROR: $resultCode")
                     asrListener?.onError("EVENT_ASR_ERROR: $resultCode")
-                    clearListeners()
                 }
 
                 Constants.NuiEvent.EVENT_VAD_START -> {
@@ -230,6 +230,7 @@ class AlibabaAsr(
 
     override suspend fun listen(onHeard: ((String) -> Unit)?): Asr.Result {
         this.onHeard = onHeard
+        isListening = true
 
         return suspendCoroutine { continuation ->
             CoroutineScope(Dispatchers.IO).launch {
@@ -240,6 +241,10 @@ class AlibabaAsr(
                                 result
                             )
                         } catch (_: Exception) {
+                        } finally {
+                            isListening = false
+                            asrListener = null
+                            this@AlibabaAsr.onHeard = null
                         }
                     }
 
@@ -269,20 +274,18 @@ class AlibabaAsr(
         }
     }
 
+    override fun isListening(): Boolean {
+        return isListening
+    }
+
     override fun stop() {
         if (!isInit) {
             logger.error(TAG, "ASR instance not initialized")
             return
         }
 
-        asrListener?.onResult("")
-        clearListeners()
         nuiInstance.stopDialog()
-    }
-
-    private fun clearListeners() {
-        asrListener = null
-        onHeard = null
+        asrListener?.onResult("")
     }
 
     companion object {

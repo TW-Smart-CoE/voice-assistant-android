@@ -10,5 +10,6 @@ interface Tts {
     suspend fun initialize(): Boolean
     fun release()
     suspend fun speak(text: String, params: Map<String, Any> = emptyMap()): Result
+    fun isSpeaking(): Boolean
     fun stop()
 }

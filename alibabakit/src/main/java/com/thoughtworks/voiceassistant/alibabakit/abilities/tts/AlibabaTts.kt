@@ -38,6 +38,7 @@ class AlibabaTts private constructor(
 
     private val ttsInstance = NativeNui(Constants.ModeType.MODE_TTS)
     private var isInit = false
+    private var isSpeaking = false
     private val taskIdManager = TaskIdManager()
     private val ttsFileWriter = TtsFileWriter(logger, config)
     private val playerManager = PlayerManager(logger, config) {
@@ -230,6 +231,7 @@ class AlibabaTts private constructor(
         text: String,
         params: Map<String, Any>,
     ): Tts.Result {
+        isSpeaking = true
         return suspendCoroutine { continuation ->
             CoroutineScope(Dispatchers.IO).launch {
                 speak(text, params, object : TtsListener {
@@ -239,6 +241,8 @@ class AlibabaTts private constructor(
                                 result
                             )
                         } catch (_: Exception) {
+                        } finally {
+                            isSpeaking = false
                         }
                     }
 
@@ -277,6 +281,10 @@ class AlibabaTts private constructor(
                 })
             }
         }
+    }
+
+    override fun isSpeaking(): Boolean {
+        return isSpeaking
     }
 
     override fun stop() {
