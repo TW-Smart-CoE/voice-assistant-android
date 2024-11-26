@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.thoughtworks.voiceassistant.app.data.models.AbilityData
 import com.thoughtworks.voiceassistant.app.data.models.AbilityDataCollection
 import com.thoughtworks.voiceassistant.app.definitions.Ability
-import com.thoughtworks.voiceassistant.app.definitions.ServiceProvider
 import com.thoughtworks.voiceassistant.app.di.Dependency
 import com.thoughtworks.voiceassistant.app.foundation.mvi.DefaultStore
 import com.thoughtworks.voiceassistant.app.foundation.mvi.MVIViewModel
@@ -60,6 +59,17 @@ class AbilityConfigViewModel(
         action: AbilityConfigAction,
     ): AbilityConfigState {
         return when (action) {
+            is AbilityConfigAction.OnLoadAbilityDataCollection -> {
+                currentState.copy(
+                    abilityDataCollection = action.abilityDataCollection.copy(
+                        tts = action.abilityDataCollection.tts,
+                        asr = action.abilityDataCollection.asr,
+                        wakeUp = action.abilityDataCollection.wakeUp,
+                        chat = action.abilityDataCollection.chat,
+                    )
+                )
+            }
+
             is AbilityConfigAction.SelectTtsProvider -> {
                 currentState.copy(
                     abilityDataCollection = currentState.abilityDataCollection.copy(
@@ -120,10 +130,7 @@ class AbilityConfigViewModel(
         scope.launch {
             val abilityDataCollection = dataSource.loadAbilityDataCollection()
             abilityDataCollection?.let {
-                sendAction(AbilityConfigAction.SelectTtsProvider(ServiceProvider.valueOf(it.tts.provider)))
-                sendAction(AbilityConfigAction.SelectAsrProvider(ServiceProvider.valueOf(it.asr.provider)))
-                sendAction(AbilityConfigAction.SelectWakeUpProvider(ServiceProvider.valueOf(it.wakeUp.provider)))
-                sendAction(AbilityConfigAction.SelectChatProvider(ServiceProvider.valueOf(it.chat.provider)))
+                sendAction(AbilityConfigAction.OnLoadAbilityDataCollection(it))
             }
         }
     }

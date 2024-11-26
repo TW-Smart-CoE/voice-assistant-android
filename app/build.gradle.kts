@@ -46,6 +46,10 @@ android {
         addBuildConfigFieldFromProperties(localProperties, "ALI_IVS_ACCESS_KEY_SECRET")
         addBuildConfigFieldFromProperties(localProperties, "ALI_IVS_APP_KEY")
         addBuildConfigFieldFromProperties(localProperties, "PICOVOICE_ACCESS_KEY")
+        addBuildConfigFieldFromProperties(localProperties, "VOLCENGINE_APP_ID")
+        addBuildConfigFieldFromProperties(localProperties, "VOLCENGINE_ACCESS_TOKEN")
+        addBuildConfigFieldFromProperties(localProperties, "VOLCENGINE_ONE_SENTENCE_RECOGNITION_CLUSTER_ID")
+        addBuildConfigFieldFromProperties(localProperties, "VOLCENGINE_STREAM_SPEECH_RECOGNITION_CLUSTER_ID")
     }
 
     sourceSets {
@@ -82,6 +86,7 @@ dependencies {
     implementation(project(":baidukit"))
     implementation(project(":picovoicekit"))
     implementation(project(":iflytekkit"))
+    implementation(project(":volcenginekit"))
     implementation(project(":openaikit"))
 
     implementation(libs.androidx.navigation.compose)

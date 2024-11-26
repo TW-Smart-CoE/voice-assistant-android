@@ -17,6 +17,7 @@ data class AbilityConfigState(
 sealed interface AbilityConfigEvent : Event
 
 sealed interface AbilityConfigAction : Action {
+    data class OnLoadAbilityDataCollection(val abilityDataCollection: AbilityDataCollection) : AbilityConfigAction
     data class SelectTtsProvider(val provider: ServiceProvider) : AbilityConfigAction
     data class SelectAsrProvider(val provider: ServiceProvider) : AbilityConfigAction
     data class SelectWakeUpProvider(val provider: ServiceProvider) : AbilityConfigAction

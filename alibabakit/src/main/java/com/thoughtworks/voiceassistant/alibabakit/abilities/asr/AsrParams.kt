@@ -30,7 +30,7 @@ object AsrParams {
         const val KEY = "recognition_type"
 
         object VALUES {
-            const val SINGLE = "single"
+            const val SINGLE_SENTENCE = "single_sentence"
             const val LONG = "long"
         }
     }

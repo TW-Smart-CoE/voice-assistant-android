@@ -5,6 +5,7 @@ import com.thoughtworks.voiceassistant.app.data.models.AbilityDataCollection
 import com.thoughtworks.voiceassistant.app.definitions.ServiceProvider
 import com.thoughtworks.voiceassistant.app.utils.voice.providers.AlibabaProvider
 import com.thoughtworks.voiceassistant.app.utils.voice.providers.PicovoiceProvider
+import com.thoughtworks.voiceassistant.app.utils.voice.providers.VolcengineProvider
 import com.thoughtworks.voiceassistant.core.abilities.Asr
 import com.thoughtworks.voiceassistant.core.abilities.Chat
 import com.thoughtworks.voiceassistant.core.abilities.Tts
@@ -40,6 +41,7 @@ class VoiceManager(
     private fun createAsr() {
         when (abilityCollection.asr.provider.lowercase()) {
             ServiceProvider.ALIBABA.name.lowercase() -> asr = AlibabaProvider.createAsr(context)
+            ServiceProvider.VOLCENGINE.name.lowercase() -> asr = VolcengineProvider.createAsr(context)
         }
     }
 

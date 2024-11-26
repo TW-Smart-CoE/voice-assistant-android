@@ -210,7 +210,9 @@ class AlibabaAsr(
 
     private fun listen(listener: AsrListener) {
         if (!isInit) {
-            logger.error(TAG, "ASR instance not initialized")
+            val errorMessage = "ASR instance not initialized"
+            logger.error(TAG, errorMessage)
+            listener.onError(errorMessage)
             return
         }
 
@@ -221,7 +223,9 @@ class AlibabaAsr(
 
         logger.debug(TAG, "start done with $ret")
         if (ret != 0) {
-            logger.error(TAG, "start dialog failed")
+            val errorMessage = "start dialog failed"
+            logger.error(TAG, errorMessage)
+            listener.onError(errorMessage)
             return
         }
 

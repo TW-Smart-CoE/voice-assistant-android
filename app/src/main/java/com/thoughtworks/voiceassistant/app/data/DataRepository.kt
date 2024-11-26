@@ -43,7 +43,7 @@ class DataRepository(
     }
 
     private fun getAsrServiceProviderList(): List<ServiceProvider> {
-        return listOf(ServiceProvider.ALIBABA)
+        return listOf(ServiceProvider.ALIBABA, ServiceProvider.VOLCENGINE)
     }
 
     private fun getWakeUpServiceProviderList(): List<ServiceProvider> {

@@ -15,6 +15,7 @@ import com.thoughtworks.voiceassistant.core.logger.DefaultLogger
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
 import com.thoughtworks.voiceassistant.core.logger.error
+import com.thoughtworks.voiceassistant.core.logger.warn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -191,7 +192,9 @@ class AlibabaTts private constructor(
 
     private suspend fun speak(text: String, params: Map<String, Any>, listener: TtsListener) {
         if (!isInit) {
-            logger.error(TAG, "TTS is not initialized!")
+            val errorMessage = "TTS is not initialized!"
+            logger.error(TAG, errorMessage)
+            listener.onError(errorMessage)
             return
         }
 
@@ -199,7 +202,8 @@ class AlibabaTts private constructor(
         delay(config.stopAndStartDelay.toLong())
 
         if (TextUtils.isEmpty(text)) {
-            logger.debug(TAG, "Text is empty")
+            val errorMessage = "Text is empty"
+            logger.warn(TAG, errorMessage)
             listener.onPlayEnd()
             return
         }

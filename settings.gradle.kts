@@ -19,6 +19,9 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://jitpack.io")
         }
+        maven {
+            url = uri("https://artifact.bytedance.com/repository/Volcengine/")
+        }
     }
 }
 
@@ -30,3 +33,4 @@ include(":baidukit")
 include(":iflytekkit")
 include(":openaikit")
 include(":picovoicekit")
+include(":volcenginekit")

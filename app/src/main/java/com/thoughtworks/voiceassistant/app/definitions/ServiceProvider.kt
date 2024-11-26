@@ -5,5 +5,6 @@ enum class ServiceProvider(val displayName: String) {
     PICOVOICE("Picovoice"),
     GOOGLE("Google"),
     IFLYTEK("iFlytek"),
+    VOLCENGINE("Volcengine"),
     OPENAI("OpenAI"),
 }

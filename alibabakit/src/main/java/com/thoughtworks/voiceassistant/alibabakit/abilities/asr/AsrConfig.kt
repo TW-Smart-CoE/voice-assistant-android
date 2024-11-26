@@ -21,7 +21,7 @@ class AsrConfig(
     deviceId: String = "",
     workspace: String = "",
     token: String = "",
-    val recognitionType: String = AsrParams.RecognitionType.VALUES.SINGLE,
+    val recognitionType: String = AsrParams.RecognitionType.VALUES.SINGLE_SENTENCE,
     val debugPath: String = "",
     val audioSource: String = AsrParams.AudioSource.VALUES.DEFAULT,
     val vadMode: String = AsrParams.VadMode.VALUES.P2T,
@@ -60,7 +60,7 @@ class AsrConfig(
     }
 
     private fun isSingleRecognition(): Boolean {
-        return recognitionType == AsrParams.RecognitionType.VALUES.SINGLE
+        return recognitionType == AsrParams.RecognitionType.VALUES.SINGLE_SENTENCE
     }
 
     override suspend fun generateTicket(
@@ -171,7 +171,7 @@ class AsrConfig(
                 appKey = params[AsrParams.AppKey.KEY]?.toString() ?: "",
                 token = params[AsrParams.Token.KEY]?.toString() ?: "",
                 recognitionType = params[AsrParams.RecognitionType.KEY]?.toString()
-                    ?: AsrParams.RecognitionType.VALUES.SINGLE,
+                    ?: AsrParams.RecognitionType.VALUES.SINGLE_SENTENCE,
                 deviceId = DeviceUtils.getDeviceId(context),
                 workspace = CommonUtils.getModelPath(context),
                 debugPath = debugPath,
