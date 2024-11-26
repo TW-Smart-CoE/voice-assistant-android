@@ -1,6 +1,5 @@
 package com.thoughtworks.voiceassistant.app.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -31,8 +30,7 @@ fun AbilityItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-        ,
+            .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
