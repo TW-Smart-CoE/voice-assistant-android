@@ -1,7 +1,10 @@
 package com.thoughtworks.voiceassistant.volcenginekit.abilities.asr
 
+import android.Manifest
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import com.bytedance.speech.speechengine.SpeechEngine
 import com.bytedance.speech.speechengine.SpeechEngineDefines
 import com.bytedance.speech.speechengine.SpeechEngineGenerator
@@ -35,60 +38,25 @@ class VolcengineAsr(
     }
 
     override suspend fun initialize(): Boolean {
+        if (engine != null) {
+            logger.debug(TAG, "ASR instance is already initialized")
+            return true
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            logger.error(TAG, "Manifest.permission.RECORD_AUDIO does not granted")
+            return false
+        }
+
         SpeechEngineGenerator.PrepareEnvironment(context, context.applicationContext as Application)
         engine = SpeechEngineGenerator.getInstance().apply {
-            setOptionString(
-                SpeechEngineDefines.PARAMS_KEY_ENGINE_NAME_STRING,
-                SpeechEngineDefines.ASR_ENGINE
-            )
-            setOptionString(SpeechEngineDefines.PARAMS_KEY_UID_STRING, config.userId)
-            setOptionString(
-                SpeechEngineDefines.PARAMS_KEY_DEVICE_ID_STRING,
-                DeviceUtils.getDeviceId(context)
-            )
-            setOptionString(SpeechEngineDefines.PARAMS_KEY_APP_ID_STRING, config.appId)
-            setOptionString(
-                SpeechEngineDefines.PARAMS_KEY_APP_TOKEN_STRING,
-                "Bearer;${config.appToken}"
-            )
-            setOptionString(
-                SpeechEngineDefines.PARAMS_KEY_ASR_ADDRESS_STRING,
-                "wss://openspeech.bytedance.com"
-            )
-            setOptionString(SpeechEngineDefines.PARAMS_KEY_ASR_URI_STRING, "/api/v2/asr")
-            setOptionString(SpeechEngineDefines.PARAMS_KEY_ASR_CLUSTER_STRING, config.asrCluster)
-            setOptionInt(SpeechEngineDefines.PARAMS_KEY_ASR_CONN_TIMEOUT_INT, 12000)
-            setOptionInt(SpeechEngineDefines.PARAMS_KEY_ASR_RECV_TIMEOUT_INT, 8000)
-            setOptionInt(SpeechEngineDefines.PARAMS_KEY_ASR_MAX_RETRY_TIMES_INT, 0)
-            setOptionString(
-                SpeechEngineDefines.PARAMS_KEY_RECORDER_TYPE_STRING,
-                SpeechEngineDefines.RECORDER_TYPE_RECORDER
-            )
-            setOptionInt(
-                SpeechEngineDefines.PARAMS_KEY_VAD_MAX_SPEECH_DURATION_INT,
-                config.vadMaxSpeechDuration
-            )
-            setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_ENABLE_DDC_BOOL, true)
-            setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_SHOW_NLU_PUNC_BOOL, true)
-            setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_DISABLE_END_PUNC_BOOL, true)
-            setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_AUTO_STOP_BOOL, config.autoStop)
-            setOptionString(
-                SpeechEngineDefines.PARAMS_KEY_ASR_RESULT_TYPE_STRING,
-                if (config.recognitionType == AsrParams.RecognitionType.VALUES.LONG) {
-                    SpeechEngineDefines.ASR_RESULT_TYPE_SINGLE
-                } else {
-                    SpeechEngineDefines.ASR_RESULT_TYPE_FULL
-                }
-            )
-
-            if (config.hotwords.hotwords.isNotEmpty()) {
-                sendDirective(
-                    SpeechEngineDefines.DIRECTIVE_UPDATE_ASR_HOTWORDS,
-                    gson.toJson(config.hotwords)
-                )
-            }
-
+            createEngine()
             setContext(context)
+            configParams()
             val ret = initEngine()
             if (ret != SpeechEngineDefines.ERR_NO_ERROR) {
                 val errMessage = "Init Engine Failed: $ret"
@@ -105,9 +73,64 @@ class VolcengineAsr(
                     handleSpeechMessage(type, data, len)
                 }
             })
+
+            logger.debug(TAG, "ASR instance initialized successfully")
         }
 
         return true
+    }
+
+    private fun SpeechEngine.configParams() {
+        setOptionString(
+            SpeechEngineDefines.PARAMS_KEY_ENGINE_NAME_STRING,
+            SpeechEngineDefines.ASR_ENGINE
+        )
+        setOptionString(SpeechEngineDefines.PARAMS_KEY_UID_STRING, config.userId)
+        setOptionString(
+            SpeechEngineDefines.PARAMS_KEY_DEVICE_ID_STRING,
+            DeviceUtils.getDeviceId(context)
+        )
+        setOptionString(SpeechEngineDefines.PARAMS_KEY_APP_ID_STRING, config.appId)
+        setOptionString(
+            SpeechEngineDefines.PARAMS_KEY_APP_TOKEN_STRING,
+            "Bearer;${config.appToken}"
+        )
+        setOptionString(
+            SpeechEngineDefines.PARAMS_KEY_ASR_ADDRESS_STRING,
+            "wss://openspeech.bytedance.com"
+        )
+        setOptionString(SpeechEngineDefines.PARAMS_KEY_ASR_URI_STRING, "/api/v2/asr")
+        setOptionString(SpeechEngineDefines.PARAMS_KEY_ASR_CLUSTER_STRING, config.asrCluster)
+        setOptionInt(SpeechEngineDefines.PARAMS_KEY_ASR_CONN_TIMEOUT_INT, 12000)
+        setOptionInt(SpeechEngineDefines.PARAMS_KEY_ASR_RECV_TIMEOUT_INT, 8000)
+        setOptionInt(SpeechEngineDefines.PARAMS_KEY_ASR_MAX_RETRY_TIMES_INT, 0)
+        setOptionString(
+            SpeechEngineDefines.PARAMS_KEY_RECORDER_TYPE_STRING,
+            SpeechEngineDefines.RECORDER_TYPE_RECORDER
+        )
+        setOptionInt(
+            SpeechEngineDefines.PARAMS_KEY_VAD_MAX_SPEECH_DURATION_INT,
+            config.vadMaxSpeechDuration
+        )
+        setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_ENABLE_DDC_BOOL, true)
+        setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_SHOW_NLU_PUNC_BOOL, true)
+        setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_DISABLE_END_PUNC_BOOL, true)
+        setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_AUTO_STOP_BOOL, config.autoStop)
+        setOptionString(
+            SpeechEngineDefines.PARAMS_KEY_ASR_RESULT_TYPE_STRING,
+            if (config.recognitionType == AsrParams.RecognitionType.VALUES.LONG) {
+                SpeechEngineDefines.ASR_RESULT_TYPE_SINGLE
+            } else {
+                SpeechEngineDefines.ASR_RESULT_TYPE_FULL
+            }
+        )
+
+        if (config.hotwords.hotwords.isNotEmpty()) {
+            sendDirective(
+                SpeechEngineDefines.DIRECTIVE_UPDATE_ASR_HOTWORDS,
+                gson.toJson(config.hotwords)
+            )
+        }
     }
 
     private fun handleSpeechMessage(
