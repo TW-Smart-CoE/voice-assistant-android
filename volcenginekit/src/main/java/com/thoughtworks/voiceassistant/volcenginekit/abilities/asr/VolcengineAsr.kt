@@ -9,12 +9,14 @@ import com.bytedance.speech.speechengine.SpeechEngine
 import com.bytedance.speech.speechengine.SpeechEngineDefines
 import com.bytedance.speech.speechengine.SpeechEngineGenerator
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.thoughtworks.voiceassistant.core.abilities.Asr
 import com.thoughtworks.voiceassistant.core.logger.DefaultLogger
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
 import com.thoughtworks.voiceassistant.core.logger.error
 import com.thoughtworks.voiceassistant.core.utils.DeviceUtils
+import com.thoughtworks.voiceassistant.volcenginekit.abilities.asr.models.AsrResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +33,7 @@ class VolcengineAsr(
     private var isListening: Boolean = false
     private var asrListener: AsrListener? = null
     private var onHeard: ((String) -> Unit)? = null
+    private var lastAsrText = ""
 
     interface AsrListener {
         fun onResult(text: String)
@@ -44,8 +47,7 @@ class VolcengineAsr(
         }
 
         if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.RECORD_AUDIO
+                context, Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             logger.error(TAG, "Manifest.permission.RECORD_AUDIO does not granted")
@@ -82,22 +84,18 @@ class VolcengineAsr(
 
     private fun SpeechEngine.configParams() {
         setOptionString(
-            SpeechEngineDefines.PARAMS_KEY_ENGINE_NAME_STRING,
-            SpeechEngineDefines.ASR_ENGINE
+            SpeechEngineDefines.PARAMS_KEY_ENGINE_NAME_STRING, SpeechEngineDefines.ASR_ENGINE
         )
         setOptionString(SpeechEngineDefines.PARAMS_KEY_UID_STRING, config.userId)
         setOptionString(
-            SpeechEngineDefines.PARAMS_KEY_DEVICE_ID_STRING,
-            DeviceUtils.getDeviceId(context)
+            SpeechEngineDefines.PARAMS_KEY_DEVICE_ID_STRING, DeviceUtils.getDeviceId(context)
         )
         setOptionString(SpeechEngineDefines.PARAMS_KEY_APP_ID_STRING, config.appId)
         setOptionString(
-            SpeechEngineDefines.PARAMS_KEY_APP_TOKEN_STRING,
-            "Bearer;${config.appToken}"
+            SpeechEngineDefines.PARAMS_KEY_APP_TOKEN_STRING, "Bearer;${config.appToken}"
         )
         setOptionString(
-            SpeechEngineDefines.PARAMS_KEY_ASR_ADDRESS_STRING,
-            "wss://openspeech.bytedance.com"
+            SpeechEngineDefines.PARAMS_KEY_ASR_ADDRESS_STRING, "wss://openspeech.bytedance.com"
         )
         setOptionString(SpeechEngineDefines.PARAMS_KEY_ASR_URI_STRING, "/api/v2/asr")
         setOptionString(SpeechEngineDefines.PARAMS_KEY_ASR_CLUSTER_STRING, config.asrCluster)
@@ -109,8 +107,7 @@ class VolcengineAsr(
             SpeechEngineDefines.RECORDER_TYPE_RECORDER
         )
         setOptionInt(
-            SpeechEngineDefines.PARAMS_KEY_VAD_MAX_SPEECH_DURATION_INT,
-            config.vadMaxSpeechDuration
+            SpeechEngineDefines.PARAMS_KEY_VAD_MAX_SPEECH_DURATION_INT, config.vadMaxSpeechDuration
         )
         setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_ENABLE_DDC_BOOL, true)
         setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_SHOW_NLU_PUNC_BOOL, true)
@@ -124,11 +121,14 @@ class VolcengineAsr(
                 SpeechEngineDefines.ASR_RESULT_TYPE_FULL
             }
         )
+        setOptionInt(
+            SpeechEngineDefines.PARAMS_KEY_RECORDER_PRESET_INT,
+            SpeechEngineDefines.RECORDER_PRESET_VOICE_COMMUNICATION
+        )
 
         if (config.hotwords.hotwords.isNotEmpty()) {
             sendDirective(
-                SpeechEngineDefines.DIRECTIVE_UPDATE_ASR_HOTWORDS,
-                gson.toJson(config.hotwords)
+                SpeechEngineDefines.DIRECTIVE_UPDATE_ASR_HOTWORDS, gson.toJson(config.hotwords)
             )
         }
     }
@@ -150,6 +150,7 @@ class VolcengineAsr(
 
             SpeechEngineDefines.MESSAGE_TYPE_ENGINE_ERROR -> {
                 logger.error(TAG, "engine error. data: $stdData")
+                asrListener?.onError(stdData)
             }
 
             SpeechEngineDefines.MESSAGE_TYPE_CONNECTION_CONNECTED -> {
@@ -157,7 +158,6 @@ class VolcengineAsr(
             }
 
             SpeechEngineDefines.MESSAGE_TYPE_PARTIAL_RESULT -> {
-                logger.debug(TAG, "ASR partial result. data: $stdData")
                 speechAsrResult(stdData, false)
             }
 
@@ -173,35 +173,86 @@ class VolcengineAsr(
     }
 
     private fun speechAsrResult(data: String, isFinal: Boolean) {
-        logger.debug(TAG, "speechAsrResult: $data, isFinal: $isFinal")
+        val asrText = parseAsrResult(data)
+        if (config.recognitionType == AsrParams.RecognitionType.VALUES.LONG) {
+            handleContinuousRecognition(asrText)
+        } else if (isFinal) {
+            // For single sentence recognition, only handle final results
+            onHeard?.invoke(asrText)
+        }
+    }
+
+    private fun handleContinuousRecognition(currentAsrText: String) {
+        if (lastAsrText.isNotEmpty() && currentAsrText.isEmpty()) {
+            logger.debug(TAG, "Continuous recognition: $lastAsrText")
+            onHeard?.invoke(lastAsrText)
+            lastAsrText = ""
+        } else {
+            lastAsrText = currentAsrText
+        }
+    }
+
+    private fun parseAsrResult(jsonString: String): String {
+        return try {
+            val gson = Gson()
+            val response = gson.fromJson(jsonString, AsrResponse::class.java)
+
+            val results = response.result
+            if (results.isNullOrEmpty()) {
+                return ""
+            }
+
+            val bestResult = results.maxByOrNull { it.confidence }
+
+            bestResult?.text ?: ""
+        } catch (e: JsonSyntaxException) {
+            logger.error(TAG, "parseAsrResult JsonSyntaxException error: ${e.message}")
+            ""
+        } catch (e: Exception) {
+            logger.error(TAG, "parseAsrResult error: ${e.message}")
+            ""
+        }
     }
 
     override fun release() {
+        if (isListening()) {
+            stop()
+        }
+
         engine?.destroyEngine()
         engine = null
+        logger.debug(TAG, "ASR instance has been released")
     }
 
     private fun listen(listener: AsrListener) {
         if (engine == null) {
             val errorMessage = "ASR instance not initialized"
             logger.error(TAG, errorMessage)
+            listener.onError(errorMessage)
+            return
         }
+
+        this.asrListener = listener
 
         engine?.apply {
             sendDirective(SpeechEngineDefines.DIRECTIVE_SYNC_STOP_ENGINE, "")
             sendDirective(SpeechEngineDefines.DIRECTIVE_START_ENGINE, "")
-            this@VolcengineAsr.asrListener = listener
         }
     }
 
     override suspend fun listen(onHeard: ((String) -> Unit)?): Asr.Result {
+        if (isListening()) {
+            val errorMessage = "ASR is already listening"
+            logger.error(TAG, errorMessage)
+            return Asr.Result(false, errorMessage)
+        }
+
         this.onHeard = onHeard
-        isListening = true
+        this.isListening = true
 
         return suspendCoroutine { continuation ->
             CoroutineScope(Dispatchers.IO).launch {
-                listen(object :
-                    AsrListener {
+                listen(object : AsrListener {
                     private fun resumeWithoutComplain(result: Asr.Result) {
                         try {
                             continuation.resume(
@@ -209,17 +260,17 @@ class VolcengineAsr(
                             )
                         } catch (_: Exception) {
                         } finally {
-                            isListening = false
-                            asrListener = null
+                            this@VolcengineAsr.isListening = false
+                            this@VolcengineAsr.asrListener = null
                             this@VolcengineAsr.onHeard = null
+                            this@VolcengineAsr.lastAsrText = ""
                         }
                     }
 
                     override fun onResult(result: String) {
                         resumeWithoutComplain(
                             Asr.Result(
-                                isSuccess = true,
-                                heardContent = result
+                                isSuccess = true, heardContent = result
                             )
                         )
                     }
@@ -227,8 +278,7 @@ class VolcengineAsr(
                     override fun onError(error: String) {
                         resumeWithoutComplain(
                             Asr.Result(
-                                isSuccess = false,
-                                errorMessage = error
+                                isSuccess = false, errorMessage = error
                             )
                         )
                     }
@@ -249,10 +299,15 @@ class VolcengineAsr(
             return
         }
 
+        if (!isListening()) {
+            return
+        }
+
         engine?.apply {
             sendDirective(SpeechEngineDefines.DIRECTIVE_FINISH_TALKING, "")
             sendDirective(SpeechEngineDefines.DIRECTIVE_STOP_ENGINE, "")
         }
+        asrListener?.onResult("")
     }
 
     companion object {

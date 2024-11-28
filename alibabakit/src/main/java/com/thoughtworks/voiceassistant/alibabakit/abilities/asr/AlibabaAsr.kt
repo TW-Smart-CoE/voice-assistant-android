@@ -203,8 +203,13 @@ class AlibabaAsr(
 
     override fun release() {
         if (isInit) {
+            if (isListening()) {
+                stop()
+            }
+
             nuiInstance.release()
             isInit = false
+            logger.debug(TAG, "ASR instance has been released")
         }
     }
 
@@ -233,6 +238,12 @@ class AlibabaAsr(
     }
 
     override suspend fun listen(onHeard: ((String) -> Unit)?): Asr.Result {
+        if (isListening()) {
+            val errorMessage = "ASR instance is already listening"
+            logger.error(TAG, errorMessage)
+            return Asr.Result(false, errorMessage)
+        }
+
         this.onHeard = onHeard
         isListening = true
 
@@ -285,6 +296,10 @@ class AlibabaAsr(
     override fun stop() {
         if (!isInit) {
             logger.error(TAG, "ASR instance not initialized")
+            return
+        }
+
+        if (!isListening()) {
             return
         }
 

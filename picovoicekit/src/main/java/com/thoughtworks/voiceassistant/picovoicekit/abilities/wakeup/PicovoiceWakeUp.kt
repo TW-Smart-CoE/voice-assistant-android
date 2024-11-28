@@ -151,6 +151,7 @@ class PicovoiceWakeUp(
             porcupineManager?.delete()
             porcupineManager = null
             isInit = false
+            logger.debug(TAG, "WakeUpManager has been released")
         }
     }
 

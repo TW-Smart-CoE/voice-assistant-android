@@ -38,6 +38,12 @@ class VoiceManager(
         tts.initialize()
     }
 
+    fun release() {
+        wakeUp.release()
+        asr.release()
+        tts.release()
+    }
+
     private fun createAsr() {
         when (abilityCollection.asr.provider.lowercase()) {
             ServiceProvider.ALIBABA.name.lowercase() -> asr = AlibabaProvider.createAsr(context)

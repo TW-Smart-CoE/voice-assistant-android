@@ -34,10 +34,6 @@ class VoiceInteractionViewModel(
 
     init {
         initAbilities(dependency.context)
-        viewModelScope.launch {
-            voiceManager.initialize()
-        }
-
 //        checkStatusAsync()
     }
 
@@ -56,7 +52,11 @@ class VoiceInteractionViewModel(
     private fun initAbilities(context: Context) {
         abilityCollection = dataSource.loadAbilityDataCollection()!!
         voiceManager = VoiceManager(context, abilityCollection)
+        viewModelScope.launch {
+            voiceManager.initialize()
+        }
         sendAction(VoiceInteractionAction.UpdateAbilityDataCollection(abilityCollection))
+
     }
 
     override fun reduce(
@@ -233,6 +233,10 @@ class VoiceInteractionViewModel(
             Log.d(TAG, result.toString())
             sendAction(VoiceInteractionAction.TtsStop)
         }
+    }
+
+    override fun onCleared() {
+        voiceManager.release()
     }
 
     companion object {

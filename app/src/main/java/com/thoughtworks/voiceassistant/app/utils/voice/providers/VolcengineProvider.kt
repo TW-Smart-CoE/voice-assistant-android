@@ -14,6 +14,8 @@ object VolcengineProvider {
                 AsrParams.AppId.KEY to BuildConfig.VOLCENGINE_APP_ID,
                 AsrParams.AppToken.KEY to BuildConfig.VOLCENGINE_ACCESS_TOKEN,
                 AsrParams.AsrCluster.KEY to BuildConfig.VOLCENGINE_ONE_SENTENCE_RECOGNITION_CLUSTER_ID,
+                AsrParams.RecognitionType.KEY to AsrParams.RecognitionType.VALUES.LONG,
+                AsrParams.VadMaxSpeechDuration.KEY to AsrParams.VadMaxSpeechDuration.VALUES.INFINITE,
             )
         )
     }
