@@ -1,19 +1,21 @@
 package com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player
 
+import android.content.Context
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.AlibabaTts
-import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsParams
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsConfig
+import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsParams
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
 import com.thoughtworks.voiceassistant.core.logger.error
 
 class PlayerManager(
+    context: Context,
     private val logger: Logger,
     private val ttsConfig: TtsConfig,
     onMp3PlayEnd: () -> Unit,
 ) {
-    private val pcmPlayer = PcmPlayer(logger, ttsConfig)
-    private val mp3Player = Mp3Player(logger, ttsConfig, onMp3PlayEnd)
+    private val pcmPlayer = PcmPlayer(context, logger, ttsConfig)
+    private val mp3Player = Mp3Player(context, logger, ttsConfig, onMp3PlayEnd)
 
     fun playSoundBegin() {
         if (!ttsConfig.playSound) {

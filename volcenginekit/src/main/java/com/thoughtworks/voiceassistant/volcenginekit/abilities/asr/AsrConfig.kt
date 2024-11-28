@@ -10,6 +10,7 @@ class AsrConfig(
     val asrCluster: String,
     val vadMaxSpeechDuration: Int,
     val autoStop: Boolean = false,
+    val audioSource: String = AsrParams.AudioSource.VALUES.DEFAULT,
     val recognitionType: String = AsrParams.RecognitionType.VALUES.SINGLE_SENTENCE,
     val hotwords: HotwordsData = AsrParams.Hotwords.VALUES.DEFAULT,
     val userId: String = AsrParams.UserId.VALUES.DEFAULT,
@@ -34,6 +35,8 @@ class AsrConfig(
                 vadMaxSpeechDuration = params[AsrParams.VadMaxSpeechDuration.KEY]?.toString()
                     ?.toInt() ?: AsrParams.VadMaxSpeechDuration.VALUES.DEFAULT,
                 autoStop = params[AsrParams.AutoStop.KEY]?.toString()?.toBoolean() == true,
+                audioSource = params[AsrParams.AudioSource.KEY]?.toString()
+                    ?: AsrParams.AudioSource.VALUES.DEFAULT,
                 recognitionType = params[AsrParams.RecognitionType.KEY]?.toString()
                     ?: AsrParams.RecognitionType.VALUES.SINGLE_SENTENCE,
                 hotwords = hotwords,

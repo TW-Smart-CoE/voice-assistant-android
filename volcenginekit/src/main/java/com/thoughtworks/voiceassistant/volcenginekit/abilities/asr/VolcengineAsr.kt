@@ -123,13 +123,25 @@ class VolcengineAsr(
         )
         setOptionInt(
             SpeechEngineDefines.PARAMS_KEY_RECORDER_PRESET_INT,
-            SpeechEngineDefines.RECORDER_PRESET_VOICE_COMMUNICATION
+            getRecorderPreset()
         )
 
         if (config.hotwords.hotwords.isNotEmpty()) {
             sendDirective(
                 SpeechEngineDefines.DIRECTIVE_UPDATE_ASR_HOTWORDS, gson.toJson(config.hotwords)
             )
+        }
+    }
+
+    private fun getRecorderPreset(): Int {
+        return when (config.audioSource) {
+            AsrParams.AudioSource.VALUES.COMMUNICATION -> {
+                return SpeechEngineDefines.RECORDER_PRESET_VOICE_COMMUNICATION
+            }
+
+            else -> {
+                return SpeechEngineDefines.RECORDER_PRESET_GENERIC
+            }
         }
     }
 

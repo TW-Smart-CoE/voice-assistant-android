@@ -1,15 +1,17 @@
 package com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player
 
-import android.media.AudioAttributes
+import android.content.Context
 import android.media.AudioFormat
-import android.media.AudioManager
 import android.media.AudioTrack
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.AlibabaTts
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsConfig
+import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsParams
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
+import com.thoughtworks.voiceassistant.core.utils.AudioUtils
 
 class PcmPlayer(
+    private val context: Context,
     private val logger: Logger,
     ttsConfig: TtsConfig,
 ) {
@@ -25,10 +27,7 @@ class PcmPlayer(
     init {
         audioTrack = AudioTrack.Builder()
             .setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setLegacyStreamType(AudioManager.STREAM_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .build()
+                AudioUtils(context).buildAudioAttributes(ttsConfig.playMode == TtsParams.PlayMode.VALUES.COMMUNICATION)
             )
             .setAudioFormat(
                 AudioFormat.Builder()

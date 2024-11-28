@@ -1,6 +1,7 @@
 package com.thoughtworks.voiceassistant.app.ui.views.voice
 
 import android.content.Context
+import android.media.AudioManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +13,7 @@ import com.thoughtworks.voiceassistant.app.foundation.mvi.DefaultStore
 import com.thoughtworks.voiceassistant.app.foundation.mvi.MVIViewModel
 import com.thoughtworks.voiceassistant.app.foundation.mvi.Store
 import com.thoughtworks.voiceassistant.app.utils.voice.VoiceManager
+import com.thoughtworks.voiceassistant.core.utils.AudioUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -28,12 +30,14 @@ class VoiceInteractionViewModel(
     private val navigator = dependency.navigator
     private val dataSource = dependency.dataSource
     private val ioDispatcher = dependency.coroutineDispatchers.ioDispatcher
+    private val audioUtils = AudioUtils(dependency.context)
 
     private lateinit var abilityCollection: AbilityDataCollection
     private lateinit var voiceManager: VoiceManager
 
     init {
         initAbilities(dependency.context)
+        audioUtils.setVolume(AudioManager.STREAM_VOICE_CALL, audioUtils.getMaxVolume(AudioManager.STREAM_VOICE_CALL))
 //        checkStatusAsync()
     }
 

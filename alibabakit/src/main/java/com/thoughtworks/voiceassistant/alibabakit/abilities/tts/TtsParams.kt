@@ -79,4 +79,12 @@ object TtsParams {
             const val DEFAULT = 50
         }
     }
+
+    object PlayMode {
+        const val KEY = "play_mode"
+        object VALUES {
+            const val MEDIA = "media"
+            const val COMMUNICATION = "communication"
+        }
+    }
 }

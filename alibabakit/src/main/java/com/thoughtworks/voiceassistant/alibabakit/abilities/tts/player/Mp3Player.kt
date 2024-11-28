@@ -1,18 +1,24 @@
 package com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player
 
+import android.content.Context
 import android.media.MediaPlayer
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.AlibabaTts
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsConfig
+import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsParams
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
+import com.thoughtworks.voiceassistant.core.utils.AudioUtils
 import java.io.IOException
 
 class Mp3Player(
+    context: Context,
     private val logger: Logger,
     private val ttsConfig: TtsConfig,
     private val onPlayEnd: () -> Unit,
 ) {
     private var mediaPlayer: MediaPlayer? = null
+    private val audioAttributes =
+        AudioUtils(context).buildAudioAttributes(ttsConfig.playMode == TtsParams.PlayMode.VALUES.COMMUNICATION)
 
     fun play() {
         if (ttsConfig.ttsFilePath.isEmpty()) {
@@ -25,6 +31,7 @@ class Mp3Player(
         try {
             mediaPlayer = MediaPlayer().apply {
                 setDataSource(ttsConfig.ttsFilePath)
+                setAudioAttributes(audioAttributes)
                 prepare() // or prepareAsync() for streaming
                 setOnCompletionListener { onPlayEndHandler(false) }
                 setOnErrorListener { _, _, _ -> onPlayEndHandler(false) }

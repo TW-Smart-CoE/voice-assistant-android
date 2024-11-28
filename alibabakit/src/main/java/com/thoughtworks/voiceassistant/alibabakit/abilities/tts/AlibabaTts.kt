@@ -42,7 +42,7 @@ class AlibabaTts private constructor(
     private var isSpeaking = false
     private val taskIdManager = TaskIdManager()
     private val ttsFileWriter = TtsFileWriter(logger, config)
-    private val playerManager = PlayerManager(logger, config) {
+    private val playerManager = PlayerManager(context, logger, config) {
         logger.debug(TAG, "MP3 player end")
         ttsListener?.onPlayEnd()
         ttsListener = null

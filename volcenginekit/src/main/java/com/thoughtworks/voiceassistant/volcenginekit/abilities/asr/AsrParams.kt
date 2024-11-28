@@ -33,6 +33,15 @@ object AsrParams {
         }
     }
 
+    object AudioSource {
+        const val KEY = "audio_source"
+
+        object VALUES {
+            const val DEFAULT = "default"
+            const val COMMUNICATION = "communication"
+        }
+    }
+
     object RecognitionType {
         const val KEY = "recognition_type"
 

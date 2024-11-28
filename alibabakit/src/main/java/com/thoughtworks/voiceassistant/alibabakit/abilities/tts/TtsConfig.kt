@@ -26,6 +26,7 @@ class TtsConfig(
     val playSound: Boolean = true,
     val stopAndStartDelay: Int = 50,
     val modeType: Int = DEFAULT_MODE,
+    val playMode: String = TtsParams.PlayMode.VALUES.MEDIA,
 ) : AlibabaConfig(accessKey, accessKeySecret, appKey, deviceId, workspace, token) {
     override suspend fun generateTicket(context: Context, logger: Logger): String {
         val tokenValue = when (token.isNotEmpty()) {
@@ -85,7 +86,9 @@ class TtsConfig(
                 playSound = params[TtsParams.PlaySound.KEY]?.toString()?.toBoolean() != false,
                 stopAndStartDelay = params[TtsParams.StopAndStartDelay.KEY]?.toString()
                     ?.toInt()
-                    ?: 50
+                    ?: 50,
+                playMode = params[TtsParams.PlayMode.KEY]?.toString()
+                    ?: TtsParams.PlayMode.VALUES.MEDIA
             )
         }
     }
