@@ -7,6 +7,7 @@ import android.media.AudioManager
 class AudioUtils(context: Context) {
     private val audioManager: AudioManager =
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
     /**
      * Sets the volume for the specified stream type.
      *

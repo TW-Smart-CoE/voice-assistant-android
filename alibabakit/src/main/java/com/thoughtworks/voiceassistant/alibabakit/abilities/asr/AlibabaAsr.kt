@@ -5,7 +5,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.AudioFormat
+import android.media.AudioManager
 import android.media.AudioRecord
+import android.media.audiofx.AcousticEchoCanceler
+import android.media.audiofx.NoiseSuppressor
 import androidx.core.app.ActivityCompat
 import com.alibaba.idst.nui.AsrResult
 import com.alibaba.idst.nui.CommonUtils
@@ -169,10 +172,37 @@ class AlibabaAsr(
 
         val ticket = config.generateTicket(context, logger)
 
+        if (config.audioSource == AsrParams.AudioSource.VALUES.COMMUNICATION) {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+        }
+
         audioRecorder = AudioRecord(
             config.getMediaRecorderAudioSource(), SAMPLE_RATE,
             AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, WAVE_FRAME_SIZE * 4
         )
+
+        // AEC
+        if (AcousticEchoCanceler.isAvailable()) {
+            logger.debug(TAG, "AcousticEchoCanceler isAvailable.");
+            val acousticEchoCanceler = AcousticEchoCanceler.create(audioRecorder.audioSessionId)
+            try {
+                acousticEchoCanceler.enabled = true
+            } catch (e: Exception) {
+                logger.error(TAG, "AcousticEchoCanceler error: ${e.message}")
+            }
+        }
+
+        // NoiseSuppressor
+        if (NoiseSuppressor.isAvailable()) {
+            logger.debug(TAG, "NoiseSuppressor isAvailable.");
+            val noiseSuppressor = NoiseSuppressor.create(audioRecorder.audioSessionId)
+            try {
+                noiseSuppressor.enabled = true
+            } catch (e: Exception) {
+                logger.error(TAG, "NoiseSuppressor error: ${e.message}")
+            }
+        }
 
         if (CommonUtils.copyAssetsData(context)) {
             logger.debug(TAG, "copy assets data done")

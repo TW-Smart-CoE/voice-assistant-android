@@ -34,7 +34,7 @@ object AlibabaProvider {
                 TtsParams.AppKey.KEY to BuildConfig.ALI_IVS_APP_KEY,
                 TtsParams.EncodeType.KEY to encodeType,
                 TtsParams.TtsFilePath.KEY to "${context.externalCacheDir?.absolutePath}/tts.${encodeType}",
-                TtsParams.PlayMode.KEY to TtsParams.PlayMode.VALUES.COMMUNICATION,
+                TtsParams.PlayMode.KEY to TtsParams.PlayMode.VALUES.MEDIA,
             )
         )
     }

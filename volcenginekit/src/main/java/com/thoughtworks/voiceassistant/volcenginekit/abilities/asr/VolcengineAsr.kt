@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import androidx.core.app.ActivityCompat
 import com.bytedance.speech.speechengine.SpeechEngine
 import com.bytedance.speech.speechengine.SpeechEngineDefines
@@ -121,6 +122,11 @@ class VolcengineAsr(
                 SpeechEngineDefines.ASR_RESULT_TYPE_FULL
             }
         )
+
+        if (config.audioSource == AsrParams.AudioSource.VALUES.COMMUNICATION) {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+        }
         setOptionInt(
             SpeechEngineDefines.PARAMS_KEY_RECORDER_PRESET_INT,
             getRecorderPreset()
