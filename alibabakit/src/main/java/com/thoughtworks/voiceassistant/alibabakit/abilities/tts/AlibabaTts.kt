@@ -110,7 +110,7 @@ class AlibabaTts private constructor(
         }
 
         private fun onTtsStart() {
-            wavHeaderToBeRemove = Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
+            wavHeaderToBeRemove = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
             if (config.ttsFilePath.isNotEmpty()) {
                 ttsFileWriter.createFile()
             }
