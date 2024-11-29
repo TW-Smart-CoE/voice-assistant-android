@@ -23,6 +23,7 @@ import com.thoughtworks.voiceassistant.core.logger.DefaultLogger
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
 import com.thoughtworks.voiceassistant.core.logger.error
+import com.thoughtworks.voiceassistant.core.logger.warn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -191,6 +192,8 @@ class AlibabaAsr(
                 } catch (e: Exception) {
                     logger.error(TAG, "AcousticEchoCanceler error: ${e.message}")
                 }
+            } else {
+                logger.warn(TAG, "AcousticEchoCanceler is not available.")
             }
         }
 
@@ -203,6 +206,8 @@ class AlibabaAsr(
                 } catch (e: Exception) {
                     logger.error(TAG, "NoiseSuppressor error: ${e.message}")
                 }
+            } else {
+                logger.warn(TAG, "NoiseSuppressor is not available.")
             }
         }
 
