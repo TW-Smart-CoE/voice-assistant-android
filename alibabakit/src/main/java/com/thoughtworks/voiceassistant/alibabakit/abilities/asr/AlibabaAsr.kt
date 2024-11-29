@@ -182,25 +182,27 @@ class AlibabaAsr(
             AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, WAVE_FRAME_SIZE * 4
         )
 
-        // AEC
-        if (AcousticEchoCanceler.isAvailable()) {
-            logger.debug(TAG, "AcousticEchoCanceler isAvailable.");
-            val acousticEchoCanceler = AcousticEchoCanceler.create(audioRecorder.audioSessionId)
-            try {
-                acousticEchoCanceler.enabled = true
-            } catch (e: Exception) {
-                logger.error(TAG, "AcousticEchoCanceler error: ${e.message}")
+        if (config.enableAcousticEchoCanceler) {
+            if (AcousticEchoCanceler.isAvailable()) {
+                logger.debug(TAG, "AcousticEchoCanceler isAvailable.");
+                val acousticEchoCanceler = AcousticEchoCanceler.create(audioRecorder.audioSessionId)
+                try {
+                    acousticEchoCanceler.enabled = true
+                } catch (e: Exception) {
+                    logger.error(TAG, "AcousticEchoCanceler error: ${e.message}")
+                }
             }
         }
 
-        // NoiseSuppressor
-        if (NoiseSuppressor.isAvailable()) {
-            logger.debug(TAG, "NoiseSuppressor isAvailable.");
-            val noiseSuppressor = NoiseSuppressor.create(audioRecorder.audioSessionId)
-            try {
-                noiseSuppressor.enabled = true
-            } catch (e: Exception) {
-                logger.error(TAG, "NoiseSuppressor error: ${e.message}")
+        if (config.enableNoiseSuppressor) {
+            if (NoiseSuppressor.isAvailable()) {
+                logger.debug(TAG, "NoiseSuppressor isAvailable.");
+                val noiseSuppressor = NoiseSuppressor.create(audioRecorder.audioSessionId)
+                try {
+                    noiseSuppressor.enabled = true
+                } catch (e: Exception) {
+                    logger.error(TAG, "NoiseSuppressor error: ${e.message}")
+                }
             }
         }
 

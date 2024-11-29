@@ -19,6 +19,8 @@ object AlibabaProvider {
                 AsrParams.AppKey.KEY to BuildConfig.ALI_IVS_APP_KEY,
                 AsrParams.AudioSource.KEY to AsrParams.AudioSource.VALUES.COMMUNICATION,
                 AsrParams.RecognitionType.KEY to AsrParams.RecognitionType.VALUES.LONG,
+                AsrParams.EnableAcousticEchoCanceler.KEY to true,
+                AsrParams.EnableNoiseSuppression.KEY to true,
             )
         )
     }

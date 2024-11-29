@@ -76,4 +76,21 @@ object AsrParams {
     object VocabularyId {
         const val KEY = "vocabulary_id"
     }
+
+    object EnableAcousticEchoCanceler {
+        const val KEY = "enable_acoustic_echo_canceler"
+        object VALUES {
+            const val TRUE = true
+            const val FALSE = false
+        }
+    }
+
+    object EnableNoiseSuppression {
+        const val KEY = "enable_noise_suppression"
+
+        object VALUES {
+            const val TRUE = true
+            const val FALSE = false
+        }
+    }
 }

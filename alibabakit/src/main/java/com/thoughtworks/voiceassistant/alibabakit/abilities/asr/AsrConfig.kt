@@ -30,6 +30,8 @@ class AsrConfig(
     val maxEndSilence: Int = AsrParams.MaxEndSilence.VALUES.DEFAULT,
     val speechNoiseThreshold: Float = AsrParams.SpeechNoiseThreshold.VALUES.DEFAULT,
     val vocabularyId: String = "",
+    val enableAcousticEchoCanceler: Boolean = false,
+    val enableNoiseSuppressor: Boolean = false,
 ) : AlibabaConfig(accessKey, accessKeySecret, appKey, deviceId, workspace, token) {
     fun getMediaRecorderAudioSource(): Int {
         return when (audioSource) {
@@ -186,7 +188,11 @@ class AsrConfig(
                     ?: AsrParams.MaxEndSilence.VALUES.DEFAULT,
                 speechNoiseThreshold = params[AsrParams.SpeechNoiseThreshold.KEY]?.toString()
                     ?.toFloat() ?: AsrParams.SpeechNoiseThreshold.VALUES.DEFAULT,
-                vocabularyId = params[AsrParams.VocabularyId.KEY]?.toString() ?: ""
+                vocabularyId = params[AsrParams.VocabularyId.KEY]?.toString() ?: "",
+                enableAcousticEchoCanceler = params[AsrParams.EnableAcousticEchoCanceler.KEY]?.toString()
+                    ?.toBoolean() != false,
+                enableNoiseSuppressor = params[AsrParams.EnableNoiseSuppression.KEY]?.toString()
+                    ?.toBoolean() != false,
             )
         }
     }
