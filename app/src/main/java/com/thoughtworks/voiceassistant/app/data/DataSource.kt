@@ -10,4 +10,6 @@ interface DataSource {
     fun saveAbilityDataCollection(abilityDataCollection: AbilityDataCollection)
     fun loadTtsInput(): String
     fun saveTtsInput(ttsInput: String)
+    fun loadChatInput(): String
+    fun saveChatInput(chatInput: String)
 }

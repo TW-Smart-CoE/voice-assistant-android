@@ -50,6 +50,7 @@ android {
         addBuildConfigFieldFromProperties(localProperties, "VOLCENGINE_ACCESS_TOKEN")
         addBuildConfigFieldFromProperties(localProperties, "VOLCENGINE_ONE_SENTENCE_RECOGNITION_CLUSTER_ID")
         addBuildConfigFieldFromProperties(localProperties, "VOLCENGINE_STREAM_SPEECH_RECOGNITION_CLUSTER_ID")
+        addBuildConfigFieldFromProperties(localProperties, "OPENAI_API_KEY")
     }
 
     sourceSets {

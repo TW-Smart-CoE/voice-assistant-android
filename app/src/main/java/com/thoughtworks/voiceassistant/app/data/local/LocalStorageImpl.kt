@@ -26,15 +26,26 @@ class LocalStorageImpl(
     }
 
     override fun loadTtsInput(): String {
-        return sharedPreferenceUtil.getString(KEY_TTS_INPUT) ?: context.getString(R.string.tts_input)
+        return sharedPreferenceUtil.getString(KEY_TTS_INPUT)
+            ?: context.getString(R.string.tts_input)
     }
 
     override fun saveTtsInput(ttsInput: String) {
         sharedPreferenceUtil.setString(KEY_TTS_INPUT, ttsInput)
     }
 
+    override fun loadChatInput(): String {
+        return sharedPreferenceUtil.getString(KEY_CHAT_INPUT)
+            ?: context.getString(R.string.chat_input)
+    }
+
+    override fun saveChatInput(chatInput: String) {
+        sharedPreferenceUtil.setString(KEY_CHAT_INPUT, chatInput)
+    }
+
     companion object {
         private const val KEY_ABILITY_DATA_COLLECTION = "ability_data_collection"
         private const val KEY_TTS_INPUT = "tts_input"
+        private const val KEY_CHAT_INPUT = "chat_input"
     }
 }

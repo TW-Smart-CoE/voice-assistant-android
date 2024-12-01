@@ -4,6 +4,7 @@ import android.content.Context
 import com.thoughtworks.voiceassistant.app.data.models.AbilityDataCollection
 import com.thoughtworks.voiceassistant.app.definitions.ServiceProvider
 import com.thoughtworks.voiceassistant.app.utils.voice.providers.AlibabaProvider
+import com.thoughtworks.voiceassistant.app.utils.voice.providers.OpenAIProvider
 import com.thoughtworks.voiceassistant.app.utils.voice.providers.PicovoiceProvider
 import com.thoughtworks.voiceassistant.app.utils.voice.providers.VolcengineProvider
 import com.thoughtworks.voiceassistant.core.abilities.Asr
@@ -24,36 +25,47 @@ class VoiceManager(
         createWakeUp()
         createAsr()
         createTts()
-    }
-
-    private fun createWakeUp() {
-        when (abilityCollection.wakeUp.provider.lowercase()) {
-            ServiceProvider.PICOVOICE.name.lowercase() -> wakeUp = PicovoiceProvider.createWakeUp(context)
-        }
+        createChat()
     }
 
     suspend fun initialize() {
         wakeUp.initialize()
         asr.initialize()
         tts.initialize()
+        chat.initialize()
     }
 
     fun release() {
         wakeUp.release()
         asr.release()
         tts.release()
+        chat.release()
+    }
+
+    private fun createWakeUp() {
+        when (abilityCollection.wakeUp.provider.lowercase()) {
+            ServiceProvider.PICOVOICE.name.lowercase() -> wakeUp =
+                PicovoiceProvider.createWakeUp(context)
+        }
     }
 
     private fun createAsr() {
         when (abilityCollection.asr.provider.lowercase()) {
             ServiceProvider.ALIBABA.name.lowercase() -> asr = AlibabaProvider.createAsr(context)
-            ServiceProvider.VOLCENGINE.name.lowercase() -> asr = VolcengineProvider.createAsr(context)
+            ServiceProvider.VOLCENGINE.name.lowercase() -> asr =
+                VolcengineProvider.createAsr(context)
         }
     }
 
     private fun createTts() {
         when (abilityCollection.tts.provider.lowercase()) {
             ServiceProvider.ALIBABA.name.lowercase() -> tts = AlibabaProvider.createTts(context)
+        }
+    }
+
+    private fun createChat() {
+        when (abilityCollection.chat.provider.lowercase()) {
+            ServiceProvider.OPENAI.name.lowercase() -> chat = OpenAIProvider.createChat(context)
         }
     }
 }

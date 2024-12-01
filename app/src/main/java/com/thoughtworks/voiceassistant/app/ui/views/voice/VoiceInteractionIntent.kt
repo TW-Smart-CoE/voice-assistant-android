@@ -36,7 +36,7 @@ data class VoiceInteractionState(
 ) : State
 
 sealed interface VoiceInteractionEvent : Event {
-    data class ShowToast(val text: String) : VoiceInteractionEvent
+    data class ShowToast(val text: String, val isLong: Boolean = false) : VoiceInteractionEvent
 }
 
 sealed interface VoiceInteractionAction : Action {
@@ -53,5 +53,6 @@ sealed interface VoiceInteractionAction : Action {
     data object TtsSpeak : VoiceInteractionAction
     data object TtsStop : VoiceInteractionAction
     data object ChatStart : VoiceInteractionAction
+    data object ChatStop : VoiceInteractionAction
     data object ChatClearHistory : VoiceInteractionAction
 }

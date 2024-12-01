@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
-import android.media.AudioManager
 import androidx.core.app.ActivityCompat
 import com.bytedance.speech.speechengine.SpeechEngine
 import com.bytedance.speech.speechengine.SpeechEngineDefines

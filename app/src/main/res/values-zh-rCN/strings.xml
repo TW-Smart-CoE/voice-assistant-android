@@ -1,3 +1,4 @@
 <resources>
     <string name="tts_input">你好，我是智能助理。</string>
+    <string name="chat_input">你好，你叫什么名字?</string>
 </resources>

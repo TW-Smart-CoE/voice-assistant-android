@@ -2,41 +2,44 @@
 
 ## Configure
 
-- Go to [OpenAI API keys](https://platform.openai.com/account/api-keys)。 Create an API Key。
+- Go to [OpenAI API keys](https://platform.openai.com/account/api-keys) or other platforms which use OpenAI API. Create an API Key.
 
-## SDK/API Key 配置
-Add following code in AndroidManifest.xml under application label:
-```xml
-<meta-data
-    android:name="OPENAI_API_KEY"
-    android:value="${OPENAI_API_KEY}" />
-```
+## Chat
 
-## Sample
+### Sample
+
 ```kotlin
-// initialize chat
-val chat = ivAssistant.createChat(
-    ChatType.ChatGpt,
+// create chat
+val chat = OpenAIChat.create(
+    context,
     mapOf(
-        Pair("base_url", "https://api.openai.com"),
-        Pair("model", "gpt-3.5-turbo"),
-        Pair("temperature", 1.0f),
-        Pair("max_history_len", 20),
+        ChatParams.ApiKey.KEY to BuildConfig.OPENAI_API_KEY,
+        ChatParams.BaseUrl.KEY to ChatParams.BaseUrl.VALUES.KIMI,
+        ChatParams.ApiVersion.KEY to ChatParams.ApiVersion.VALUES.V1,
+        ChatParams.Model.KEY to "moonshot-v1-8k",
     )
-)
-chat.initialize()
+
+// init chat
+viewModelScope.launch {
+    chat.initialize()
+}
 
 // use chat
-chat.chat(getString(R.string.hello), object : ChatCallback {
-    override fun onResult(text: String) {
-        tts.play(text)
-    }
+viewModelScope.launch {
+    val result = chat.chat(Chat.Message("user", chatText))
+    Log.d(TAG, result.toString())
+}
 
-    override fun onError(errorMessage: String) {
-        Log.e(TAG, "chat onError: $errorMessage")
-    }
-})
+// stop chat
+chat.stop()
 
 // release chat
 chat.release()
 ```
+
+## Reference
+- [OpenAI](https://platform.openai.com)
+- [Kimi](https://platform.moonshot.cn)
+- [Doubao](https://www.volcengine.com/docs/82379/1298454)
+- [Spark](https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html)
+- [GLM](https://open.bigmodel.cn/overview)

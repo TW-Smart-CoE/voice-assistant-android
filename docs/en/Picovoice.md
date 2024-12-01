@@ -31,7 +31,7 @@ viewModelScope.launch {
 
 // use wakeUp
 viewModelScope.launch {
-    val result = voiceManager.wakeUp.listen {
+    val result = wakeUp.listen {
         Log.d(TAG, "onWakeUp: $it")
     }
     Log.d(TAG, result.toString())

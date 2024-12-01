@@ -13,6 +13,7 @@ import com.thoughtworks.voiceassistant.app.foundation.mvi.DefaultStore
 import com.thoughtworks.voiceassistant.app.foundation.mvi.MVIViewModel
 import com.thoughtworks.voiceassistant.app.foundation.mvi.Store
 import com.thoughtworks.voiceassistant.app.utils.voice.VoiceManager
+import com.thoughtworks.voiceassistant.core.abilities.Chat
 import com.thoughtworks.voiceassistant.core.utils.AudioUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,6 +24,9 @@ class VoiceInteractionViewModel(
         initialState = VoiceInteractionState(
             tts = TtsState(
                 input = dependency.dataSource.loadTtsInput(),
+            ),
+            chat = ChatState(
+                input = dependency.dataSource.loadChatInput(),
             ),
         )
     ),
@@ -37,7 +41,10 @@ class VoiceInteractionViewModel(
 
     init {
         initAbilities(dependency.context)
-        audioUtils.setVolume(AudioManager.STREAM_VOICE_CALL, audioUtils.getMaxVolume(AudioManager.STREAM_VOICE_CALL))
+        audioUtils.setVolume(
+            AudioManager.STREAM_VOICE_CALL,
+            audioUtils.getMaxVolume(AudioManager.STREAM_VOICE_CALL)
+        )
 //        checkStatusAsync()
     }
 
@@ -86,7 +93,8 @@ class VoiceInteractionViewModel(
                     ),
                     chat = ChatState(
                         title = "${Ability.CHAT.displayName}: ${abilityCollection.chat.provider}",
-                        started = false
+                        started = false,
+                        input = currentState.chat.input
                     )
                 )
             }
@@ -163,6 +171,14 @@ class VoiceInteractionViewModel(
                 )
             }
 
+            is VoiceInteractionAction.ChatStop -> {
+                currentState.copy(
+                    chat = currentState.chat.copy(
+                        started = false
+                    )
+                )
+            }
+
             else -> {
                 currentState
             }
@@ -176,6 +192,7 @@ class VoiceInteractionViewModel(
         when (action) {
             is VoiceInteractionAction.NavigateBack -> {
                 dataSource.saveTtsInput(currentState.tts.input)
+                dataSource.saveChatInput(currentState.chat.input)
                 navigator.navigateBack()
             }
 
@@ -202,6 +219,14 @@ class VoiceInteractionViewModel(
 
             is VoiceInteractionAction.TtsStop -> {
                 voiceManager.tts.stop()
+            }
+
+            is VoiceInteractionAction.ChatStart -> {
+                chatStart(currentState.chat.input)
+            }
+
+            is VoiceInteractionAction.ChatStop -> {
+                chatStop()
             }
 
             else -> {
@@ -237,6 +262,21 @@ class VoiceInteractionViewModel(
             Log.d(TAG, result.toString())
             sendAction(VoiceInteractionAction.TtsStop)
         }
+    }
+
+    private fun chatStart(chatText: String) {
+        viewModelScope.launch {
+            val result = voiceManager.chat.chat(Chat.Message("user", chatText))
+            Log.d(TAG, result.toString())
+            if (result.isSuccess) {
+                sendEvent(VoiceInteractionEvent.ShowToast(result.message.content, true))
+            }
+            sendAction(VoiceInteractionAction.ChatStop)
+        }
+    }
+
+    private fun chatStop() {
+        voiceManager.chat.stop()
     }
 
     override fun onCleared() {

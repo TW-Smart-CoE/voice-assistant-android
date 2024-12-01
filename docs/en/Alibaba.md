@@ -32,7 +32,7 @@ viewModelScope.launch {
 
 // use asr
 viewModelScope.launch {
-    val result = voiceManager.asr.listen {
+    val result = asr.listen {
         Log.d(TAG, "onHeard: $it")
     }
     Log.d(TAG, result.toString())
@@ -73,7 +73,7 @@ viewModelScope.launch {
 
 // use tts
 viewModelScope.launch {
-    val result = voiceManager.tts.speak(text, emptyMap())
+    val result = tts.speak(text, emptyMap())
     Log.d(TAG, result.toString())
 }
 

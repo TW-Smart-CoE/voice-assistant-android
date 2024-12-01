@@ -38,6 +38,14 @@ class DataRepository(
         localStorage.saveTtsInput(ttsInput)
     }
 
+    override fun loadChatInput(): String {
+        return localStorage.loadChatInput()
+    }
+
+    override fun saveChatInput(chatInput: String) {
+        localStorage.saveChatInput(chatInput)
+    }
+
     private fun getTtsServiceProviderList(): List<ServiceProvider> {
         return listOf(ServiceProvider.ALIBABA)
     }

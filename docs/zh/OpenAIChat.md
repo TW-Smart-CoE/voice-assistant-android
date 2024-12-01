@@ -1,42 +1,45 @@
-# OpenAI ChatGPT
+# OpenAI Chat
 
-## 后台配置
+## 配置
 
-- 请前往[OpenAI API keys](https://platform.openai.com/account/api-keys)。 创建一个 API Key。
+- 在 [OpenAI API keys](https://platform.openai.com/account/api-keys) 或其他使用 OpenAI API 的平台创建 API Key。
 
-## SDK/API Key 配置
-AndroidManifest.xml 中 application 标签下配置（也可以在代码中配置）：
-```xml
-<meta-data
-    android:name="OPENAI_API_KEY"
-    android:value="${OPENAI_API_KEY}" />
-```
+## Chat
 
-## 示例代码
+### 示例
+
 ```kotlin
-// initialize chat
-val chat = ivAssistant.createChat(
-    ChatType.ChatGpt,
+// create chat
+val chat = OpenAIChat.create(
+    context,
     mapOf(
-        Pair("base_url", "https://api.openai.com"),
-        Pair("model", "gpt-3.5-turbo"),
-        Pair("temperature", 1.0f),
-        Pair("max_history_len", 20),
+        ChatParams.ApiKey.KEY to BuildConfig.OPENAI_API_KEY,
+        ChatParams.BaseUrl.KEY to ChatParams.BaseUrl.VALUES.KIMI,
+        ChatParams.ApiVersion.KEY to ChatParams.ApiVersion.VALUES.V1,
+        ChatParams.Model.KEY to "moonshot-v1-8k",
     )
-)
-chat.initialize()
+
+// init chat
+viewModelScope.launch {
+    chat.initialize()
+}
 
 // use chat
-chat.chat(getString(R.string.hello), object : ChatCallback {
-    override fun onResult(text: String) {
-        tts.play(text)
-    }
+viewModelScope.launch {
+    val result = chat.chat(Chat.Message("user", chatText))
+    Log.d(TAG, result.toString())
+}
 
-    override fun onError(errorMessage: String) {
-        Log.e(TAG, "chat onError: $errorMessage")
-    }
-})
+// stop chat
+chat.stop()
 
 // release chat
 chat.release()
 ```
+
+## Reference
+- [OpenAI](https://platform.openai.com)
+- [Kimi](https://platform.moonshot.cn)
+- [豆包](https://www.volcengine.com/docs/82379/1298454)
+- [星火](https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html)
+- [智普清言](https://open.bigmodel.cn/overview)

@@ -1,13 +1,24 @@
 package com.thoughtworks.voiceassistant.core.abilities
 
-interface ChatCallback {
-    fun onResult(text: String) {}
-    fun onError(errorMessage: String) {}
-}
-
 interface Chat {
-    fun initialize()
-    fun chat(content: String, chatCallback: ChatCallback? = null)
-    fun clearConversationHistory()
+    data class Message(
+        val role: String,
+        val content: String,
+    )
+
+    data class Result(
+        val isSuccess: Boolean = false,
+        val errorMessage: String = "",
+        val message: Message = Message("assistant", ""),
+    )
+
+    suspend fun initialize()
+    suspend fun chat(userMessage: Message): Result
+    fun isChatting(): Boolean
+    fun stop()
     fun release()
+    fun getSystemContext(): List<Message>
+    fun setSystemContext(contextMessages: List<Message>)
+    fun getConversationHistory(): List<Message>
+    fun clearConversationHistory()
 }

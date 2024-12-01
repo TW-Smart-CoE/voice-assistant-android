@@ -49,6 +49,8 @@ publishing {
 
 dependencies {
     implementation(project(":core"))
+    implementation(libs.gson)
+    implementation(libs.okhttp)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

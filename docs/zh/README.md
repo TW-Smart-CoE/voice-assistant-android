@@ -30,6 +30,7 @@ implementation("com.github.TW-Smart-CoE.voice-assistant-android:core:$latest_ver
 implementation("com.github.TW-Smart-CoE.voice-assistant-android:alibabakit:$latest_version")
 implementation("com.github.TW-Smart-CoE.voice-assistant-android:picovoicekit:$latest_version")
 implementation("com.github.TW-Smart-CoE.voice-assistant-android:volcenginekit:$latest_version")
+implementation("com.github.TW-Smart-CoE.voice-assistant-android:openaikit:$latest_version")
 ```
 
 ## 能力提供服务
@@ -37,4 +38,4 @@ implementation("com.github.TW-Smart-CoE.voice-assistant-android:volcenginekit:$l
 - [阿里巴巴](Alibaba.md)
 - [火山引擎](Volcengine.md)
 - [Picovoice](Picovoice.md)
-- [OpenAI Chat](OpenAIChat)
+- [OpenAI Chat](OpenAIChat.md)

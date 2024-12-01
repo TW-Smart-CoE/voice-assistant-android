@@ -31,7 +31,7 @@ viewModelScope.launch {
 
 // use asr
 viewModelScope.launch {
-    val result = voiceManager.asr.listen {
+    val result = asr.listen {
         Log.d(TAG, "onHeard: $it")
     }
     Log.d(TAG, result.toString())

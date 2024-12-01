@@ -12,4 +12,5 @@
     <string name="all_permission_granted" translatable="false">All permissions granted!</string>
     <string name="request_permission_btn" translatable="false">Request Permissions</string>
     <string name="tts_input">hello, I am smart assistance</string>
+    <string name="chat_input">Hi, what is your name?</string>
 </resources>

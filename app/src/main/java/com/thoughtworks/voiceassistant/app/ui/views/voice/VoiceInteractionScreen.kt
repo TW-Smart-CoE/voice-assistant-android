@@ -88,7 +88,11 @@ fun VoiceInteractionScreen(dependency: Dependency) {
         event.onEach { event ->
             when (event) {
                 is VoiceInteractionEvent.ShowToast -> {
-                    Toast.makeText(context, event.text, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        event.text,
+                        if (event.isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }.launchIn(scope)
@@ -251,9 +255,10 @@ fun ChatCard(
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { sendAction(VoiceInteractionAction.ChatClearHistory) }
+                    enabled = state.chat.started,
+                    onClick = { sendAction(VoiceInteractionAction.ChatStop) }
                 ) {
-                    Text(context.getString(R.string.clear_history_btn))
+                    Text(context.getString(R.string.stop_btn))
                 }
             }
         }
