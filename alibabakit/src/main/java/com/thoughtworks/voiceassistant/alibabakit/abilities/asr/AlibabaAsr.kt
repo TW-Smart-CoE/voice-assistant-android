@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.AudioFormat
-import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.audiofx.AcousticEchoCanceler
 import android.media.audiofx.NoiseSuppressor
@@ -92,7 +91,12 @@ class AlibabaAsr(
 
                 Constants.NuiEvent.EVENT_ASR_ERROR -> {
                     logger.error(TAG, "EVENT_ASR_ERROR: $resultCode")
-                    asrListener?.onError("EVENT_ASR_ERROR: $resultCode")
+                    if (resultCode == 41010105) {
+                        // one sentence recognition error: SILENT_SPEECH
+                        asrListener?.onResult("")
+                    } else {
+                        asrListener?.onError("EVENT_ASR_ERROR: $resultCode")
+                    }
                 }
 
                 Constants.NuiEvent.EVENT_VAD_START -> {
