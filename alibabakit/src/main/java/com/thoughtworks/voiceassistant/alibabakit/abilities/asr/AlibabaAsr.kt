@@ -93,6 +93,7 @@ class AlibabaAsr(
                     logger.error(TAG, "EVENT_ASR_ERROR: $resultCode")
                     if (resultCode == 41010105) {
                         // one sentence recognition error: SILENT_SPEECH
+                        onHeard?.invoke("")
                         asrListener?.onResult("")
                     } else {
                         asrListener?.onError("EVENT_ASR_ERROR: $resultCode")

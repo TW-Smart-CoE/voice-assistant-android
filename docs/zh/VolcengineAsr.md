@@ -1,1 +1,0 @@
-- 因为 Volcengine 使用了旧的 support library，所以需要在 Android 工程的 gradle.properties 中配置 android.enableJetifier=true。
