@@ -173,11 +173,6 @@ class AlibabaAsr(
 
         val ticket = config.generateTicket(context, logger)
 
-        if (config.audioSource == AsrParams.AudioSource.VALUES.COMMUNICATION) {
-            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
-        }
-
         audioRecorder = AudioRecord(
             config.getMediaRecorderAudioSource(), SAMPLE_RATE,
             AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, WAVE_FRAME_SIZE * 4

@@ -123,10 +123,6 @@ class VolcengineAsr(
             }
         )
 
-        if (config.audioSource == AsrParams.AudioSource.VALUES.COMMUNICATION) {
-            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
-        }
         setOptionInt(
             SpeechEngineDefines.PARAMS_KEY_RECORDER_PRESET_INT,
             getRecorderPreset()
