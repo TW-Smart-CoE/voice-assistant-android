@@ -44,4 +44,4 @@ wakeUp.release()
 ```
 
 ## 参考文档
-[Porcupine Wake Word Android quick start](https://picovoice.ai/docs/quick-start/porcupine-android/)
+- [Porcupine Wake Word Android quick start](https://picovoice.ai/docs/quick-start/porcupine-android/)

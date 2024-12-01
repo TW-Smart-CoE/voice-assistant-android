@@ -85,7 +85,7 @@ tts.release()
 ```
 
 ## Reference
-[Alibaba One-sentence Asr interface description](https://help.aliyun.com/zh/isi/developer-reference/overview-3?spm=5176.22414175.sslink.1.21883e74dCEmFW)
-[Alibaba One-sentence Asr Android SDK](https://help.aliyun.com/zh/isi/developer-reference/nui-sdk-for-android?spm=a2c4g.11186623.help-menu-30413.d_3_0_0_2_1.7f874bb4rNCrfz)
-[Alibaba Real-time Asr interface description](https://help.aliyun.com/zh/isi/developer-reference/api-reference?spm=a2c4g.11186623.help-menu-30413.d_3_0_1_0.3b6c4a51NEzylc)
-[Alibaba Real-time Asr Android SDK](https://help.aliyun.com/zh/isi/developer-reference/nui-sdk-for-android-1?spm=a2c4g.11186623.help-menu-30413.d_3_0_1_1_1.44b8626b9ObDWE)
+- [Alibaba One-sentence Asr interface description](https://help.aliyun.com/zh/isi/developer-reference/overview-3?spm=5176.22414175.sslink.1.21883e74dCEmFW)
+- [Alibaba One-sentence Asr Android SDK](https://help.aliyun.com/zh/isi/developer-reference/nui-sdk-for-android?spm=a2c4g.11186623.help-menu-30413.d_3_0_0_2_1.7f874bb4rNCrfz)
+- [Alibaba Real-time Asr interface description](https://help.aliyun.com/zh/isi/developer-reference/api-reference?spm=a2c4g.11186623.help-menu-30413.d_3_0_1_0.3b6c4a51NEzylc)
+- [Alibaba Real-time Asr Android SDK](https://help.aliyun.com/zh/isi/developer-reference/nui-sdk-for-android-1?spm=a2c4g.11186623.help-menu-30413.d_3_0_1_1_1.44b8626b9ObDWE)
