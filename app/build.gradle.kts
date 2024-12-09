@@ -90,7 +90,6 @@ dependencies {
     implementation(project(":volcenginekit"))
     implementation(project(":openaikit"))
 
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.gson)
 
     implementation(libs.androidx.core.ktx)

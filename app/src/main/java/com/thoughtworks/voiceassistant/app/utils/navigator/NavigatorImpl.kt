@@ -14,7 +14,6 @@ class NavigatorImpl(private val navController: NavController) : Navigator {
                 inclusive = true // This removes the PermissionScreen from the back stack
             }
             launchSingleTop = true // Ensures that only one instance of AbilityConfigScreen is created
-
         }
     }
 

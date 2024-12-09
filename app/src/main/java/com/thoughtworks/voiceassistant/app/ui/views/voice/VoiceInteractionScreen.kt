@@ -61,7 +61,7 @@ fun VoiceInteractionScreen(dependency: Dependency) {
                 navigationIcon = {
                     IconButton(onClick = { viewModel.sendAction(VoiceInteractionAction.NavigateBack) }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.arrow_back_24_black),
+                            painter = painterResource(id = R.drawable.ic_arrow_back_24_black),
                             contentDescription = "Back"
                         )
                     }
