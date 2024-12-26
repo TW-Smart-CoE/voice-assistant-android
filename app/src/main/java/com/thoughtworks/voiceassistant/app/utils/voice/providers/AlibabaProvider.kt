@@ -37,6 +37,7 @@ object AlibabaProvider {
                 TtsParams.EncodeType.KEY to encodeType,
                 TtsParams.TtsFilePath.KEY to "${context.externalCacheDir?.absolutePath}/tts.${encodeType}",
                 TtsParams.PlayMode.KEY to TtsParams.PlayMode.VALUES.MEDIA,
+                TtsParams.RemoveWavHeader.KEY to true,
             )
         )
     }

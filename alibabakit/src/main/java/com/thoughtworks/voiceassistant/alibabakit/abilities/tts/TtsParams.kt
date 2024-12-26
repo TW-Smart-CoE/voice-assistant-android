@@ -87,4 +87,12 @@ object TtsParams {
             const val COMMUNICATION = "communication"
         }
     }
+
+    object RemoveWavHeader {
+        const val KEY = "remove_wav_header"
+        object VALUES {
+            const val TRUE = true
+            const val FALSE = false
+        }
+    }
 }

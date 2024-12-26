@@ -1,7 +1,6 @@
 package com.thoughtworks.voiceassistant.alibabakit.abilities.tts
 
 import android.content.Context
-import android.os.Build
 import android.text.TextUtils
 import com.alibaba.idst.nui.CommonUtils
 import com.alibaba.idst.nui.Constants
@@ -110,7 +109,7 @@ class AlibabaTts private constructor(
         }
 
         private fun onTtsStart() {
-            wavHeaderToBeRemove = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+            wavHeaderToBeRemove = config.removeWavHeader
             if (config.ttsFilePath.isNotEmpty()) {
                 ttsFileWriter.createFile()
             }
