@@ -171,6 +171,7 @@ class VolcengineAsr(
             }
 
             SpeechEngineDefines.MESSAGE_TYPE_PARTIAL_RESULT -> {
+//                logger.debug(TAG, "ASR partial result. data: $stdData")
                 speechAsrResult(stdData, false)
             }
 
@@ -189,9 +190,13 @@ class VolcengineAsr(
         val asrText = parseAsrResult(data)
         if (config.recognitionType == AsrParams.RecognitionType.VALUES.LONG) {
             handleContinuousRecognition(asrText)
-        } else if (isFinal) {
-            // For single sentence recognition, only handle final results
-            onHeard?.invoke(asrText)
+        } else {
+            lastAsrText = asrText
+            if (isFinal) {
+                // For single sentence recognition, only handle final results
+                onHeard?.invoke(asrText)
+                asrListener?.onResult(asrText)
+            }
         }
     }
 
@@ -224,6 +229,15 @@ class VolcengineAsr(
         } catch (e: Exception) {
             logger.error(TAG, "parseAsrResult error: ${e.message}")
             ""
+        }
+    }
+
+    private fun ensureSingleSentenceOnHeardAfterStop() {
+        if (config.recognitionType == AsrParams.RecognitionType.VALUES.SINGLE_SENTENCE) {
+            if (lastAsrText.isNotEmpty()) {
+                onHeard?.invoke(lastAsrText)
+                lastAsrText = ""
+            }
         }
     }
 
@@ -320,6 +334,9 @@ class VolcengineAsr(
             sendDirective(SpeechEngineDefines.DIRECTIVE_FINISH_TALKING, "")
             sendDirective(SpeechEngineDefines.DIRECTIVE_STOP_ENGINE, "")
         }
+
+        ensureSingleSentenceOnHeardAfterStop()
+
         asrListener?.onResult("")
     }
 

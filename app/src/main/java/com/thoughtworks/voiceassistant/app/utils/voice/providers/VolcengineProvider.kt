@@ -15,7 +15,8 @@ object VolcengineProvider {
                 AsrParams.AppToken.KEY to BuildConfig.VOLCENGINE_ACCESS_TOKEN,
                 AsrParams.AsrCluster.KEY to BuildConfig.VOLCENGINE_ONE_SENTENCE_RECOGNITION_CLUSTER_ID,
                 AsrParams.AudioSource.KEY to AsrParams.AudioSource.VALUES.COMMUNICATION,
-                AsrParams.RecognitionType.KEY to AsrParams.RecognitionType.VALUES.LONG,
+                AsrParams.RecognitionType.KEY to AsrParams.RecognitionType.VALUES.SINGLE_SENTENCE,
+                AsrParams.AutoStop.KEY to false,
                 AsrParams.VadMaxSpeechDuration.KEY to AsrParams.VadMaxSpeechDuration.VALUES.INFINITE,
             )
         )
