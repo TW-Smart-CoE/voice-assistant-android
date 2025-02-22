@@ -63,6 +63,7 @@ class VolcengineAsr(
             if (ret != SpeechEngineDefines.ERR_NO_ERROR) {
                 val errMessage = "Init Engine Failed: $ret"
                 logger.error(TAG, errMessage)
+                release()
                 return false
             }
 
@@ -98,7 +99,7 @@ class VolcengineAsr(
             SpeechEngineDefines.PARAMS_KEY_ASR_ADDRESS_STRING, "wss://openspeech.bytedance.com"
         )
         setOptionString(SpeechEngineDefines.PARAMS_KEY_ASR_URI_STRING, "/api/v2/asr")
-        setOptionString(SpeechEngineDefines.PARAMS_KEY_ASR_CLUSTER_STRING, config.asrCluster)
+        setOptionString(SpeechEngineDefines.PARAMS_KEY_ASR_CLUSTER_STRING, config.cluster)
         setOptionInt(SpeechEngineDefines.PARAMS_KEY_ASR_CONN_TIMEOUT_INT, 12000)
         setOptionInt(SpeechEngineDefines.PARAMS_KEY_ASR_RECV_TIMEOUT_INT, 8000)
         setOptionInt(SpeechEngineDefines.PARAMS_KEY_ASR_MAX_RETRY_TIMES_INT, 0)

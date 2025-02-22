@@ -11,8 +11,8 @@ object AsrParams {
         const val KEY = "app_token"
     }
 
-    object AsrCluster {
-        const val KEY = "asr_cluster"
+    object Cluster {
+        const val KEY = "cluster"
     }
 
     object VadMaxSpeechDuration {

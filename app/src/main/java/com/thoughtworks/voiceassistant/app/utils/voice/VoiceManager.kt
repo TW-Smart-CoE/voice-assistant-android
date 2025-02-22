@@ -60,6 +60,8 @@ class VoiceManager(
     private fun createTts() {
         when (abilityCollection.tts.provider.lowercase()) {
             ServiceProvider.ALIBABA.name.lowercase() -> tts = AlibabaProvider.createTts(context)
+            ServiceProvider.VOLCENGINE.name.lowercase() -> tts =
+                VolcengineProvider.createTts(context)
         }
     }
 

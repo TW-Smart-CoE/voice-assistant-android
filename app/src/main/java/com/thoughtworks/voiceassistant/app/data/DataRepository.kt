@@ -47,7 +47,7 @@ class DataRepository(
     }
 
     private fun getTtsServiceProviderList(): List<ServiceProvider> {
-        return listOf(ServiceProvider.ALIBABA)
+        return listOf(ServiceProvider.ALIBABA, ServiceProvider.VOLCENGINE)
     }
 
     private fun getAsrServiceProviderList(): List<ServiceProvider> {

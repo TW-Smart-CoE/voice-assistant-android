@@ -3,8 +3,11 @@ package com.thoughtworks.voiceassistant.app.utils.voice.providers
 import android.content.Context
 import com.thoughtworks.voiceassistant.app.BuildConfig
 import com.thoughtworks.voiceassistant.core.abilities.Asr
+import com.thoughtworks.voiceassistant.core.abilities.Tts
 import com.thoughtworks.voiceassistant.volcenginekit.abilities.asr.AsrParams
 import com.thoughtworks.voiceassistant.volcenginekit.abilities.asr.VolcengineAsr
+import com.thoughtworks.voiceassistant.volcenginekit.abilities.tts.TtsParams
+import com.thoughtworks.voiceassistant.volcenginekit.abilities.tts.VolcengineTts
 
 object VolcengineProvider {
     fun createAsr(context: Context): Asr {
@@ -13,11 +16,26 @@ object VolcengineProvider {
             mapOf(
                 AsrParams.AppId.KEY to BuildConfig.VOLCENGINE_APP_ID,
                 AsrParams.AppToken.KEY to BuildConfig.VOLCENGINE_ACCESS_TOKEN,
-                AsrParams.AsrCluster.KEY to BuildConfig.VOLCENGINE_ONE_SENTENCE_RECOGNITION_CLUSTER_ID,
+                AsrParams.Cluster.KEY to BuildConfig.VOLCENGINE_ONE_SENTENCE_RECOGNITION_CLUSTER_ID,
                 AsrParams.AudioSource.KEY to AsrParams.AudioSource.VALUES.COMMUNICATION,
                 AsrParams.RecognitionType.KEY to AsrParams.RecognitionType.VALUES.SINGLE_SENTENCE,
                 AsrParams.AutoStop.KEY to false,
                 AsrParams.VadMaxSpeechDuration.KEY to AsrParams.VadMaxSpeechDuration.VALUES.INFINITE,
+            )
+        )
+    }
+
+    fun createTts(context: Context): Tts {
+        return VolcengineTts.create(
+            context,
+            mapOf(
+                TtsParams.AppId.KEY to BuildConfig.VOLCENGINE_APP_ID,
+                TtsParams.AppToken.KEY to BuildConfig.VOLCENGINE_ACCESS_TOKEN,
+                AsrParams.Cluster.KEY to BuildConfig.VOLCENGINE_STREAM_SPEECH_SYNTHESIS_CLUSTER_ID,
+                TtsParams.VoiceName.KEY to "灿灿 2.0",
+                TtsParams.VoiceType.KEY to "BV700_V2_streaming",
+                TtsParams.VoicePitch.KEY to 1.0f,
+                TtsParams.VoiceSpeed.KEY to 1.0f,
             )
         )
     }
