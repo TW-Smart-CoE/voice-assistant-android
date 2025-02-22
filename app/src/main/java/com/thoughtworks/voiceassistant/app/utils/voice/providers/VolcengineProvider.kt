@@ -31,7 +31,7 @@ object VolcengineProvider {
             mapOf(
                 TtsParams.AppId.KEY to BuildConfig.VOLCENGINE_APP_ID,
                 TtsParams.AppToken.KEY to BuildConfig.VOLCENGINE_ACCESS_TOKEN,
-                AsrParams.Cluster.KEY to BuildConfig.VOLCENGINE_STREAM_SPEECH_SYNTHESIS_CLUSTER_ID,
+                TtsParams.Cluster.KEY to BuildConfig.VOLCENGINE_STREAM_SPEECH_SYNTHESIS_CLUSTER_ID,
                 TtsParams.VoiceName.KEY to "灿灿 2.0",
                 TtsParams.VoiceType.KEY to "BV700_V2_streaming",
                 TtsParams.VoicePitchRatio.KEY to 1.0f,
