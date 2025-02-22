@@ -2,7 +2,7 @@ package com.thoughtworks.voiceassistant.volcenginekit.abilities.tts
 
 object TtsParams {
     object AppId {
-        const val KEY = "app_Id"
+        const val KEY = "app_id"
     }
 
     object AppToken {

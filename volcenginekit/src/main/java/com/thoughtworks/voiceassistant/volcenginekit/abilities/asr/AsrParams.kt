@@ -4,7 +4,7 @@ import com.thoughtworks.voiceassistant.volcenginekit.abilities.asr.models.Hotwor
 
 object AsrParams {
     object AppId {
-        const val KEY = "app_Id"
+        const val KEY = "app_id"
     }
 
     object AppToken {
