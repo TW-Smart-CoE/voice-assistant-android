@@ -6,7 +6,7 @@ import com.thoughtworks.voiceassistant.volcenginekit.abilities.asr.models.Hotwor
 
 class AsrConfig(
     val appId: String,
-    val appToken: String,
+    val accessToken: String,
     val cluster: String,
     val vadMaxSpeechDuration: Int,
     val autoStop: Boolean = false,
@@ -21,7 +21,7 @@ class AsrConfig(
             params: Map<String, Any>,
         ): AsrConfig {
             params.requireKey(AsrParams.AppId.KEY)
-            params.requireKey(AsrParams.AppToken.KEY)
+            params.requireKey(AsrParams.AccessToken.KEY)
             params.requireKey(AsrParams.Cluster.KEY)
 
             val hotwords = params[AsrParams.Hotwords.KEY]?.let {
@@ -30,7 +30,7 @@ class AsrConfig(
 
             return AsrConfig(
                 appId = params[AsrParams.AppId.KEY].toString(),
-                appToken = params[AsrParams.AppToken.KEY].toString(),
+                accessToken = params[AsrParams.AccessToken.KEY].toString(),
                 cluster = params[AsrParams.Cluster.KEY].toString(),
                 vadMaxSpeechDuration = params[AsrParams.VadMaxSpeechDuration.KEY]?.toString()
                     ?.toInt() ?: AsrParams.VadMaxSpeechDuration.VALUES.DEFAULT,

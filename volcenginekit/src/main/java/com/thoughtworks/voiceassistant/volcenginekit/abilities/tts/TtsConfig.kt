@@ -6,7 +6,7 @@ import com.thoughtworks.voiceassistant.volcenginekit.abilities.asr.AsrParams
 
 class TtsConfig(
     val appId: String,
-    val appToken: String,
+    val accessToken: String,
     val cluster: String,
     val voiceName: String,
     val voiceType: String,
@@ -23,14 +23,14 @@ class TtsConfig(
             params: Map<String, Any>,
         ): TtsConfig {
             params.requireKey(TtsParams.AppId.KEY)
-            params.requireKey(TtsParams.AppToken.KEY)
+            params.requireKey(TtsParams.AccessToken.KEY)
             params.requireKey(AsrParams.Cluster.KEY)
             params.requireKey(TtsParams.VoiceName.KEY)
             params.requireKey(TtsParams.VoiceType.KEY)
 
             return TtsConfig(
                 appId = params[TtsParams.AppId.KEY].toString(),
-                appToken = params[TtsParams.AppToken.KEY].toString(),
+                accessToken = params[TtsParams.AccessToken.KEY].toString(),
                 cluster = params[AsrParams.Cluster.KEY].toString(),
                 voiceName = params[TtsParams.VoiceName.KEY].toString(),
                 voiceType = params[TtsParams.VoiceType.KEY].toString(),

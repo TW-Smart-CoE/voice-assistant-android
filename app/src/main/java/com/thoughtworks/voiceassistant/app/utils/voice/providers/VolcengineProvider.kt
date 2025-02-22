@@ -15,7 +15,7 @@ object VolcengineProvider {
             context,
             mapOf(
                 AsrParams.AppId.KEY to BuildConfig.VOLCENGINE_APP_ID,
-                AsrParams.AppToken.KEY to BuildConfig.VOLCENGINE_ACCESS_TOKEN,
+                AsrParams.AccessToken.KEY to BuildConfig.VOLCENGINE_ACCESS_TOKEN,
                 AsrParams.Cluster.KEY to BuildConfig.VOLCENGINE_ONE_SENTENCE_RECOGNITION_CLUSTER_ID,
                 AsrParams.AudioSource.KEY to AsrParams.AudioSource.VALUES.COMMUNICATION,
                 AsrParams.RecognitionType.KEY to AsrParams.RecognitionType.VALUES.SINGLE_SENTENCE,
@@ -30,7 +30,7 @@ object VolcengineProvider {
             context,
             mapOf(
                 TtsParams.AppId.KEY to BuildConfig.VOLCENGINE_APP_ID,
-                TtsParams.AppToken.KEY to BuildConfig.VOLCENGINE_ACCESS_TOKEN,
+                TtsParams.AccessToken.KEY to BuildConfig.VOLCENGINE_ACCESS_TOKEN,
                 TtsParams.Cluster.KEY to BuildConfig.VOLCENGINE_STREAM_SPEECH_SYNTHESIS_CLUSTER_ID,
                 TtsParams.VoiceName.KEY to "灿灿 2.0",
                 TtsParams.VoiceType.KEY to "BV700_V2_streaming",

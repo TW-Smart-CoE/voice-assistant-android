@@ -93,7 +93,7 @@ class VolcengineAsr(
         )
         setOptionString(SpeechEngineDefines.PARAMS_KEY_APP_ID_STRING, config.appId)
         setOptionString(
-            SpeechEngineDefines.PARAMS_KEY_APP_TOKEN_STRING, "Bearer;${config.appToken}"
+            SpeechEngineDefines.PARAMS_KEY_APP_TOKEN_STRING, "Bearer;${config.accessToken}"
         )
         setOptionString(
             SpeechEngineDefines.PARAMS_KEY_ASR_ADDRESS_STRING, "wss://openspeech.bytedance.com"

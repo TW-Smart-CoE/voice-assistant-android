@@ -5,8 +5,8 @@ object TtsParams {
         const val KEY = "app_id"
     }
 
-    object AppToken {
-        const val KEY = "app_token"
+    object AccessToken {
+        const val KEY = "access_token"
     }
 
     object Cluster {
