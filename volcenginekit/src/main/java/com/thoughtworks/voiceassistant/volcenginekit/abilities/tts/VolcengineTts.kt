@@ -270,9 +270,21 @@ class VolcengineTts(
     }
 
     override fun stop() {
+        if (engine == null) {
+            logger.warn(TAG, "TTS is not initialized!")
+            return
+        }
+
+        if (!isSpeaking) {
+            logger.warn(TAG, "TTS is not speaking!")
+            return
+        }
+
         engine?.apply {
             sendDirective(SpeechEngineDefines.DIRECTIVE_SYNC_STOP_ENGINE, "")
         }
+        ttsListener?.onPlayCancel()
+        ttsListener = null
     }
 
     companion object {
