@@ -41,6 +41,14 @@ object TtsParams {
         const val KEY = "tts_file_path"
     }
 
+    object PlayMode {
+        const val KEY = "play_mode"
+        object VALUES {
+            const val MEDIA = "media"
+            const val COMMUNICATION = "communication"
+        }
+    }
+
     object UserId {
         const val KEY = "user_id"
 

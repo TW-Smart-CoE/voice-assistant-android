@@ -37,6 +37,7 @@ object VolcengineProvider {
                 TtsParams.VoicePitch.KEY to 1.0f,
                 TtsParams.VoiceSpeed.KEY to 1.0f,
                 TtsParams.TtsFilePath.KEY to "${context.externalCacheDir?.absolutePath}/tts.pcm",
+                TtsParams.PlayMode.KEY to TtsParams.PlayMode.VALUES.MEDIA,
             )
         )
     }

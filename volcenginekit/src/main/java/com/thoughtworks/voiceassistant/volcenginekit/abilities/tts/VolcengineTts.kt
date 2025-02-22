@@ -172,13 +172,21 @@ class VolcengineTts(
             SpeechEngineDefines.PARAMS_KEY_TTS_SPEED_RATIO_DOUBLE,
             config.voiceSpeed.toDouble()
         )
+
         setOptionInt(
             SpeechEngineDefines.PARAMS_KEY_AUDIO_STREAM_TYPE_INT,
-            SpeechEngineDefines.AUDIO_STREAM_TYPE_MEDIA
+            if (config.playMode == TtsParams.PlayMode.VALUES.COMMUNICATION) {
+                SpeechEngineDefines.AUDIO_STREAM_TYPE_VOICE
+            } else {
+                SpeechEngineDefines.AUDIO_STREAM_TYPE_MEDIA
+            }
         )
 
         if (config.ttsFilePath.isNotEmpty()) {
-            setOptionInt(SpeechEngineDefines.PARAMS_KEY_TTS_DATA_CALLBACK_MODE_INT, SpeechEngineDefines.TTS_DATA_CALLBACK_MODE_ALL)
+            setOptionInt(
+                SpeechEngineDefines.PARAMS_KEY_TTS_DATA_CALLBACK_MODE_INT,
+                SpeechEngineDefines.TTS_DATA_CALLBACK_MODE_ALL
+            )
         }
     }
 

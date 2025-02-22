@@ -112,7 +112,7 @@ class VolcengineAsr(
         )
         setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_ENABLE_DDC_BOOL, true)
         setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_SHOW_NLU_PUNC_BOOL, true)
-        setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_DISABLE_END_PUNC_BOOL, true)
+        setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_DISABLE_END_PUNC_BOOL, false)
         setOptionBoolean(SpeechEngineDefines.PARAMS_KEY_ASR_AUTO_STOP_BOOL, config.autoStop)
         setOptionString(
             SpeechEngineDefines.PARAMS_KEY_ASR_RESULT_TYPE_STRING,
@@ -172,7 +172,7 @@ class VolcengineAsr(
             }
 
             SpeechEngineDefines.MESSAGE_TYPE_PARTIAL_RESULT -> {
-//                logger.debug(TAG, "ASR partial result. data: $stdData")
+                logger.debug(TAG, "ASR partial result. data: $stdData")
                 speechAsrResult(stdData, false)
             }
 
@@ -333,7 +333,7 @@ class VolcengineAsr(
 
         engine?.apply {
             sendDirective(SpeechEngineDefines.DIRECTIVE_FINISH_TALKING, "")
-            sendDirective(SpeechEngineDefines.DIRECTIVE_STOP_ENGINE, "")
+            sendDirective(SpeechEngineDefines.DIRECTIVE_SYNC_STOP_ENGINE, "")
         }
 
         ensureSingleSentenceOnHeardAfterStop()
