@@ -214,17 +214,17 @@ class AlibabaTts private constructor(
         val ttsVersion = if (charNum > MAX_TEXT_NUM) 1 else 0
         ttsInstance.setparamTts("tts_version", ttsVersion.toString())
         if (params.isNotEmpty()) {
-            val fontName = params["font_name"]
+            val fontName = params[TtsParams.FontName.KEY]
             fontName?.let {
                 if (it.toString().endsWith("_emo")) {
-                    val emotion = params["emotion"]?.toString() ?: SSMLEmotions.NEUTRAL
-                    val intensity = params["intensity"]?.toString()?.toFloat() ?: 1.0f
+                    val emotion = params[SpeakParams.Emotion.KEY]?.toString() ?: SpeakParams.Emotion.VALUES.NEUTRAL
+                    val intensity = params[SpeakParams.Intensity.KEY]?.toString()?.toFloat() ?: SpeakParams.Intensity.VALUES.DEFAULT
                     val ssml = formatSSML(it.toString(), emotion, intensity, text)
-                    ttsInstance.startTts("1", taskIdManager.generateTaskId(), ssml)
+                    ttsInstance.startTts(PRIORITY, taskIdManager.generateTaskId(), ssml)
                 }
             }
         } else {
-            ttsInstance.startTts("1", taskIdManager.generateTaskId(), text)
+            ttsInstance.startTts(PRIORITY, taskIdManager.generateTaskId(), text)
         }
 
         this.ttsListener = listener
@@ -321,6 +321,7 @@ class AlibabaTts private constructor(
     companion object {
         const val TAG = "AlibabaTts"
         private const val MAX_TEXT_NUM = 300
+        private const val PRIORITY = "1"
 
         fun create(
             context: Context,
