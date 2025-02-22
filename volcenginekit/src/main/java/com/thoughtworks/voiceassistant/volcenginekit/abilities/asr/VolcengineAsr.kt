@@ -333,7 +333,7 @@ class VolcengineAsr(
 
         engine?.apply {
             sendDirective(SpeechEngineDefines.DIRECTIVE_FINISH_TALKING, "")
-            sendDirective(SpeechEngineDefines.DIRECTIVE_SYNC_STOP_ENGINE, "")
+            sendDirective(SpeechEngineDefines.DIRECTIVE_STOP_ENGINE, "")
         }
 
         ensureSingleSentenceOnHeardAfterStop()

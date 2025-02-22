@@ -7,7 +7,6 @@ import com.alibaba.idst.nui.Constants
 import com.alibaba.idst.nui.INativeTtsCallback
 import com.alibaba.idst.nui.NativeNui
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player.PlayerManager
-import com.thoughtworks.voiceassistant.core.utils.TtsFileWriter
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player.TtsStreamData
 import com.thoughtworks.voiceassistant.core.abilities.Tts
 import com.thoughtworks.voiceassistant.core.logger.DefaultLogger
@@ -15,6 +14,8 @@ import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.debug
 import com.thoughtworks.voiceassistant.core.logger.error
 import com.thoughtworks.voiceassistant.core.logger.warn
+import com.thoughtworks.voiceassistant.core.utils.RateToValue
+import com.thoughtworks.voiceassistant.core.utils.TtsFileWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -174,6 +175,15 @@ class AlibabaTts private constructor(
             ttsInstance.setparamTts("sample_rate", config.sampleRate.toString())
             ttsInstance.setparamTts("enable_subtitle", config.enableSubtitle)
             ttsInstance.setparamTts("encode_type", config.encodeType)
+
+            val pitchValue = RateToValue.calculateValueFromRate(
+                config.voicePitchRatio,
+                RateToValue.Range(-500f, 500f)
+            )
+            ttsInstance.setparamTts("pitch_level", pitchValue.toString())
+            ttsInstance.setparamTts("speed_level", config.voiceSpeedRatio.toString())
+            ttsInstance.setparamTts("volume", config.voiceVolumeRatio.toString())
+
             logger.debug(TAG, "TTS instance initialized successfully")
             isInit = true
         }
@@ -217,8 +227,10 @@ class AlibabaTts private constructor(
             val fontName = params[TtsParams.FontName.KEY]
             fontName?.let {
                 if (it.toString().endsWith("_emo")) {
-                    val emotion = params[SpeakParams.Emotion.KEY]?.toString() ?: SpeakParams.Emotion.VALUES.NEUTRAL
-                    val intensity = params[SpeakParams.Intensity.KEY]?.toString()?.toFloat() ?: SpeakParams.Intensity.VALUES.DEFAULT
+                    val emotion = params[SpeakParams.Emotion.KEY]?.toString()
+                        ?: SpeakParams.Emotion.VALUES.NEUTRAL
+                    val intensity = params[SpeakParams.Intensity.KEY]?.toString()?.toFloat()
+                        ?: SpeakParams.Intensity.VALUES.DEFAULT
                     val ssml = formatSSML(it.toString(), emotion, intensity, text)
                     ttsInstance.startTts(PRIORITY, taskIdManager.generateTaskId(), ssml)
                 }

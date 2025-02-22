@@ -95,6 +95,30 @@ object TtsParams {
             const val FALSE = false
         }
     }
+
+    object VoicePitchRatio {
+        const val KEY = "voice_pitch_ratio"
+
+        object VALUES {
+            const val DEFAULT = 1.0f
+        }
+    }
+
+    object VoiceSpeedRatio {
+        const val KEY = "voice_speed_ratio"
+
+        object VALUES {
+            const val DEFAULT = 1.0f
+        }
+    }
+
+    object VoiceVolumeRatio {
+        const val KEY = "voice_volume_ratio"
+
+        object VALUES {
+            const val DEFAULT = 1.0f
+        }
+    }
 }
 
 object SpeakParams {

@@ -10,8 +10,9 @@ class TtsConfig(
     val cluster: String,
     val voiceName: String,
     val voiceType: String,
-    val voicePitch: Float,
-    val voiceSpeed: Float,
+    val voicePitchRatio: Float,
+    val voiceSpeedRatio: Float,
+    val voiceVolumeRatio: Float,
     val ttsFilePath: String,
     val playMode: String = TtsParams.PlayMode.VALUES.MEDIA,
     val userId: String = TtsParams.UserId.VALUES.DEFAULT,
@@ -33,10 +34,12 @@ class TtsConfig(
                 cluster = params[AsrParams.Cluster.KEY].toString(),
                 voiceName = params[TtsParams.VoiceName.KEY].toString(),
                 voiceType = params[TtsParams.VoiceType.KEY].toString(),
-                voicePitch = params[TtsParams.VoicePitch.KEY]?.toString()?.toFloat()
-                    ?: TtsParams.VoicePitch.VALUES.DEFAULT,
-                voiceSpeed = params[TtsParams.VoiceSpeed.KEY]?.toString()?.toFloat()
-                    ?: TtsParams.VoiceSpeed.VALUES.DEFAULT,
+                voicePitchRatio = params[TtsParams.VoicePitchRatio.KEY]?.toString()?.toFloat()
+                    ?: TtsParams.VoicePitchRatio.VALUES.DEFAULT,
+                voiceSpeedRatio = params[TtsParams.VoiceSpeedRatio.KEY]?.toString()?.toFloat()
+                    ?: TtsParams.VoiceSpeedRatio.VALUES.DEFAULT,
+                voiceVolumeRatio = params[TtsParams.VoiceVolumeRatio.KEY]?.toString()?.toFloat()
+                    ?: TtsParams.VoiceVolumeRatio.VALUES.DEFAULT,
                 ttsFilePath = params[TtsParams.TtsFilePath.KEY]?.toString() ?: "",
                 playMode = params[TtsParams.PlayMode.KEY]?.toString()
                     ?: TtsParams.PlayMode.VALUES.MEDIA,

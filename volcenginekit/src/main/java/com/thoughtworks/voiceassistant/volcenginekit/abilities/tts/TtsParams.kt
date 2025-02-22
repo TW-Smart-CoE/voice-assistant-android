@@ -21,16 +21,24 @@ object TtsParams {
         const val KEY = "voice_type"
     }
 
-    object VoicePitch {
-        const val KEY = "voice_pitch"
+    object VoicePitchRatio {
+        const val KEY = "voice_pitch_ratio"
 
         object VALUES {
             const val DEFAULT = 1.0f
         }
     }
 
-    object VoiceSpeed {
-        const val KEY = "voice_speed"
+    object VoiceSpeedRatio {
+        const val KEY = "voice_speed_ratio"
+
+        object VALUES {
+            const val DEFAULT = 1.0f
+        }
+    }
+
+    object VoiceVolumeRatio {
+        const val KEY = "voice_volume_ratio"
 
         object VALUES {
             const val DEFAULT = 1.0f

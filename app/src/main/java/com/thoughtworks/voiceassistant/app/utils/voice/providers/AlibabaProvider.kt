@@ -39,6 +39,9 @@ object AlibabaProvider {
                 TtsParams.TtsFilePath.KEY to "${context.externalCacheDir?.absolutePath}/tts.${encodeType}",
                 TtsParams.PlayMode.KEY to TtsParams.PlayMode.VALUES.MEDIA,
                 TtsParams.RemoveWavHeader.KEY to true,
+                TtsParams.VoicePitchRatio.KEY to 1.0f,
+                TtsParams.VoiceSpeedRatio.KEY to 1.0f,
+                TtsParams.VoiceVolumeRatio.KEY to 1.0f,
                 TtsParams.FontName.KEY to "aitong",
             )
         )

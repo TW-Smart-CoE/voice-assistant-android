@@ -165,12 +165,15 @@ class VolcengineTts(
         )
         setOptionDouble(
             SpeechEngineDefines.PARAMS_KEY_TTS_PITCH_RATIO_DOUBLE,
-            config.voicePitch.toDouble()
+            config.voicePitchRatio.toDouble()
         )
-        setOptionDouble(SpeechEngineDefines.PARAMS_KEY_TTS_VOLUME_RATIO_DOUBLE, 1.0)
         setOptionDouble(
             SpeechEngineDefines.PARAMS_KEY_TTS_SPEED_RATIO_DOUBLE,
-            config.voiceSpeed.toDouble()
+            config.voiceSpeedRatio.toDouble()
+        )
+        setOptionDouble(
+            SpeechEngineDefines.PARAMS_KEY_TTS_VOLUME_RATIO_DOUBLE,
+            config.voiceVolumeRatio.toDouble()
         )
 
         setOptionInt(

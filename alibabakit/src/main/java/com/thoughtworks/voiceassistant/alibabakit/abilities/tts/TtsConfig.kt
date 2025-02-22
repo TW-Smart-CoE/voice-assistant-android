@@ -28,6 +28,9 @@ class TtsConfig(
     val modeType: Int = DEFAULT_MODE,
     val playMode: String = TtsParams.PlayMode.VALUES.MEDIA,
     val removeWavHeader: Boolean = true,
+    val voicePitchRatio: Float,
+    val voiceSpeedRatio: Float,
+    val voiceVolumeRatio: Float,
 ) : AlibabaConfig(accessKey, accessKeySecret, appKey, deviceId, workspace, token) {
     override suspend fun generateTicket(context: Context, logger: Logger): String {
         val tokenValue = when (token.isNotEmpty()) {
@@ -90,7 +93,13 @@ class TtsConfig(
                     ?: 50,
                 playMode = params[TtsParams.PlayMode.KEY]?.toString()
                     ?: TtsParams.PlayMode.VALUES.MEDIA,
-                removeWavHeader = params[TtsParams.RemoveWavHeader.KEY]?.toString()?.toBoolean() != false
+                removeWavHeader = params[TtsParams.RemoveWavHeader.KEY]?.toString()?.toBoolean() != false,
+                voicePitchRatio = params[TtsParams.VoicePitchRatio.KEY]?.toString()?.toFloat()
+                    ?: TtsParams.VoicePitchRatio.VALUES.DEFAULT,
+                voiceSpeedRatio = params[TtsParams.VoiceSpeedRatio.KEY]?.toString()?.toFloat()
+                    ?: TtsParams.VoiceSpeedRatio.VALUES.DEFAULT,
+                voiceVolumeRatio = params[TtsParams.VoiceVolumeRatio.KEY]?.toString()?.toFloat()
+                    ?: TtsParams.VoiceVolumeRatio.VALUES.DEFAULT,
             )
         }
     }

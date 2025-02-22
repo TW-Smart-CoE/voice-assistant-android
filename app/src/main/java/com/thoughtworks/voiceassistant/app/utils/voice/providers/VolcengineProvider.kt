@@ -34,8 +34,9 @@ object VolcengineProvider {
                 AsrParams.Cluster.KEY to BuildConfig.VOLCENGINE_STREAM_SPEECH_SYNTHESIS_CLUSTER_ID,
                 TtsParams.VoiceName.KEY to "灿灿 2.0",
                 TtsParams.VoiceType.KEY to "BV700_V2_streaming",
-                TtsParams.VoicePitch.KEY to 1.0f,
-                TtsParams.VoiceSpeed.KEY to 1.0f,
+                TtsParams.VoicePitchRatio.KEY to 1.0f,
+                TtsParams.VoiceSpeedRatio.KEY to 1.0f,
+                TtsParams.VoiceVolumeRatio.KEY to 1.0f,
                 TtsParams.TtsFilePath.KEY to "${context.externalCacheDir?.absolutePath}/tts.pcm",
                 TtsParams.PlayMode.KEY to TtsParams.PlayMode.VALUES.MEDIA,
             )
