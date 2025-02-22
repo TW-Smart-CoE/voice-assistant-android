@@ -12,6 +12,7 @@ class TtsConfig(
     val voiceType: String,
     val voicePitch: Float,
     val voiceSpeed: Float,
+    val ttsFilePath: String,
     val userId: String = TtsParams.UserId.VALUES.DEFAULT,
 ) {
     companion object {
@@ -35,6 +36,7 @@ class TtsConfig(
                     ?: TtsParams.VoicePitch.VALUES.DEFAULT,
                 voiceSpeed = params[TtsParams.VoiceSpeed.KEY]?.toString()?.toFloat()
                     ?: TtsParams.VoiceSpeed.VALUES.DEFAULT,
+                ttsFilePath = params[TtsParams.TtsFilePath.KEY]?.toString() ?: "",
                 userId = params[TtsParams.UserId.KEY]?.toString()
                     ?: TtsParams.UserId.VALUES.DEFAULT,
             )

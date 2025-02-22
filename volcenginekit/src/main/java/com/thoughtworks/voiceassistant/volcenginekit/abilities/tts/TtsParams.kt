@@ -37,6 +37,10 @@ object TtsParams {
         }
     }
 
+    object TtsFilePath {
+        const val KEY = "tts_file_path"
+    }
+
     object UserId {
         const val KEY = "user_id"
 

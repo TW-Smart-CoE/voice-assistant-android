@@ -1,7 +1,5 @@
-package com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player
+package com.thoughtworks.voiceassistant.core.utils
 
-import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.AlibabaTts
-import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsConfig
 import com.thoughtworks.voiceassistant.core.logger.Logger
 import com.thoughtworks.voiceassistant.core.logger.error
 import java.io.File
@@ -11,14 +9,14 @@ import java.io.OutputStream
 
 class TtsFileWriter(
     private val logger: Logger,
-    private val ttsConfig: TtsConfig,
+    private val ttsFilePath: String,
 ) {
     private var outputStream: OutputStream? = null
 
     fun createFile() {
         outputStream?.close()
 
-        val file = File(ttsConfig.ttsFilePath)
+        val file = File(ttsFilePath)
 
         // Check if directory exists, if not then create it
         if (!file.parentFile?.exists()!!) {
@@ -56,6 +54,6 @@ class TtsFileWriter(
     }
 
     companion object {
-        private const val TAG = "${AlibabaTts.TAG}.TtsFileWriter"
+        private const val TAG = "TtsFileWriter"
     }
 }

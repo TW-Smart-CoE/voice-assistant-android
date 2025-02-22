@@ -7,7 +7,7 @@ import com.alibaba.idst.nui.Constants
 import com.alibaba.idst.nui.INativeTtsCallback
 import com.alibaba.idst.nui.NativeNui
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player.PlayerManager
-import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player.TtsFileWriter
+import com.thoughtworks.voiceassistant.core.utils.TtsFileWriter
 import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.player.TtsStreamData
 import com.thoughtworks.voiceassistant.core.abilities.Tts
 import com.thoughtworks.voiceassistant.core.logger.DefaultLogger
@@ -40,7 +40,7 @@ class AlibabaTts private constructor(
     private var isInit = false
     private var isSpeaking = false
     private val taskIdManager = TaskIdManager()
-    private val ttsFileWriter = TtsFileWriter(logger, config)
+    private val ttsFileWriter = TtsFileWriter(logger, config.ttsFilePath)
     private val playerManager = PlayerManager(context, logger, config) {
         logger.debug(TAG, "MP3 player end")
         ttsListener?.onPlayEnd()
@@ -117,8 +117,8 @@ class AlibabaTts private constructor(
         }
 
         private fun finishFileWrite() {
-            ttsFileWriter.closeFile()
             if (config.ttsFilePath.isNotEmpty()) {
+                ttsFileWriter.closeFile()
                 logger.debug(TAG, "TTS file saved at: ${config.ttsFilePath}")
                 ttsListener?.onTTSFileSaved(config.ttsFilePath)
             }

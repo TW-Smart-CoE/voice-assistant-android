@@ -13,6 +13,7 @@ import com.thoughtworks.voiceassistant.core.logger.debug
 import com.thoughtworks.voiceassistant.core.logger.error
 import com.thoughtworks.voiceassistant.core.logger.warn
 import com.thoughtworks.voiceassistant.core.utils.DeviceUtils
+import com.thoughtworks.voiceassistant.core.utils.TtsFileWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,6 +36,7 @@ class VolcengineTts(
     private var engine: SpeechEngine? = null
     private var ttsListener: TtsListener? = null
     private var isSpeaking = false
+    private val ttsFileWriter = TtsFileWriter(logger, config.ttsFilePath)
 
     override suspend fun initialize(): Boolean {
         if (engine != null) {
@@ -76,22 +78,26 @@ class VolcengineTts(
         data: ByteArray,
         len: Int,
     ) {
-        val stdData = String(data)
         when (type) {
             SpeechEngineDefines.MESSAGE_TYPE_ENGINE_START -> {
-                logger.debug(TAG, "engine start success. data: $stdData")
+                logger.debug(TAG, "engine start success.")
             }
 
             SpeechEngineDefines.MESSAGE_TYPE_ENGINE_STOP -> {
-                logger.debug(TAG, "engine stop success. data: $stdData")
+                logger.debug(TAG, "engine stop success.")
             }
 
             SpeechEngineDefines.MESSAGE_TYPE_ENGINE_ERROR -> {
+                val stdData = String(data)
                 logger.error(TAG, "engine error. data: $stdData")
+                ttsListener?.onError(stdData)
             }
 
             SpeechEngineDefines.MESSAGE_TYPE_TTS_SYNTHESIS_BEGIN -> {
                 logger.debug(TAG, "tts synthesis begin.")
+                if (config.ttsFilePath.isNotEmpty()) {
+                    ttsFileWriter.createFile()
+                }
             }
 
             SpeechEngineDefines.MESSAGE_TYPE_TTS_SYNTHESIS_END -> {
@@ -108,7 +114,15 @@ class VolcengineTts(
                 logger.debug(TAG, "tts playing finish.")
                 isSpeaking = false
                 ttsListener?.onPlayEnd()
+                finishFileWrite()
                 ttsListener = null
+            }
+
+            SpeechEngineDefines.MESSAGE_TYPE_TTS_AUDIO_DATA -> {
+                logger.debug(TAG, "tts audio data. $len, ${data.size}")
+                if (config.ttsFilePath.isNotEmpty()) {
+                    ttsFileWriter.writeData(data)
+                }
             }
         }
     }
@@ -162,6 +176,10 @@ class VolcengineTts(
             SpeechEngineDefines.PARAMS_KEY_AUDIO_STREAM_TYPE_INT,
             SpeechEngineDefines.AUDIO_STREAM_TYPE_MEDIA
         )
+
+        if (config.ttsFilePath.isNotEmpty()) {
+            setOptionInt(SpeechEngineDefines.PARAMS_KEY_TTS_DATA_CALLBACK_MODE_INT, SpeechEngineDefines.TTS_DATA_CALLBACK_MODE_ALL)
+        }
     }
 
     override fun release() {
@@ -284,7 +302,16 @@ class VolcengineTts(
             sendDirective(SpeechEngineDefines.DIRECTIVE_SYNC_STOP_ENGINE, "")
         }
         ttsListener?.onPlayCancel()
+        finishFileWrite()
         ttsListener = null
+    }
+
+    private fun finishFileWrite() {
+        if (config.ttsFilePath.isNotEmpty()) {
+            ttsFileWriter.closeFile()
+            logger.debug(TAG, "TTS file saved at: ${config.ttsFilePath}")
+            ttsListener?.onTTSFileSaved(config.ttsFilePath)
+        }
     }
 
     companion object {
