@@ -199,6 +199,11 @@ class VolcengineTts(
         ttsListener = listener
         engine?.apply {
             setOptionString(SpeechEngineDefines.PARAMS_KEY_TTS_TEXT_STRING, text)
+            params[SpeakParams.Emotion.KEY]?.toString()?.let {
+                if (it != SpeakParams.Emotion.VALUES.NEUTRAL) {
+                    setOptionString(SpeechEngineDefines.PARAMS_KEY_TTS_EMOTION_STRING, it)
+                }
+            }
             sendDirective(SpeechEngineDefines.DIRECTIVE_START_ENGINE, "")
         }
     }

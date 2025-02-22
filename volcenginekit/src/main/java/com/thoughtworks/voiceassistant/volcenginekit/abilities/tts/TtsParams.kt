@@ -45,3 +45,19 @@ object TtsParams {
         }
     }
 }
+
+object SpeakParams {
+    object Emotion {
+        const val KEY = "emotion"
+
+        object VALUES {
+            const val NEUTRAL = ""
+            const val HAPPY = "happy"
+            const val SAD = "sad"
+            const val ANGRY = "angry"
+            const val SCARE = "scare"
+            const val HATE = "hate"
+            const val SURPRISE = "surprise"
+        }
+    }
+}
