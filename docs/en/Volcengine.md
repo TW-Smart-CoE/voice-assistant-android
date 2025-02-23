@@ -5,6 +5,32 @@
 Create your own speech application in the [Volcengine Speech Application Management](https://console.volcengine.com/speech/app) to obtain the APP_ID. Click on Speech Recognition on the left -> One Sentence Recognition or Streaming Speech Recognition to get the AccessToken.
 Since Volcengine uses an old support library, you need to configure `android.enableJetifier=true` in the `gradle.properties` of your Android project.
 
+### Add repository
+
+You need to add `maven { setUrl("https://artifact.bytedance.com/repository/Volcengine/") }` in App's settings.gradle.kts.
+For example:
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { setUrl("https://jitpack.io") }
+        maven { setUrl("https://artifact.bytedance.com/repository/Volcengine/") }
+    }
+}
+```
+
+### About android.enableJetifier=true
+
+In your project's root folder, ensure your gradle.properties file contains the following two lines:
+```properties
+android.useAndroidX=true
+android.enableJetifier=true
+```
+The property android.enableJetifier=true is a Gradle setting used to automatically convert references in dependencies that are based on the old Android Support libraries to the corresponding AndroidX references. In other words, when your project has migrated to AndroidX but some third-party libraries still use the old com.android.support libraries, enabling Jetifier will automatically redirect those old classes and methods to their corresponding AndroidX versions, thereby avoiding conflicts caused by having both libraries coexist.
+Once enabled, Gradle will scan all dependencies during the build process and convert any outdated references to AndroidX-compatible ones. This helps you smoothly transition to AndroidX and resolve dependency conflicts.
+
 ## Asr
 
 ### Sample
