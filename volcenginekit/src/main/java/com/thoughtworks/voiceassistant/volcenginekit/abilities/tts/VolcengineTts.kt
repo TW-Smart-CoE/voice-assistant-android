@@ -228,11 +228,14 @@ class VolcengineTts(
         ttsListener = listener
         engine?.apply {
             setOptionString(SpeechEngineDefines.PARAMS_KEY_TTS_TEXT_STRING, text)
+
+            // emotion
             params[SpeakParams.Emotion.KEY]?.toString()?.let {
-                if (it != SpeakParams.Emotion.VALUES.NEUTRAL) {
-                    setOptionString(SpeechEngineDefines.PARAMS_KEY_TTS_EMOTION_STRING, it)
-                }
+                setOptionString(SpeechEngineDefines.PARAMS_KEY_TTS_EMOTION_STRING, it)
+            } ?: run {
+                setOptionString(SpeechEngineDefines.PARAMS_KEY_TTS_EMOTION_STRING, SpeakParams.Emotion.VALUES.NEUTRAL)
             }
+
             sendDirective(SpeechEngineDefines.DIRECTIVE_START_ENGINE, "")
         }
     }
