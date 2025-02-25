@@ -236,6 +236,7 @@ class VolcengineTts(
                 setOptionString(SpeechEngineDefines.PARAMS_KEY_TTS_EMOTION_STRING, SpeakParams.Emotion.VALUES.NEUTRAL)
             }
 
+            sendDirective(SpeechEngineDefines.DIRECTIVE_SYNC_STOP_ENGINE, "")
             sendDirective(SpeechEngineDefines.DIRECTIVE_START_ENGINE, "")
         }
     }
@@ -313,7 +314,7 @@ class VolcengineTts(
         }
 
         engine?.apply {
-            sendDirective(SpeechEngineDefines.DIRECTIVE_SYNC_STOP_ENGINE, "")
+            sendDirective(SpeechEngineDefines.DIRECTIVE_STOP_ENGINE, "")
         }
         ttsListener?.onPlayCancel()
         finishFileWrite()
