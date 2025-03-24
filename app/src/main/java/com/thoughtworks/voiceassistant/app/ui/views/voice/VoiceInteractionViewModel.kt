@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.thoughtworks.voiceassistant.alibabakit.abilities.tts.TtsParams
 import com.thoughtworks.voiceassistant.app.data.models.AbilityDataCollection
 import com.thoughtworks.voiceassistant.app.definitions.Ability
 import com.thoughtworks.voiceassistant.app.di.Dependency
@@ -16,7 +15,6 @@ import com.thoughtworks.voiceassistant.app.foundation.mvi.Store
 import com.thoughtworks.voiceassistant.app.utils.voice.VoiceManager
 import com.thoughtworks.voiceassistant.core.abilities.Chat
 import com.thoughtworks.voiceassistant.core.utils.AudioUtils
-import com.thoughtworks.voiceassistant.volcenginekit.abilities.tts.SpeakParams
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -65,11 +63,10 @@ class VoiceInteractionViewModel(
     private fun initAbilities(context: Context) {
         abilityCollection = dataSource.loadAbilityDataCollection()!!
         voiceManager = VoiceManager(context, abilityCollection)
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             voiceManager.initialize()
+            sendAction(VoiceInteractionAction.UpdateAbilityDataCollection(abilityCollection))
         }
-        sendAction(VoiceInteractionAction.UpdateAbilityDataCollection(abilityCollection))
-
     }
 
     override fun reduce(

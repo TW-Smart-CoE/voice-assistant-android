@@ -116,14 +116,14 @@ fun WakeUpCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.wakeUp.listening,
+                    enabled = !state.wakeUp.listening && state.wakeUp.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.WakeUpListen) }
                 ) {
                     Text(context.getString(R.string.listen_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.wakeUp.listening,
+                    enabled = state.wakeUp.listening && state.wakeUp.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.WakeUpStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
@@ -150,14 +150,14 @@ fun AsrCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.asr.listening,
+                    enabled = !state.asr.listening && state.asr.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.AsrListen) }
                 ) {
                     Text(context.getString(R.string.listen_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.asr.listening,
+                    enabled = state.asr.listening && state.asr.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.AsrStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
@@ -199,14 +199,14 @@ fun TtsCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.tts.speaking,
+                    enabled = !state.tts.speaking && state.tts.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.TtsSpeak) }
                 ) {
                     Text(context.getString(R.string.speak_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.tts.speaking,
+                    enabled = state.tts.speaking && state.tts.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.TtsStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
@@ -248,14 +248,14 @@ fun ChatCard(
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = !state.chat.started,
+                    enabled = !state.chat.started && state.chat.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.ChatStart) }
                 ) {
                     Text(context.getString(R.string.chat_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    enabled = state.chat.started,
+                    enabled = state.chat.started && state.chat.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.ChatStop) }
                 ) {
                     Text(context.getString(R.string.stop_btn))
