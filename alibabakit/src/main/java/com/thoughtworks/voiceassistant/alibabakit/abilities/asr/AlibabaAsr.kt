@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import com.alibaba.idst.nui.AsrResult
 import com.alibaba.idst.nui.CommonUtils
 import com.alibaba.idst.nui.Constants
+import com.alibaba.idst.nui.Constants.NuiResultCode.NULL_DIALOG_ERROR
 import com.alibaba.idst.nui.INativeNuiCallback
 import com.alibaba.idst.nui.KwsResult
 import com.alibaba.idst.nui.NativeNui
@@ -262,6 +263,14 @@ class AlibabaAsr(
             config.getAliVadMode(),
             config.genDialogParams(),
         )
+
+        if (ret == NULL_DIALOG_ERROR) {
+            // https://help.aliyun.com/zh/isi/support/error-codes?spm=cpm._chatcloud.0.0.5fb26c80eUrNLI
+            // 无有效对话实例，一般在内部状态错误时发生。
+            // 请确认接口调用前是否为正确状态，可使用cancel接口恢复idle状态。
+            val cancelResult = nuiInstance.cancelDialog()
+            logger.debug(TAG, "cancel dialog result: $cancelResult")
+        }
 
         logger.debug(TAG, "start done with $ret")
         if (ret != 0) {
