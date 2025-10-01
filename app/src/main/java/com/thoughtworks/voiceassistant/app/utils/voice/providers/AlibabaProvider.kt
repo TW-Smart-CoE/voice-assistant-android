@@ -27,7 +27,7 @@ object AlibabaProvider {
     }
 
     fun createTts(context: Context): Tts {
-        val encodeType = TtsParams.EncodeType.VALUES.WAV
+        val encodeType = TtsParams.EncodeType.VALUES.MP3
 
         return AlibabaTts.create(
             context,
