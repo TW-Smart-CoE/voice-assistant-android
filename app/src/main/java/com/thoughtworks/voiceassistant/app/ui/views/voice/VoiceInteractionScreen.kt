@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -190,6 +192,8 @@ fun TtsCard(
                         shape = MaterialTheme.shapes.small
                     )
                     .padding(8.dp),
+                textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -239,6 +243,8 @@ fun ChatCard(
                         shape = MaterialTheme.shapes.small
                     )
                     .padding(8.dp),
+                textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
             )
             Spacer(modifier = Modifier.height(8.dp))
