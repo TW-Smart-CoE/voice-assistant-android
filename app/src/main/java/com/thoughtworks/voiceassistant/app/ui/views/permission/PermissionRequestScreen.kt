@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.thoughtworks.voiceassistant.app.R
@@ -66,7 +67,7 @@ fun PermissionRequestScreen(
     // UI
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(context.getString(R.string.request_permission_screen_title)) })
+            TopAppBar(title = { Text(stringResource(R.string.request_permission_screen_title)) })
         },
         content = { paddingValues ->
             Column(
@@ -76,9 +77,9 @@ fun PermissionRequestScreen(
                     .padding(16.dp)
             ) {
                 if (deniedPermissions.isEmpty()) {
-                    Text(context.getString(R.string.all_permission_granted))
+                    Text(stringResource(R.string.all_permission_granted))
                 } else {
-                    Text(context.getString(R.string.denied_permissions_title))
+                    Text(stringResource(R.string.denied_permissions_title))
                     deniedPermissions.forEach { permission ->
                         val displayPermission = permission.replace("android.permission.", "")
                         Text(displayPermission)
@@ -89,7 +90,7 @@ fun PermissionRequestScreen(
                     Button(onClick = {
                         permissionLauncher.launch(deniedPermissions.toTypedArray())
                     }) {
-                        Text(context.getString(R.string.request_permission_btn))
+                        Text(stringResource(R.string.request_permission_btn))
                     }
                 }
             }

@@ -18,7 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.thoughtworks.voiceassistant.app.R
@@ -35,14 +35,13 @@ fun AbilityConfigScreen(
     val factory = remember { AbilityConfigViewModelFactory(dependency) }
     val viewModel: AbilityConfigViewModel = viewModel(factory = factory)
     val state = viewModel.uiState.collectAsState()
-    val context = LocalContext.current
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = context.getString(R.string.app_name),
+                        text = stringResource(R.string.app_name),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -76,7 +75,7 @@ fun AbilityConfigScreen(
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                 ) {
-                    Text(context.getString(R.string.ok_btn))
+                    Text(stringResource(R.string.ok_btn))
                 }
             }
         }

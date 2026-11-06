@@ -3,7 +3,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
 }
@@ -30,15 +29,20 @@ fun DefaultConfig.addBuildConfigFieldFromProperties(
 
 android {
     namespace = "com.thoughtworks.voiceassistant.app"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.thoughtworks.voiceassistant.app"
         minSdk = 24
-        //noinspection OldTargetApi
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
+
+        ndk {
+            // 16 KB page-size compatibility: x86/x86_64 prebuilts from some SDKs
+            // are still 4 KB aligned and are not needed for phone builds.
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -57,7 +61,7 @@ android {
 
     sourceSets {
         named("main") {
-            jniLibs.srcDirs("libs/iflytek")
+            jniLibs.directories.add("libs/iflytek")
         }
     }
 
@@ -71,11 +75,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
         compose = true

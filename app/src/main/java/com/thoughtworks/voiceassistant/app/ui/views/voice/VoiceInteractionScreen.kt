@@ -33,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -59,7 +60,7 @@ fun VoiceInteractionScreen(dependency: Dependency) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(context.getString(R.string.app_name)) },
+                title = { Text(stringResource(R.string.app_name)) },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.sendAction(VoiceInteractionAction.NavigateBack) }) {
                         Icon(
@@ -106,8 +107,6 @@ fun WakeUpCard(
     state: VoiceInteractionState,
     sendAction: (VoiceInteractionAction) -> Unit,
 ) {
-    val context = LocalContext.current
-
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(state.wakeUp.title, style = MaterialTheme.typography.titleMedium)
@@ -121,14 +120,14 @@ fun WakeUpCard(
                     enabled = !state.wakeUp.listening && state.wakeUp.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.WakeUpListen) }
                 ) {
-                    Text(context.getString(R.string.listen_btn))
+                    Text(stringResource(R.string.listen_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
                     enabled = state.wakeUp.listening && state.wakeUp.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.WakeUpStop) }
                 ) {
-                    Text(context.getString(R.string.stop_btn))
+                    Text(stringResource(R.string.stop_btn))
                 }
             }
         }
@@ -140,8 +139,6 @@ fun AsrCard(
     state: VoiceInteractionState,
     sendAction: (VoiceInteractionAction) -> Unit,
 ) {
-    val context = LocalContext.current
-
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(state.asr.title, style = MaterialTheme.typography.titleMedium)
@@ -155,14 +152,14 @@ fun AsrCard(
                     enabled = !state.asr.listening && state.asr.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.AsrListen) }
                 ) {
-                    Text(context.getString(R.string.listen_btn))
+                    Text(stringResource(R.string.listen_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
                     enabled = state.asr.listening && state.asr.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.AsrStop) }
                 ) {
-                    Text(context.getString(R.string.stop_btn))
+                    Text(stringResource(R.string.stop_btn))
                 }
             }
         }
@@ -174,8 +171,6 @@ fun TtsCard(
     state: VoiceInteractionState,
     sendAction: (VoiceInteractionAction) -> Unit,
 ) {
-    val context = LocalContext.current
-
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(state.tts.title, style = MaterialTheme.typography.titleMedium)
@@ -206,14 +201,14 @@ fun TtsCard(
                     enabled = !state.tts.speaking && state.tts.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.TtsSpeak) }
                 ) {
-                    Text(context.getString(R.string.speak_btn))
+                    Text(stringResource(R.string.speak_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
                     enabled = state.tts.speaking && state.tts.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.TtsStop) }
                 ) {
-                    Text(context.getString(R.string.stop_btn))
+                    Text(stringResource(R.string.stop_btn))
                 }
             }
         }
@@ -225,8 +220,6 @@ fun ChatCard(
     state: VoiceInteractionState,
     sendAction: (VoiceInteractionAction) -> Unit,
 ) {
-    val context = LocalContext.current
-
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(state.chat.title, style = MaterialTheme.typography.titleMedium)
@@ -257,14 +250,14 @@ fun ChatCard(
                     enabled = !state.chat.started && state.chat.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.ChatStart) }
                 ) {
-                    Text(context.getString(R.string.chat_btn))
+                    Text(stringResource(R.string.chat_btn))
                 }
                 Button(
                     modifier = Modifier.weight(1f),
                     enabled = state.chat.started && state.chat.title.contains(":"),
                     onClick = { sendAction(VoiceInteractionAction.ChatStop) }
                 ) {
-                    Text(context.getString(R.string.stop_btn))
+                    Text(stringResource(R.string.stop_btn))
                 }
             }
         }

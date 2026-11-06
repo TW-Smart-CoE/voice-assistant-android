@@ -1,12 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     id("maven-publish")
 }
 
 android {
     namespace = "com.thoughtworks.voiceassistant.volcenginekit"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 24
@@ -25,11 +24,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+    publishing {
+        singleVariant("release")
     }
 }
 
@@ -51,6 +50,8 @@ dependencies {
     implementation(project(":core"))
     implementation(libs.gson)
     implementation(libs.bytedance.speechengine)
+    // speechengine_tob 0.0.15.x uses OkHttp for its WebSocket client.
+    implementation(libs.okhttp)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
