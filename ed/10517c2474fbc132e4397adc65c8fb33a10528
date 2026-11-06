@@ -1,0 +1,39 @@
+alibabakit/build.gradle.kts
+  s_6769134ec284e5::t_c27f6d29dc6cb3 8,27-28,30-31
+app/src/main/java/com/thoughtworks/voiceassistant/app/ui/views/voice/VoiceInteractionScreen.kt
+  s_6769134ec284e5::t_c9f5ab53dbad39 36,63,123,130,155,162,204,211,253,260
+baidukit/build.gradle.kts
+  s_6769134ec284e5::t_2664524593fa25 8,27-28,30-31
+core/build.gradle.kts
+  s_6769134ec284e5::t_ad50a889d3e99c 8,27-28,30-31
+gradle.properties
+  s_6769134ec284e5::t_000a89299de6a2 24-26
+gradle/wrapper/gradle-wrapper.properties
+  s_6769134ec284e5::t_4db237c6143f28 3-7
+gradlew
+  s_6769134ec284e5::t_d63ee6318394ef 1,4,18-19,22-64,68,70-82,85-89,92,96,103,110-114,123,125,134-137,141,145-160,163-169,172-176,178-187,189-197,202-246
+gradlew.bat
+  s_6769134ec284e5::t_e6f41440edf69b 16-17,19,22,26-54,57-58,73,75-79,81-82,90-94,96-97,104-107,109-112
+iflytekkit/build.gradle.kts
+  s_6769134ec284e5::t_b50218f804b177 8,27-28,30-31
+openaikit/build.gradle.kts
+  s_6769134ec284e5::t_db1bbe3d148b9e 8,27-28,30-31
+picovoicekit/build.gradle.kts
+  s_6769134ec284e5::t_9c81027f2c36fd 8,27-28,30-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ed10517c2474fbc132e4397adc65c8fb33a10528",
+  "prompts": {},
+  "sessions": {
+    "s_6769134ec284e5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e54484b08ffeTQkHFlMa9k9grn",
+        "model": "unknown"
+      },
+      "human_author": "Jie Meng <jmengxy@gmail.com>"
+    }
+  }
+}
